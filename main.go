@@ -20,8 +20,7 @@ var redirect_uri = "http%3A%2F%2F127.0.0.1:3000/login/discord/callback"
 var user_info_url = "https://discord.com/api/v10/users/@me"
 
 func generateRandomStateString() (string, error) {
-	// Set the length of the state string you want to generate
-	stateLength := 8 // You can adjust this length as needed
+	stateLength := 8
 
 	// Create a buffer to store the random bytes
 	stateBytes := make([]byte, stateLength)
@@ -34,7 +33,6 @@ func generateRandomStateString() (string, error) {
 
 	// Convert the random bytes to a base64-encoded string (URL-safe)
 	stateString := base64.RawURLEncoding.EncodeToString(stateBytes)
-	fmt.Println("Function State Generated: ", stateString)
 	return stateString, nil
 }
 
@@ -46,20 +44,19 @@ func generateRandomStateString() (string, error) {
 // @Router /login/{provider} [get]
 func HandleLogin(c *fiber.Ctx) error {
 	state, err := generateRandomStateString()
-	fmt.Println("Handle Login State: ", state)
+	
 	if err != nil {
 		fmt.Println("Error generating random state:", err)
 		return err
 	}
 	if c.Params("provider") == "discord" {
-		// Set the state as an HTTP-only cookie
+		// Set the state in a HTTP-only cookie
 		c.Cookie(&fiber.Cookie{
 			Name:     "oauth2_state",
 			Value:    state,
 			HTTPOnly: true,
-			SameSite: "Lax", // Set to "Lax" for cross-origin requests on non-secure connections
-			Secure:   false, // Set to true if deployed over HTTPS
-			// You can set other cookie options such as MaxAge as needed
+			SameSite: "Lax", 
+			Secure:   false, 
 		})
 
 		// Redirect the user to the OAuth2 service for authorization
@@ -102,7 +99,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 
 		// Retrieve the state value from the HTTP-only cookie in the request
 		stateFromCookie := c.Cookies("oauth2_state")
-		fmt.Println("Callback Cookie State: ", stateFromCookie)
+
 		// Validate the state received in the callback against the one from the cookie
 		if code == "" || stateFromCookie == "" || c.Query("state") != stateFromCookie {
 			// Invalid state parameter, deny the request
