@@ -1,0 +1,20 @@
+info:
+  contact: {}
+paths:
+  /login/{provider}:
+    get:
+      description: Redirects to the provider's login page
+      operationId: handleLogin
+      parameters:
+      - description: Provider name (e.g., discord)
+        in: path
+        name: provider
+        required: true
+        type: string
+      responses:
+        "302":
+          description: Redirects to the provider's login page
+          schema:
+            type: string
+      summary: Login with a provider
+swagger: "2.0"
