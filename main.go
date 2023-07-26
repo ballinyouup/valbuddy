@@ -1,26 +1,18 @@
 package main
 
 import (
-	
 	"fmt"
 	"log"
-	"os"
 	"nextjs-go/utils"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
 
-var discord_links = utils.DiscordLinks{
-	AccessTokenURL: "https://discord.com/api/oauth2/token",
-	AuthorizeURL: "https://discord.com/oauth2/authorize",
-	RedirectURI: "http://127.0.0.1:3000/login/discord/callback",
-	UserInfoURL: "https://discord.com/api/v10/users/@me",
-}
-
 func HandleLogin(c *fiber.Ctx) error {
 	state, err := utils.GenerateState()
-	
+
 	if err != nil {
 		fmt.Println("Error generating random state:", err)
 		return err
@@ -31,12 +23,12 @@ func HandleLogin(c *fiber.Ctx) error {
 			Name:     "oauth2_state",
 			Value:    state,
 			HTTPOnly: true,
-			SameSite: "Lax", 
-			Secure:   false, 
+			SameSite: "Lax",
+			Secure:   false,
 		})
 
 		// Redirect the user to the OAuth2 service for authorization
-		result := fmt.Sprintf("%s?response_type=code&client_id=%s&scope=identify%%20email&state=%s&redirect_uri=%s&prompt=consent", discord_links.AuthorizeURL, os.Getenv("DISCORD_ID"), state, "http%3A%2F%2F127.0.0.1:3000/login/discord/callback")
+		result := fmt.Sprintf("%s?response_type=code&client_id=%s&scope=identify%%20email&state=%s&redirect_uri=%s&prompt=consent", utils.DiscordURLS.AuthorizeURL, os.Getenv("DISCORD_ID"), state, "http%3A%2F%2F127.0.0.1:3000/login/discord/callback")
 
 		return c.Redirect(result)
 	}
@@ -48,11 +40,11 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	case "discord":
 		code := c.Query("code")
 		utils.CheckStateAndCSRF(c, code)
-		status, body, err := utils.GetDiscordAccessToken(code, discord_links)
+		status, body, err := utils.GetDiscordAccessToken(code)
 		if err != nil {
 			return fmt.Errorf("error getting discord access token: %s", err)
 		}
-		discordTokenResp, err := utils.GetDiscordUserInfo(status, body, discord_links)
+		discordTokenResp, err := utils.GetDiscordUserInfo(status, body)
 		if err != nil {
 			return fmt.Errorf("error getting user info: %s", err)
 		}

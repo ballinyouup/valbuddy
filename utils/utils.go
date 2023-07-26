@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -37,12 +38,19 @@ type DiscordLinks struct {
 	UserInfoURL    string
 }
 
-func GetDiscordAccessToken(code string, discord_links DiscordLinks) (int, []byte, error) {
+var DiscordURLS = DiscordLinks{
+	AccessTokenURL: "https://discord.com/api/oauth2/token",
+	AuthorizeURL:   "https://discord.com/oauth2/authorize",
+	RedirectURI:    "http://127.0.0.1:3000/login/discord/callback",
+	UserInfoURL:    "https://discord.com/api/v10/users/@me",
+}
+
+func GetDiscordAccessToken(code string) (int, []byte, error) {
 	// Create Agent and Add URI/Headers to Request
 	a := fiber.AcquireAgent()
 	req := a.Request()
 	req.Header.SetMethod("POST")
-	req.SetRequestURI(discord_links.AccessTokenURL)
+	req.SetRequestURI(DiscordURLS.AccessTokenURL)
 	req.Header.SetContentType("application/x-www-form-urlencoded")
 
 	// Add Form Arguments to the Request
@@ -51,7 +59,7 @@ func GetDiscordAccessToken(code string, discord_links DiscordLinks) (int, []byte
 	args.Add("client_secret", os.Getenv("DISCORD_SECRET"))
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-	args.Add("redirect_uri", discord_links.RedirectURI)
+	args.Add("redirect_uri", DiscordURLS.RedirectURI)
 	a.Form(args)
 	defer fiber.ReleaseArgs(args)
 
@@ -79,43 +87,71 @@ type DiscordResponse struct {
 	Scope        string `json:"scope"`
 }
 
-type DiscordTokenResponse struct {
-	Status   int    `json:"status"`
-	Id       string `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
+type DiscordUserResponse struct {
+	Status           int     `json:"status"`
+	ID               string  `json:"id"`
+	Username         string  `json:"username"`
+	Discriminator    string  `json:"discriminator"`
+	GlobalName       string  `json:"global_name,omitempty"`
+	Avatar           string  `json:"avatar,omitempty"`
+	Bot              bool    `json:"bot,omitempty"`
+	System           bool    `json:"system,omitempty"`
+	MFAEnabled       bool    `json:"mfa_enabled,omitempty"`
+	Banner           string  `json:"banner,omitempty"`
+	AccentColor      *int    `json:"accent_color,omitempty"`
+	Locale           string  `json:"locale,omitempty"`
+	Verified         bool    `json:"verified,omitempty"`
+	Email            *string `json:"email,omitempty"`
+	Flags            *int    `json:"flags,omitempty"`
+	PremiumType      *int    `json:"premium_type,omitempty"`
+	PublicFlags      *int    `json:"public_flags,omitempty"`
+	AvatarDecoration string  `json:"avatar_decoration,omitempty"`
 }
 
-func GetDiscordUserInfo(status int, body []byte, discord_links DiscordLinks) (DiscordTokenResponse, error) {
+func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	// Create and Convert Response to JSON to check for errors
 	var discordResp DiscordResponse
 	discordResp.Status = status
 	if err := json.Unmarshal(body, &discordResp); err != nil {
 		fmt.Println("Error during discordResp json unmarshal:", err)
-		return DiscordTokenResponse{}, err
+		return DiscordUserResponse{}, err
 	}
 	access_token := discordResp.AccessToken
 	token_agent := fiber.AcquireAgent()
 	token_req := token_agent.Request()
-	token_req.SetRequestURI(discord_links.UserInfoURL)
+	token_req.SetRequestURI(DiscordURLS.UserInfoURL)
 	token_req.Header.SetMethod("GET")
 	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
 	if token_err := token_agent.Parse(); token_err != nil {
 		fmt.Println("Error parsing token agent:", token_err)
-		return DiscordTokenResponse{}, token_err
+		return DiscordUserResponse{}, token_err
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
 	token_status, token_body, token_err := token_agent.Bytes()
 	if token_err != nil {
-		return DiscordTokenResponse{}, fmt.Errorf("error reading token agent bytes: %s", token_err)
+		return DiscordUserResponse{}, fmt.Errorf("error reading token agent bytes: %s", token_err)
 	}
 	// Release the Agent After We Used it
 	defer fiber.ReleaseAgent(token_agent)
-	var discordTokenResp DiscordTokenResponse
+	var discordTokenResp DiscordUserResponse
 	discordTokenResp.Status = token_status
 	if token_err := json.Unmarshal(token_body, &discordTokenResp); token_err != nil {
 		fmt.Println("Error during token json unmarshal:", token_err)
-		return DiscordTokenResponse{}, token_err
+		return DiscordUserResponse{}, token_err
 	}
+
+	// Format Avatar String for Default/Profile Images
+	if discordTokenResp.Avatar == "" {
+		user_id, err := strconv.Atoi(discordTokenResp.ID)
+		if err != nil {
+			fmt.Println("Error Converting to String:", err)
+			return DiscordUserResponse{}, err
+		}
+		shardIndex := (user_id >> 22) % 6
+		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/embed/avatars/%d.png", shardIndex)
+	} else {
+		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/avatars/%s/%s.png", discordTokenResp.ID, discordTokenResp.Avatar)
+	}
+
 	return discordTokenResp, nil
 }
