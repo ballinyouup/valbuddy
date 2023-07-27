@@ -5,10 +5,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	r "math/rand"
+	database "nextjs-go/db"
+	"nextjs-go/models"
 	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/lucsky/cuid"
 )
 
 func GenerateState() (string, error) {
@@ -20,6 +24,16 @@ func GenerateState() (string, error) {
 	}
 	stateString := base64.RawURLEncoding.EncodeToString(stateBytes) // Convert the random bytes to a base64-encoded string (URL-safe)
 	return stateString, nil
+}
+
+func GenerateCSRFToken() string {
+	// Generate a random string as the CSRF token
+	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]byte, 32)
+	for i := range b {
+		b[i] = letterBytes[r.Intn(len(letterBytes))]
+	}
+	return string(b)
 }
 
 func CheckStateAndCSRF(c *fiber.Ctx, code string) error {
@@ -154,4 +168,36 @@ func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	}
 
 	return discordTokenResp, nil
+}
+
+func CreateUser(c *fiber.Ctx, discordTokenResp DiscordUserResponse) (models.User, error) {
+	db := database.Init()
+	if db == nil {
+		fmt.Printf("Error initializing database")
+	}
+	fmt.Printf("Database Initialized\n")
+
+	err := db.Find(&models.User{}, "email = ?", discordTokenResp.Email)
+	if err != nil {
+		// User does not exist, proceed with user creation
+		newUser := &models.User{
+			UserID:   cuid.New(),
+			Email:    *discordTokenResp.Email,
+			Username: discordTokenResp.Username,
+			Role:     "free",
+			Image:    discordTokenResp.Avatar,
+		}
+
+		// Create the user record in the database
+		db.Create(newUser)
+		fmt.Printf("New User Created\n")
+
+		timeLayout := "2006-01-02 15:04:05"
+		fmt.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s\n",
+			newUser.UserID, string(newUser.CreatedAt.Format(timeLayout)), newUser.Email, newUser.Role, newUser.Username, newUser.Image)
+
+		// Return the newly created user in the JSON response
+		return *newUser, nil
+	}
+	return models.User{}, c.SendString("User Already Exists!")
 }

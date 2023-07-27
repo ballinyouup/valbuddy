@@ -4,13 +4,10 @@ import (
 	"fmt"
 	"log"
 	"nextjs-go/auth"
-	database "nextjs-go/db"
-	"nextjs-go/models"
 	"os"
 
-	"github.com/lucsky/cuid"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 )
 
@@ -27,8 +24,8 @@ func HandleLogin(c *fiber.Ctx) error {
 			Name:     "oauth2_state",
 			Value:    state,
 			HTTPOnly: true,
-			SameSite: "Lax",
-			Secure:   false,
+			SameSite: "Strict",
+			Secure:   true,
 		})
 
 		// Redirect the user to the OAuth2 service for authorization
@@ -51,7 +48,11 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		if err != nil {
 			return fmt.Errorf("error getting user info: %s", err)
 		}
-		return c.JSON(discordTokenResp)
+		user, err := auth.CreateUser(c, discordTokenResp)
+		if err != nil {
+			return err
+		}
+		return c.JSON(user)
 	case "google":
 		return nil
 	default:
@@ -59,51 +60,17 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	}
 }
 
-// app.Use(cors.New()) // CORS
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file:", err)
 	}
-
 	app := fiber.New()
 
+	app.Use(logger.New())
 	// App Routes
 	app.Get("/", func(c *fiber.Ctx) error {
-		db := database.Init()
-		if db == nil {
-			fmt.Printf("Error initializing database")
-		}
-		fmt.Printf("Database Initialized\n")
-		rand_string, str_err := auth.GenerateState()
-		if str_err != nil {
-			return err
-		}
-		// Manually set CreatedAt field before creating the record
-		newUser := &models.User{
-			UserID:   cuid.New(),
-			Email:    "test@test.com" + rand_string,
-			Username: "user1" + rand_string,
-			Role:     "free" + rand_string,
-			Image:    "http://example.com/image" + rand_string,
-		}
-
-		// Create the user record in the database
-		db.Create(newUser)
-		fmt.Printf("New User Created\n")
-
-		timeLayout := "2006-01-02 15:04:05"
-		fmt.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s\n",
-			newUser.UserID, string(newUser.CreatedAt.Format(timeLayout)), newUser.Email, newUser.Role, newUser.Username, newUser.Image)
-
-		getUsers := []models.User{}
-		err := db.Find(&getUsers)
-		if err.Error != nil {
-			fmt.Printf("Error retrieving user: %s\n", err.Error)
-			return err.Error
-		}
-
-		return c.JSON(getUsers)
+		return c.JSON(fiber.Map{"Welcome": "User"})
 	})
 	app.Get("/login/:provider", HandleLogin)
 	app.Get("/login/:provider/callback", HandleProviderCallback)
