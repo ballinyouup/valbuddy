@@ -50,7 +50,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		}
 		user, err := auth.CreateUser(c, discordTokenResp)
 		if err != nil {
-			return fmt.Errorf("%s", err)
+			return err
 		}
 		return c.JSON(user)
 	case "google":
@@ -70,7 +70,7 @@ func main() {
 	app.Use(logger.New())
 	// App Routes
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{"Welcome": "User"})
+		return c.SendString("Welcome!")
 	})
 	app.Get("/login/:provider", HandleLogin)
 	app.Get("/login/:provider/callback", HandleProviderCallback)
