@@ -50,7 +50,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		}
 		user, err := auth.CreateUser(c, discordTokenResp)
 		if err != nil {
-			return err
+			return fmt.Errorf("%s", err)
 		}
 		return c.JSON(user)
 	case "google":

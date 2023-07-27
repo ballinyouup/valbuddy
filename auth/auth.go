@@ -176,9 +176,9 @@ func CreateUser(c *fiber.Ctx, discordTokenResp DiscordUserResponse) (models.User
 		fmt.Printf("Error initializing database")
 	}
 	fmt.Printf("Database Initialized\n")
-
-	err := db.Find(&models.User{}, "email = ?", discordTokenResp.Email)
-	if err != nil {
+	existingUser := models.User{}
+	db.Find(&existingUser, "email = ?", discordTokenResp.Email)
+	if existingUser.UserID == "" {
 		// User does not exist, proceed with user creation
 		newUser := &models.User{
 			UserID:   cuid.New(),
@@ -199,5 +199,5 @@ func CreateUser(c *fiber.Ctx, discordTokenResp DiscordUserResponse) (models.User
 		// Return the newly created user in the JSON response
 		return *newUser, nil
 	}
-	return models.User{}, c.SendString("User Already Exists!")
+	return models.User{}, fiber.NewError(401, "User Already Exists!")
 }
