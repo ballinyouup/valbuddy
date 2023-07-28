@@ -3,9 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/url"
-	"nextjs-go/auth"
-	"nextjs-go/db"
 	"os"
+	"sveltekit-go/auth"
+	"sveltekit-go/db"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -21,7 +21,7 @@ type OAuth2Config struct {
 }
 
 func FormatAuthURL(config OAuth2Config) string {
-	redirectURI := url.QueryEscape(config.RedirectURI)
+	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", os.Getenv("BASE_URL"), config.RedirectURI))
 	scope := url.QueryEscape(config.Scope)
 	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&prompt=%s",
 		config.AuthorizeURL,
@@ -55,7 +55,7 @@ func HandleLogin(c *fiber.Ctx) error {
 			ClientID:     os.Getenv("DISCORD_ID"),
 			Scope:        "identify email",
 			State:        state,
-			RedirectURI:  "http://127.0.0.1:3000/login/discord/callback",
+			RedirectURI:  "/login/discord/callback",
 			Prompt:       "consent",
 		}
 

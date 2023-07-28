@@ -12,7 +12,7 @@ import (
 var DiscordURLS = DiscordLinks{
 	AccessTokenURL: "https://discord.com/api/oauth2/token",
 	AuthorizeURL:   "https://discord.com/oauth2/authorize",
-	RedirectURI:    "http://127.0.0.1:3000/login/discord/callback",
+	RedirectURI:    "/login/discord/callback",
 	UserInfoURL:    "https://discord.com/api/v10/users/@me",
 }
 
@@ -30,7 +30,7 @@ func GetDiscordAccessToken(code string) (int, []byte, error) {
 	args.Add("client_secret", os.Getenv("DISCORD_SECRET"))
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-	args.Add("redirect_uri", DiscordURLS.RedirectURI)
+	args.Add("redirect_uri", fmt.Sprintf("%s%s", os.Getenv("BASE_URL"), DiscordURLS.RedirectURI))
 	a.Form(args)
 	defer fiber.ReleaseArgs(args)
 
@@ -74,8 +74,8 @@ func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	var discordTokenResp DiscordUserResponse
 	discordTokenResp.Status = token_status
 	if token_err := json.Unmarshal(token_body, &discordTokenResp); token_err != nil {
-		
-		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError,"Error during token json unmarshal")
+
+		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error during token json unmarshal")
 	}
 	CreateDiscordAvatar(&discordTokenResp)
 	return discordTokenResp, nil
@@ -86,7 +86,7 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	if discordTokenResp.Avatar == "" {
 		user_id, err := strconv.Atoi(discordTokenResp.ID)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError,"Error Converting to String")
+			return fiber.NewError(fiber.StatusInternalServerError, "Error Converting to String")
 		}
 		shardIndex := (user_id >> 22) % 6
 		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/embed/avatars/%d.png", shardIndex)
@@ -95,5 +95,3 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	}
 	return nil
 }
-
-

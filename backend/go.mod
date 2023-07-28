@@ -1,4 +1,4 @@
-module nextjs-go
+module sveltekit-go
 
 go 1.20
 
