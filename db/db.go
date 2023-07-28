@@ -1,17 +1,18 @@
 package db
 
 import (
-	_ "fmt"
 	"log"
 	"nextjs-go/models"
 	"os"
+	"fmt"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"github.com/gofiber/fiber/v2"
+	"github.com/lucsky/cuid"
 )
 
 func Init() (*gorm.DB) {
-	//dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"), os.Getenv("DB_SSL"), os.Getenv("DB_TIMEZONE"))
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
@@ -19,4 +20,34 @@ func Init() (*gorm.DB) {
 	db.AutoMigrate(&models.User{})
 	
 	return db
+}
+
+func CreateUser(c *fiber.Ctx, discordTokenResp models.DiscordUserResponse) (models.User, error) {
+	db := Init()
+	
+	fmt.Printf("Database Initialized\n")
+	existingUser := models.User{}
+	db.Find(&existingUser, "email = ?", discordTokenResp.Email)
+	if existingUser.UserID == "" {
+		// User does not exist, proceed with user creation
+		newUser := &models.User{
+			UserID:   cuid.New(),
+			Email:    *discordTokenResp.Email,
+			Username: discordTokenResp.Username,
+			Role:     "free",
+			Image:    discordTokenResp.Avatar,
+		}
+
+		// Create the user record in the database
+		db.Create(newUser)
+		fmt.Printf("New User Created\n")
+
+		timeLayout := "2006-01-02 15:04:05"
+		fmt.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s\n",
+			newUser.UserID, string(newUser.CreatedAt.Format(timeLayout)), newUser.Email, newUser.Role, newUser.Username, newUser.Image)
+
+		// Return the newly created user in the JSON response
+		return *newUser, nil
+	}
+	return models.User{}, fiber.NewError(401, "User Already Exists!")
 }
