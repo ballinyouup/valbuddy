@@ -3,15 +3,13 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"nextjs-go/models"
 	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	
 )
 
-var DiscordURLS = models.DiscordLinks{
+var DiscordURLS = DiscordLinks{
 	AccessTokenURL: "https://discord.com/api/oauth2/token",
 	AuthorizeURL:   "https://discord.com/oauth2/authorize",
 	RedirectURI:    "http://127.0.0.1:3000/login/discord/callback",
@@ -38,26 +36,24 @@ func GetDiscordAccessToken(code string) (int, []byte, error) {
 
 	// Initialize Agent
 	if err := a.Parse(); err != nil {
-		fmt.Println("Error parsing first API response:", err)
-		return 0, nil, err
+		return 0, nil, fiber.NewError(fiber.StatusInternalServerError, "Error parsing first API response")
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
 	status, body, err := a.Bytes()
 	if err != nil {
-		return 0, nil, fmt.Errorf("error during first Bytes function call: %s", err)
+		return 0, nil, fiber.NewError(fiber.StatusInternalServerError, "Error during First Body Call")
 	}
 	// Release the Agent After We Used it
 	defer fiber.ReleaseAgent(a)
 	return status, body, nil
 }
 
-func GetDiscordUserInfo(status int, body []byte) (models.DiscordUserResponse, error) {
+func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	// Create and Convert Response to JSON to check for errors
-	var discordResp models.DiscordResponse
+	var discordResp DiscordResponse
 	discordResp.Status = status
 	if err := json.Unmarshal(body, &discordResp); err != nil {
-		fmt.Println("Error during discordResp json unmarshal:", err)
-		return models.DiscordUserResponse{}, err
+		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error during discordResp json unmarshal")
 	}
 	access_token := discordResp.AccessToken
 	token_agent := fiber.AcquireAgent()
@@ -66,37 +62,38 @@ func GetDiscordUserInfo(status int, body []byte) (models.DiscordUserResponse, er
 	token_req.Header.SetMethod("GET")
 	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
 	if token_err := token_agent.Parse(); token_err != nil {
-		fmt.Println("Error parsing token agent:", token_err)
-		return models.DiscordUserResponse{}, token_err
+		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error parsing token agent")
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
 	token_status, token_body, token_err := token_agent.Bytes()
 	if token_err != nil {
-		return models.DiscordUserResponse{}, fmt.Errorf("error reading token agent bytes: %s", token_err)
+		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error reading token bytes")
 	}
 	// Release the Agent After We Used it
 	defer fiber.ReleaseAgent(token_agent)
-	var discordTokenResp models.DiscordUserResponse
+	var discordTokenResp DiscordUserResponse
 	discordTokenResp.Status = token_status
 	if token_err := json.Unmarshal(token_body, &discordTokenResp); token_err != nil {
-		fmt.Println("Error during token json unmarshal:", token_err)
-		return models.DiscordUserResponse{}, token_err
+		
+		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError,"Error during token json unmarshal")
 	}
+	CreateDiscordAvatar(&discordTokenResp)
+	return discordTokenResp, nil
+}
 
-	// Format Avatar String for Default/Profile Images
+// Add & Format Avatar String for Default/Profile Images
+func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	if discordTokenResp.Avatar == "" {
 		user_id, err := strconv.Atoi(discordTokenResp.ID)
 		if err != nil {
-			fmt.Println("Error Converting to String:", err)
-			return models.DiscordUserResponse{}, err
+			return fiber.NewError(fiber.StatusInternalServerError,"Error Converting to String")
 		}
 		shardIndex := (user_id >> 22) % 6
 		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/embed/avatars/%d.png", shardIndex)
 	} else {
 		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/avatars/%s/%s.png", discordTokenResp.ID, discordTokenResp.Avatar)
 	}
-
-	return discordTokenResp, nil
+	return nil
 }
 
 

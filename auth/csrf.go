@@ -3,31 +3,18 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/base64"
-	r "math/rand"
 
 	"github.com/gofiber/fiber/v2"
 	
 )
 
-func GenerateState() (string, error) {
-	stateLength := 8
-	stateBytes := make([]byte, stateLength) // Create a buffer to store the random bytes
-	_, err := rand.Read(stateBytes)         // Fill the buffer with random bytes
+func GenerateRandomString(stateLength int) (string, error) {
+	stateBytes := make([]byte, stateLength)
+	_, err := rand.Read(stateBytes)
 	if err != nil {
-		return "", err
+		return "", fiber.NewError(fiber.StatusInternalServerError, "Error Creating Random String")
 	}
-	stateString := base64.RawURLEncoding.EncodeToString(stateBytes) // Convert the random bytes to a base64-encoded string (URL-safe)
-	return stateString, nil
-}
-
-func GenerateCSRFToken() string {
-	// Generate a random string as the CSRF token
-	const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	b := make([]byte, 32)
-	for i := range b {
-		b[i] = letterBytes[r.Intn(len(letterBytes))]
-	}
-	return string(b)
+	return base64.RawURLEncoding.EncodeToString(stateBytes), nil
 }
 
 func CheckStateAndCSRF(c *fiber.Ctx, code string) error {

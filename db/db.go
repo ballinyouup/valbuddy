@@ -2,7 +2,7 @@ package db
 
 import (
 	"log"
-	"nextjs-go/models"
+	"nextjs-go/auth"
 	"os"
 	"fmt"
 
@@ -17,20 +17,20 @@ func Init() (*gorm.DB) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&User{})
 	
 	return db
 }
 
-func CreateUser(c *fiber.Ctx, discordTokenResp models.DiscordUserResponse) (models.User, error) {
+func CreateUser(c *fiber.Ctx, discordTokenResp auth.DiscordUserResponse) (User, error) {
 	db := Init()
 	
 	fmt.Printf("Database Initialized\n")
-	existingUser := models.User{}
+	existingUser := User{}
 	db.Find(&existingUser, "email = ?", discordTokenResp.Email)
 	if existingUser.UserID == "" {
 		// User does not exist, proceed with user creation
-		newUser := &models.User{
+		newUser := &User{
 			UserID:   cuid.New(),
 			Email:    *discordTokenResp.Email,
 			Username: discordTokenResp.Username,
@@ -49,5 +49,5 @@ func CreateUser(c *fiber.Ctx, discordTokenResp models.DiscordUserResponse) (mode
 		// Return the newly created user in the JSON response
 		return *newUser, nil
 	}
-	return models.User{}, fiber.NewError(401, "User Already Exists!")
+	return User{}, fiber.NewError(401, "User Already Exists!")
 }
