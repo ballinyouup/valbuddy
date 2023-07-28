@@ -79,7 +79,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-		user, err := db.CreateUser(c, discordTokenResp)
+		user, err := db.CreateUser(c, *discordTokenResp.Email, discordTokenResp.Username, "free", discordTokenResp.Avatar, "discord")
 		if err != nil {
 			return err
 		}
