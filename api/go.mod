@@ -3,8 +3,9 @@ module sveltekit-go
 go 1.20
 
 require (
+	github.com/aws/aws-lambda-go v1.41.0
+	github.com/awslabs/aws-lambda-go-api-proxy v0.13.3
 	github.com/gofiber/fiber/v2 v2.48.0
-	github.com/joho/godotenv v1.5.1
 	github.com/lucsky/cuid v1.2.1
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.2

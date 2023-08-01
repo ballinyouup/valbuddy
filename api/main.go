@@ -1,27 +1,35 @@
 package main
 
 import (
-	"log"
+	"context"
 	"sveltekit-go/routes"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/joho/godotenv"
 )
 
-func main() {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		fiber.NewError(fiber.StatusInternalServerError, "Error loading .env file:")
-	}
+var fiberLambda *fiberadapter.FiberLambda
+
+func init() {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
+	app.Use(cors.New(cors.ConfigDefault))
 	// App Routes
 	routes.Home(app)
 	routes.Login(app)
+	fiberLambda = fiberadapter.New(app)
+}
 
-	// App Port
-	log.Fatal(app.Listen(":3000"))
+func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return fiberLambda.ProxyWithContext(ctx, req)
+}
+
+func main() {
+	lambda.Start(Handler)
 }
