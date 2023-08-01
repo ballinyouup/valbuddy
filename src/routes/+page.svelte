@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	
+</script>
+
+<a href="https://eap6uv9is7.execute-api.us-east-1.amazonaws.com/production/login/discord">Discord</a>
