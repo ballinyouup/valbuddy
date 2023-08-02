@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 	"log"
-	"os"
+	"sveltekit-go/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/lucsky/cuid"
@@ -12,7 +12,7 @@ import (
 )
 
 func Init() *gorm.DB {
-	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
 	}

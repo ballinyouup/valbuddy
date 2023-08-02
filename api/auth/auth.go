@@ -3,9 +3,9 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"os"
-	"strconv"
 
+	"strconv"
+	"sveltekit-go/config"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -26,11 +26,12 @@ func GetDiscordAccessToken(code string) (int, []byte, error) {
 
 	// Add Form Arguments to the Request
 	args := fiber.AcquireArgs()
-	args.Add("client_id", os.Getenv("DISCORD_ID"))
-	args.Add("client_secret", os.Getenv("DISCORD_SECRET"))
+	args.Add("client_id", config.Env.DISCORD_ID)
+	args.Add("client_secret", config.Env.DISCORD_SECRET)
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-	args.Add("redirect_uri", fmt.Sprintf("%s%s", os.Getenv("BASE_URL"), DiscordURLS.RedirectURI))
+	
+	args.Add("redirect_uri", fmt.Sprintf("%s%s", config.Env.API_URL, DiscordURLS.RedirectURI))
 	a.Form(args)
 	defer fiber.ReleaseArgs(args)
 

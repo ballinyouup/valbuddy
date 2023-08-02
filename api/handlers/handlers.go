@@ -3,8 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/url"
-	"os"
+
 	"sveltekit-go/auth"
+	"sveltekit-go/config"
 	"sveltekit-go/db"
 
 	"github.com/gofiber/fiber/v2"
@@ -20,17 +21,17 @@ type OAuth2Config struct {
 	Prompt       string
 }
 
-func FormatAuthURL(config OAuth2Config) string {
-	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", os.Getenv("BASE_URL"), config.RedirectURI))
-	scope := url.QueryEscape(config.Scope)
+func FormatAuthURL(oauth OAuth2Config) string {
+	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
+	scope := url.QueryEscape(oauth.Scope)
 	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&prompt=%s",
-		config.AuthorizeURL,
-		config.ResponseType,
-		config.ClientID,
+		oauth.AuthorizeURL,
+		oauth.ResponseType,
+		oauth.ClientID,
 		scope,
-		config.State,
+		oauth.State,
 		redirectURI,
-		config.Prompt,
+		oauth.Prompt,
 	)
 }
 
@@ -52,7 +53,7 @@ func HandleLogin(c *fiber.Ctx) error {
 		discordAuthConfig := OAuth2Config{
 			AuthorizeURL: auth.DiscordURLS.AuthorizeURL,
 			ResponseType: "code",
-			ClientID:     os.Getenv("DISCORD_ID"),
+			ClientID:     config.Env.DISCORD_ID,
 			Scope:        "identify email",
 			State:        state,
 			RedirectURI:  "/login/discord/callback",

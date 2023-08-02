@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"os"
+	"log"
+	"sveltekit-go/config"
 	"sveltekit-go/routes"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -29,7 +30,11 @@ func StartFiber() *fiber.App {
 }
 
 func init() {
-	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
+	_, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading configuration: %v", err)
+	}
+	if config.Env.IS_LAMBDA {
 		fiberLambda = fiberadapter.New(StartFiber())
 	}
 }
@@ -39,7 +44,7 @@ func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.API
 }
 
 func main() {
-	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
+	if config.Env.IS_LAMBDA {
 		lambda.Start(Handler)
 	} else {
 		StartFiber().Listen(":3000")
