@@ -84,7 +84,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 			return err
 		}
 		return c.JSON(user)
-	case "google":
+	case "twitch":
 		return nil
 	default:
 		return c.JSON(fiber.Map{"error": "Incorrect Provider"})
