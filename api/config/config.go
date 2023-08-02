@@ -12,7 +12,7 @@ type Config struct {
 	DISCORD_SECRET string
 	DATABASE_URL   string
 	API_URL        string
-	IS_LAMBDA         bool
+	IS_LAMBDA      bool
 	// Add more configuration variables here if needed
 }
 
@@ -20,10 +20,11 @@ var Env *Config
 
 // LoadConfig loads the configuration from the .env file
 func LoadConfig() (*Config, error) {
-	// Load the environment variables from the .env file
-	err := godotenv.Load("../.env")
-	if err != nil {
-		return nil, err
+	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") == "" {
+		err := godotenv.Load("../.env")
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var apiURL string
@@ -39,7 +40,7 @@ func LoadConfig() (*Config, error) {
 		DISCORD_SECRET: os.Getenv("DISCORD_SECRET"),
 		DATABASE_URL:   os.Getenv("DATABASE_URL"),
 		API_URL:        apiURL,
-		IS_LAMBDA:         os.Getenv("AWS_LAMBDA_URL") != "",
+		IS_LAMBDA:      os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
 		// Add more configuration variables here if needed
 	}
 
