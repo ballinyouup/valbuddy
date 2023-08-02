@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"sveltekit-go/routes"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -15,15 +16,22 @@ import (
 
 var fiberLambda *fiberadapter.FiberLambda
 
-func init() {
+func StartFiber() *fiber.App {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
 	app.Use(cors.New(cors.ConfigDefault))
+
 	// App Routes
 	routes.Home(app)
 	routes.Login(app)
-	fiberLambda = fiberadapter.New(app)
+	return app
+}
+
+func init() {
+	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
+		fiberLambda = fiberadapter.New(StartFiber())
+	}
 }
 
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -31,5 +39,9 @@ func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.API
 }
 
 func main() {
-	lambda.Start(Handler)
+	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
+		lambda.Start(Handler)
+	} else {
+		StartFiber().Listen(":3000")
+	}
 }
