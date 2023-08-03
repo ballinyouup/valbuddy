@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"log"
+	"strings"
 	"sveltekit-go/config"
 
 	"github.com/go-playground/validator/v10"
@@ -15,14 +16,18 @@ import (
 var validate *validator.Validate
 var db *gorm.DB
 
-func Init() {
+func Init() error {
 	validate = validator.New()
 	var err error
 	db, err = gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
 	if err != nil {
-		log.Fatalln(err)
+		return fmt.Errorf("database init > error initializing database: %w", err)
 	}
-	db.AutoMigrate(&User{})
+	err = db.AutoMigrate(&User{})
+	if err != nil {
+		return fmt.Errorf("database init > error during auto migration: %w", err)
+	}
+	return nil
 }
 
 func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) error {
@@ -45,8 +50,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 			for _, err := range err.(validator.ValidationErrors) {
 				validationErrors = append(validationErrors, fmt.Sprintf("%s validation failed for field %s", err.Tag(), err.Field()))
 			}
-			log.Printf("New User Failed Validation: %s", validationErrors)
-			return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("New User Failed Validation: %s", validationErrors))
+			return fmt.Errorf("new user failed validation: %s", strings.Join(validationErrors, ", "))
 		}
 		// Create the user record in the database
 		db.Create(newUser)

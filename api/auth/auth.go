@@ -6,6 +6,7 @@ import (
 
 	"strconv"
 	"sveltekit-go/config"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -30,19 +31,19 @@ func GetDiscordAccessToken(code string) (int, []byte, error) {
 	args.Add("client_secret", config.Env.DISCORD_SECRET)
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-	
+
 	args.Add("redirect_uri", fmt.Sprintf("%s%s", config.Env.API_URL, DiscordURLS.RedirectURI))
 	a.Form(args)
 	defer fiber.ReleaseArgs(args)
 
 	// Initialize Agent
 	if err := a.Parse(); err != nil {
-		return 0, nil, fiber.NewError(fiber.StatusInternalServerError, "Error parsing first API response")
+		return 0, nil, fmt.Errorf("GetDiscordAccessToken > Error making POST Request: %w", err)
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
 	status, body, err := a.Bytes()
 	if err != nil {
-		return 0, nil, fiber.NewError(fiber.StatusInternalServerError, "Error during First Body Call")
+		return 0, nil, fmt.Errorf("GetDiscordAccessToken > Error extracting Status, Body, and Error: %w", err[0])
 	}
 	// Release the Agent After We Used it
 	defer fiber.ReleaseAgent(a)
@@ -54,7 +55,7 @@ func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	var discordResp DiscordResponse
 	discordResp.Status = status
 	if err := json.Unmarshal(body, &discordResp); err != nil {
-		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error during discordResp json unmarshal")
+		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error during JSON Unmarshal - DiscordResponse: %w", err)
 	}
 	access_token := discordResp.AccessToken
 	token_agent := fiber.AcquireAgent()
@@ -62,21 +63,21 @@ func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	token_req.SetRequestURI(DiscordURLS.UserInfoURL)
 	token_req.Header.SetMethod("GET")
 	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
-	if token_err := token_agent.Parse(); token_err != nil {
-		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error parsing token agent")
+	if err := token_agent.Parse(); err != nil {
+		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error making GET Request: %w", err)
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
-	token_status, token_body, token_err := token_agent.Bytes()
-	if token_err != nil {
-		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error reading token bytes")
+	token_status, token_body, err := token_agent.Bytes()
+	if err != nil {
+		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error extracting Status, Body, and Error: %w", err[0])
 	}
 	// Release the Agent After We Used it
 	defer fiber.ReleaseAgent(token_agent)
 	var discordTokenResp DiscordUserResponse
 	discordTokenResp.Status = token_status
-	if token_err := json.Unmarshal(token_body, &discordTokenResp); token_err != nil {
+	if err := json.Unmarshal(token_body, &discordTokenResp); err != nil {
 
-		return DiscordUserResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Error during token json unmarshal")
+		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error during JSON Unmarshal - DiscordTokenResponse: %s", err)
 	}
 	CreateDiscordAvatar(&discordTokenResp)
 	return discordTokenResp, nil
@@ -87,7 +88,7 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	if discordTokenResp.Avatar == "" {
 		user_id, err := strconv.Atoi(discordTokenResp.ID)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, "Error Converting to String")
+			return fmt.Errorf("CreateDiscordAvatar > Error converting to string: %w", err)
 		}
 		shardIndex := (user_id >> 22) % 6
 		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/embed/avatars/%d.png", shardIndex)

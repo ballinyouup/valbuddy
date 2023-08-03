@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"sveltekit-go/config"
 	"sveltekit-go/db"
 	"sveltekit-go/routes"
@@ -17,6 +17,7 @@ import (
 )
 
 var fiberLambda *fiberadapter.FiberLambda
+var initError error
 
 func StartFiber() *fiber.App {
 	app := fiber.New()
@@ -31,10 +32,13 @@ func StartFiber() *fiber.App {
 }
 
 func init() {
-	_, err := config.LoadConfig()
-	db.Init()
+	err := db.Init()
 	if err != nil {
-		log.Fatalf("Error loading configuration: %v", err)
+		initError = fmt.Errorf("error initializing database: %w", err)
+	}
+	_, err = config.LoadConfig()
+	if err != nil {
+		initError = fmt.Errorf("error loading configuration: %w", err)
 	}
 	if config.Env.IS_LAMBDA {
 		fiberLambda = fiberadapter.New(StartFiber())
@@ -42,6 +46,9 @@ func init() {
 }
 
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	if initError != nil {
+		return events.APIGatewayProxyResponse{}, fiber.NewError(fiber.StatusInternalServerError, "init > %w", initError.Error())
+	}
 	return fiberLambda.ProxyWithContext(ctx, req)
 }
 

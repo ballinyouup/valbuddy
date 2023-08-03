@@ -38,7 +38,7 @@ func FormatAuthURL(oauth OAuth2Config) string {
 func HandleLogin(c *fiber.Ctx) error {
 	state, err := auth.GenerateRandomString(8)
 	if err != nil {
-		return err
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleLogin > %s", err))
 	}
 	if c.Params("provider") == "discord" {
 		// Set the state in a HTTP-only cookie
@@ -71,18 +71,21 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	switch c.Params("provider") {
 	case "discord":
 		code := c.Query("code")
-		auth.CheckStateAndCSRF(c)
+		err := auth.CheckStateAndCSRF(c)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		}
 		status, body, err := auth.GetDiscordAccessToken(code)
 		if err != nil {
-			return err
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 		}
 		discordTokenResp, err := auth.GetDiscordUserInfo(status, body)
 		if err != nil {
-			return err
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 		}
-		createErr := db.CreateUser(c, *discordTokenResp.Email, discordTokenResp.Username, "free", discordTokenResp.Avatar, "discord")
-		if createErr != nil {
-			return err
+		createUserErr := db.CreateUser(c, *discordTokenResp.Email, discordTokenResp.Username, "free", discordTokenResp.Avatar, "discord")
+		if createUserErr != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", createUserErr))
 		}
 		return c.Redirect("https://www.valbuddy.com")
 	case "twitch":
