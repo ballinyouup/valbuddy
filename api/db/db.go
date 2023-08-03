@@ -1,16 +1,21 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"sveltekit-go/config"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/lucsky/cuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+var validate *validator.Validate
+
 func Init() *gorm.DB {
+	validate = validator.New()
 	db, err := gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
@@ -20,7 +25,7 @@ func Init() *gorm.DB {
 	return db
 }
 
-func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) (User, error) {
+func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) error {
 	db := Init()
 
 	// Check if the user already exists in the database
@@ -36,18 +41,23 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 			Image:    image,
 			Provider: provider,
 		}
-
+		err := validate.Struct(newUser)
+		if err != nil {
+			var validationErrors []string
+			for _, err := range err.(validator.ValidationErrors) {
+				validationErrors = append(validationErrors, fmt.Sprintf("%s validation failed for field %s", err.Tag(), err.Field()))
+			}
+			log.Printf("New User Failed Validation: %s", validationErrors)
+			return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("New User Failed Validation: %s", validationErrors))
+		}
 		// Create the user record in the database
 		db.Create(newUser)
-		log.Printf("New User Created\n")
 
 		timeLayout := "2006-01-02 15:04:05"
 		log.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s, provider: %s\n",
 			newUser.UserID, string(newUser.CreatedAt.Format(timeLayout)), newUser.Email, newUser.Role, newUser.Username, newUser.Image, newUser.Provider)
 
-		// Return the newly created user in the JSON response
-		return *newUser, nil
+		return nil
 	}
-
-	return User{}, fiber.NewError(401, "User Already Exists!")
+	return nil
 }
