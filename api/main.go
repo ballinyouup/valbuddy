@@ -23,7 +23,10 @@ func StartFiber() *fiber.App {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://127.0.0.1:3000, https://api.valbuddy.com, https://www.valbuddy.com",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	// App Routes
 	routes.Home(app)

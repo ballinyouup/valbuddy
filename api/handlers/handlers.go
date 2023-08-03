@@ -46,7 +46,7 @@ func HandleLogin(c *fiber.Ctx) error {
 			Name:     "oauth2_state",
 			Value:    state,
 			HTTPOnly: true,
-			SameSite: "Strict",
+			SameSite: "Lax",
 			Secure:   true,
 		})
 
@@ -59,7 +59,6 @@ func HandleLogin(c *fiber.Ctx) error {
 			RedirectURI:  "/login/discord/callback",
 			Prompt:       "consent",
 		}
-
 		// Redirect the user to the OAuth2 service for authorization
 		result := FormatAuthURL(discordAuthConfig)
 		return c.Redirect(result)
