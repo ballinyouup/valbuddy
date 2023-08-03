@@ -23,7 +23,7 @@ func StartFiber() *fiber.App {
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
-	app.Use(cors.New(cors.ConfigDefault))
+	app.Use(cors.New())
 
 	// App Routes
 	routes.Home(app)
@@ -32,13 +32,11 @@ func StartFiber() *fiber.App {
 }
 
 func init() {
-	err := db.Init()
-	if err != nil {
-		initError = fmt.Errorf("error initializing database: %w", err)
-	}
-	_, err = config.LoadConfig()
-	if err != nil {
+	if _, err := config.LoadConfig(); err != nil {
 		initError = fmt.Errorf("error loading configuration: %w", err)
+	}
+	if err := db.Init(); err != nil {
+		initError = fmt.Errorf("error initializing database: %w", err)
 	}
 	if config.Env.IS_LAMBDA {
 		fiberLambda = fiberadapter.New(StartFiber())
