@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 
 	"github.com/gofiber/fiber/v2"
-	
 )
 
 func GenerateRandomString(stateLength int) (string, error) {
@@ -17,9 +16,9 @@ func GenerateRandomString(stateLength int) (string, error) {
 	return base64.RawURLEncoding.EncodeToString(stateBytes), nil
 }
 
-func CheckStateAndCSRF(c *fiber.Ctx, code string) error {
-	stateFromCookie := c.Cookies("oauth2_state")                                    // Retrieve the state value from the HTTP-only cookie in the request
-	if code == "" || stateFromCookie == "" || c.Query("state") != stateFromCookie { // Validate the state received in the callback against the one from the cookie
+func CheckStateAndCSRF(c *fiber.Ctx) error {
+	stateFromCookie := c.Cookies("oauth2_state")                      // Retrieve the state value from the HTTP-only cookie in the request
+	if stateFromCookie == "" || c.Query("state") != stateFromCookie { // Validate the state received in the callback against the one from the cookie
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid state parameter") // Invalid state parameter, deny the request
 	}
 	c.ClearCookie("oauth2_state") // Clear the OAuth2 state cookie after it has been validated

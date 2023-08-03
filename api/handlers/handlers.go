@@ -71,7 +71,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	switch c.Params("provider") {
 	case "discord":
 		code := c.Query("code")
-		auth.CheckStateAndCSRF(c, code)
+		auth.CheckStateAndCSRF(c)
 		status, body, err := auth.GetDiscordAccessToken(code)
 		if err != nil {
 			return err

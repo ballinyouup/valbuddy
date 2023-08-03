@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"log"
 	"sveltekit-go/config"
 
@@ -40,10 +39,10 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 
 		// Create the user record in the database
 		db.Create(newUser)
-		fmt.Printf("New User Created\n")
+		log.Printf("New User Created\n")
 
 		timeLayout := "2006-01-02 15:04:05"
-		fmt.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s, provider: %s\n",
+		log.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s, provider: %s\n",
 			newUser.UserID, string(newUser.CreatedAt.Format(timeLayout)), newUser.Email, newUser.Role, newUser.Username, newUser.Image, newUser.Provider)
 
 		// Return the newly created user in the JSON response
