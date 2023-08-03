@@ -13,6 +13,7 @@ import (
 )
 
 var validate *validator.Validate
+var db *gorm.DB
 
 func Init() *gorm.DB {
 	validate = validator.New()
@@ -21,13 +22,10 @@ func Init() *gorm.DB {
 		log.Fatalln(err)
 	}
 	db.AutoMigrate(&User{})
-
 	return db
 }
 
 func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) error {
-	db := Init()
-
 	// Check if the user already exists in the database
 	existingUser := User{}
 	db.Find(&existingUser, "email = ?", email)
