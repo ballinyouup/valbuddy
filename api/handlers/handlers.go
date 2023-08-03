@@ -84,7 +84,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		if createErr != nil {
 			return err
 		}
-		return c.Redirect("https://api.valbuddy.com")
+		return c.Redirect("https://www.valbuddy.com")
 	case "twitch":
 		return nil
 	default:
