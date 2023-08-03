@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"sveltekit-go/config"
+	"sveltekit-go/db"
 	"sveltekit-go/routes"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -18,6 +19,7 @@ import (
 var fiberLambda *fiberadapter.FiberLambda
 
 func StartFiber() *fiber.App {
+	db.Init()
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
