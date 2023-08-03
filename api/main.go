@@ -19,7 +19,6 @@ import (
 var fiberLambda *fiberadapter.FiberLambda
 
 func StartFiber() *fiber.App {
-	db.Init()
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
@@ -33,6 +32,7 @@ func StartFiber() *fiber.App {
 
 func init() {
 	_, err := config.LoadConfig()
+	db.Init()
 	if err != nil {
 		log.Fatalf("Error loading configuration: %v", err)
 	}

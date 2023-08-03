@@ -15,14 +15,14 @@ import (
 var validate *validator.Validate
 var db *gorm.DB
 
-func Init() *gorm.DB {
+func Init() {
 	validate = validator.New()
-	db, err := gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
 	}
 	db.AutoMigrate(&User{})
-	return db
 }
 
 func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) error {
