@@ -2,4 +2,6 @@
 	
 </script>
 
-<a href="https://api.valbuddy.com/login/discord">Discord</a>
+<p>Welcome</p>
+<a href="/login">Login</a>
+
