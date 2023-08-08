@@ -1,5 +1,5 @@
 <script lang="ts">
-	
+	import { Config } from "../../env";
 </script>
 
-<a href="https://api.valbuddy.com/login/discord">Discord</a>
+<a href={`${Config.API_URL}/login/discord`}>Discord</a>
