@@ -24,8 +24,9 @@ func StartFiber() *fiber.App {
 	app.Use(logger.New())
 	app.Use(recover.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://127.0.0.1:3000, https://api.valbuddy.com, https://www.valbuddy.com",
-		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowOrigins:     fmt.Sprintf("%s, %s", config.Env.API_URL, config.Env.FRONTEND_URL),
+		AllowHeaders:     "Origin, Content-Type, Accept",
+		AllowCredentials: true,
 	}))
 
 	// App Routes
