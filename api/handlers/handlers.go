@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"time"
 
-	"sveltekit-go/auth"
-	"sveltekit-go/config"
-	"sveltekit-go/db"
+	"nextjs-go/auth"
+	"nextjs-go/config"
+	"nextjs-go/db"
 
 	"github.com/gofiber/fiber/v2"
 )

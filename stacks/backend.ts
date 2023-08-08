@@ -1,7 +1,7 @@
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 import { ApiGatewayV1Api, Function } from "sst/constructs";
 
-export default function Backend({ stack }) {
+export default function Backend({ stack }: any) {
     const lambdaFunc = new Function(stack, "goLambda", {
         handler: "./api/main.go",
         runtime: "go1.x",

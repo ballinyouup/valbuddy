@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"sveltekit-go/config"
+	"nextjs-go/config"
 	"time"
 
 	"github.com/go-playground/validator/v10"

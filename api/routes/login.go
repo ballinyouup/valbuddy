@@ -1,7 +1,7 @@
 package routes
 import (
 	"github.com/gofiber/fiber/v2"
-	"sveltekit-go/handlers"
+	"nextjs-go/handlers"
 )
 func Login(app *fiber.App)  {
 	app.Get("/login/:provider", handlers.HandleLogin)

@@ -1,7 +1,7 @@
-import { SvelteKitSite } from "sst/constructs";
+import { NextjsSite } from "sst/constructs";
 
-export default function Site({ stack }) {
-    const site = new SvelteKitSite(stack, "site");
+export default function Site({ stack }: any) {
+    const site = new NextjsSite(stack, "site");
     stack.addOutputs({
         url: site.url,
     });

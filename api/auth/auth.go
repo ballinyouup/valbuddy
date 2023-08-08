@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"nextjs-go/config"
 	"strconv"
-	"sveltekit-go/config"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,35 +18,31 @@ var DiscordURLS = DiscordLinks{
 }
 
 func GetDiscordAccessToken(code string) (int, []byte, error) {
-	// Create Agent and Add URI/Headers to Request
-	a := fiber.AcquireAgent()
+	a := fiber.AcquireAgent() // Create Agent and Add URI/Headers to Request
+	defer fiber.ReleaseAgent(a)
+
 	req := a.Request()
 	req.Header.SetMethod("POST")
 	req.SetRequestURI(DiscordURLS.AccessTokenURL)
 	req.Header.SetContentType("application/x-www-form-urlencoded")
 
-	// Add Form Arguments to the Request
-	args := fiber.AcquireArgs()
+	args := fiber.AcquireArgs() // Add Form Arguments to the Request
+	defer fiber.ReleaseArgs(args)
+
 	args.Add("client_id", config.Env.DISCORD_ID)
 	args.Add("client_secret", config.Env.DISCORD_SECRET)
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-
 	args.Add("redirect_uri", fmt.Sprintf("%s%s", config.Env.API_URL, DiscordURLS.RedirectURI))
 	a.Form(args)
-	defer fiber.ReleaseArgs(args)
 
-	// Initialize Agent
-	if err := a.Parse(); err != nil {
+	if err := a.Parse(); err != nil { // Initialize Agent
 		return 0, nil, fmt.Errorf("GetDiscordAccessToken > Error making POST Request: %w", err)
 	}
-	// Store Status, Body, and Err. Agent Cannot be used after
-	status, body, err := a.Bytes()
+	status, body, err := a.Bytes() // Store Status, Body, and Err. Agent Cannot be used after
 	if err != nil {
 		return 0, nil, fmt.Errorf("GetDiscordAccessToken > Error extracting Status, Body, and Error: %w", err[0])
 	}
-	// Release the Agent After We Used it
-	defer fiber.ReleaseAgent(a)
 	return status, body, nil
 }
 
@@ -59,6 +55,8 @@ func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	}
 	access_token := discordResp.AccessToken
 	token_agent := fiber.AcquireAgent()
+	defer fiber.ReleaseAgent(token_agent)
+
 	token_req := token_agent.Request()
 	token_req.SetRequestURI(DiscordURLS.UserInfoURL)
 	token_req.Header.SetMethod("GET")
@@ -71,8 +69,6 @@ func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	if err != nil {
 		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error extracting Status, Body, and Error: %w", err[0])
 	}
-	// Release the Agent After We Used it
-	defer fiber.ReleaseAgent(token_agent)
 	var discordTokenResp DiscordUserResponse
 	discordTokenResp.Status = token_status
 	if err := json.Unmarshal(token_body, &discordTokenResp); err != nil {

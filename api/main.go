@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"sveltekit-go/config"
-	"sveltekit-go/db"
-	"sveltekit-go/routes"
+	"nextjs-go/config"
+	"nextjs-go/db"
+	"nextjs-go/routes"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
