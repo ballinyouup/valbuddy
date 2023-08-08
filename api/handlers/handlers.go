@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/url"
+	"time"
 
 	"sveltekit-go/auth"
 	"sveltekit-go/config"
@@ -46,10 +48,12 @@ func HandleLogin(c *fiber.Ctx) error {
 			Name:     "oauth2_state",
 			Value:    state,
 			HTTPOnly: true,
-			SameSite: "Lax",
+			SameSite: "None",
 			Secure:   true,
+			Domain:   config.Env.COOKIE_DOMAIN,
+			Path:     "/",
 		})
-
+		c.Set("Access-Control-Allow-Origin", config.Env.FRONTEND_URL)
 		discordAuthConfig := OAuth2Config{
 			AuthorizeURL: auth.DiscordURLS.AuthorizeURL,
 			ResponseType: "code",
@@ -82,11 +86,33 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 		}
-		createUserErr := db.CreateUser(c, *discordTokenResp.Email, discordTokenResp.Username, "free", discordTokenResp.Avatar, "discord")
+		user, createUserErr := db.CreateOrLoginUser(c, *discordTokenResp.Email, discordTokenResp.Username, "free", discordTokenResp.Avatar, "discord")
 		if createUserErr != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", createUserErr))
 		}
-		return c.Redirect("https://www.valbuddy.com")
+		s, err := db.Sessions.Get(c)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		}
+		s.Destroy()
+		s.Set("user_id", user.UserID)
+		s.Set("session_id", s.ID())
+		s.SetExpiry(24 * time.Hour)
+
+		// After saving the session, fetch it again to get the updated data
+		err = s.Save()
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		}
+
+		// Fetch the session from storage to get the latest data
+		s, err = db.Sessions.Get(c)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		}
+
+		log.Println("userId: ", s.Get("user_id"), "sessionId: ", s.Get("session_id"))
+		return c.Redirect(config.Env.FRONTEND_URL)
 	case "twitch":
 		return nil
 	default:
