@@ -14,6 +14,8 @@ type Config struct {
 	DATABASE_URL   string
 	API_URL        string
 	IS_LAMBDA      bool
+	FRONTEND_URL   string
+	COOKIE_DOMAIN  string
 	// Add more configuration variables here if needed
 }
 
@@ -29,10 +31,16 @@ func LoadConfig() (*Config, error) {
 	}
 
 	var apiURL string
+	var frontendURL string
+	var cookieDomain string
 	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "" {
 		apiURL = os.Getenv("API_URL")
+		frontendURL = os.Getenv("FRONTEND_URL")
+		cookieDomain = os.Getenv("COOKIE_DOMAIN")
 	} else {
-		apiURL = "http://127.0.0.1:3000"
+		apiURL = "http://localhost:3000"
+		frontendURL = "http://localhost:5173"
+		cookieDomain = "localhost"
 	}
 
 	// Create a new Config instance and populate it with the environment variables
@@ -41,6 +49,8 @@ func LoadConfig() (*Config, error) {
 		DISCORD_SECRET: os.Getenv("DISCORD_SECRET"),
 		DATABASE_URL:   os.Getenv("DATABASE_URL"),
 		API_URL:        apiURL,
+		FRONTEND_URL:   frontendURL,
+		COOKIE_DOMAIN:  cookieDomain,
 		IS_LAMBDA:      os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
 		// Add more configuration variables here if needed
 	}
