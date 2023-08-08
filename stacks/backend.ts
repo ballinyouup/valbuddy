@@ -9,7 +9,9 @@ export default function Backend({ stack }) {
             DISCORD_ID: process.env.DISCORD_ID as string,
             DISCORD_SECRET: process.env.DISCORD_SECRET as string,
             DATABASE_URL: process.env.DATABASE_URL as string,
-            API_URL: process.env.API_URL as string
+            API_URL: process.env.API_URL as string,
+            FRONTEND_URL: process.env.FRONTEND_URL as string,
+            COOKIE_DOMAIN: process.env.COOKIE_DOMAIN as string
         }
     })
     new ApiGatewayV1Api(stack, "goApi", {
@@ -28,7 +30,7 @@ export default function Backend({ stack }) {
                     allowMethods: ["ANY"],
                 }
             },
-        }
+        },
     });
 
 }
