@@ -3,7 +3,6 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/url"
 	"nextjs-go/config"
 	"strconv"
@@ -53,7 +52,7 @@ func (oauth TwitchOAuth2Config) FormatAuthURL() string {
 	)
 }
 
-func GetDiscordAccessToken(code string) (DiscordResponse, error) {
+func (oauth DiscordOAuth2Config) GetAccessToken(code string) (interface{}, error) {
 	a := fiber.AcquireAgent() // Create Agent and Add URI/Headers to Request
 	defer fiber.ReleaseAgent(a)
 
@@ -88,7 +87,7 @@ func GetDiscordAccessToken(code string) (DiscordResponse, error) {
 	return discordResp, nil
 }
 
-func GetDiscordUserInfo(discordResp DiscordResponse) (DiscordUserResponse, error) {
+func (oauth DiscordOAuth2Config) GetUserInfo(discordResp DiscordResponse) (interface{}, error) {
 
 	access_token := discordResp.AccessToken
 	token_agent := fiber.AcquireAgent()
@@ -131,7 +130,7 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	return nil
 }
 
-func GetTwitchAccessToken(code string) (TwitchResponse, error) {
+func (oauth TwitchOAuth2Config) GetAccessToken(code string) (interface{}, error) {
 	a := fiber.AcquireAgent() // Create Agent and Add URI/Headers to Request
 	defer fiber.ReleaseAgent(a)
 
@@ -162,11 +161,10 @@ func GetTwitchAccessToken(code string) (TwitchResponse, error) {
 	if err := json.Unmarshal(body, &twitchResp); err != nil {
 		return TwitchResponse{}, fmt.Errorf("GetTwitchUserInfo > Error during JSON Unmarshal - TwitchResponse: %w", err)
 	}
-	log.Print(twitchResp)
 	return twitchResp, nil
 }
 
-func GetTwitchUserInfo(twitchResp TwitchResponse) (TwitchUserResponse, error) {
+func (oauth TwitchOAuth2Config) GetUserInfo(twitchResp TwitchResponse) (interface{}, error) {
 	access_token := twitchResp.AccessToken
 	token_agent := fiber.AcquireAgent()
 	defer fiber.ReleaseAgent(token_agent)
@@ -190,6 +188,5 @@ func GetTwitchUserInfo(twitchResp TwitchResponse) (TwitchUserResponse, error) {
 
 		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error during JSON Unmarshal - TwitchTokenResponse: %s", err)
 	}
-	log.Print(twitchUserResp)
 	return twitchUserResp, nil
 }
