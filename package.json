@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "sst bind next dev",
+    "dev": "concurrently \"next dev\" \"cd api && go run main.go\"",
+    "sst-dev": "sst bind next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "aws-cdk-lib": "2.84.0",
+    "concurrently": "^8.2.0",
     "constructs": "10.1.156",
     "sst": "^2.23.13"
   }
