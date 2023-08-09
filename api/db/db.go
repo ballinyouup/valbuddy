@@ -3,8 +3,8 @@ package db
 import (
 	"fmt"
 	"log"
-	"strings"
 	"nextjs-go/config"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -17,20 +17,20 @@ import (
 )
 
 var validate *validator.Validate
-var db *gorm.DB
+var Database *gorm.DB
 var Store fiber.Storage
 var Sessions *session.Store
 
 func Init() error {
 	validate = validator.New()
 	var err error
-	db, err = gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
+	Database, err = gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("database init > error initializing database: %w", err)
 	}
 	Store = pg.New(pg.Config{
 		ConnectionURI: config.Env.DATABASE_URL,
-		Database:      db.Name(),
+		Database:      Database.Name(),
 		Table:         "sessions",
 		Reset:         false,
 		GCInterval:    10 * time.Second,
@@ -44,7 +44,7 @@ func Init() error {
 		CookieSecure:   true,
 		CookiePath:     "/",
 	})
-	err = db.AutoMigrate(&User{})
+	err = Database.AutoMigrate(&User{})
 	if err != nil {
 		return fmt.Errorf("database init > error during auto migration: %w", err)
 	}
@@ -54,7 +54,11 @@ func Init() error {
 func CreateOrLoginUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) (User, error) {
 	// Check if the user already exists in the database
 	existingUser := User{}
-	db.Find(&existingUser, "email = ?", email)
+	err := Database.Where("email = ?", email).First(&existingUser).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return User{}, err
+	}
+
 	if existingUser.UserID == "" {
 		// User does not exist, proceed with user creation
 		newUser := &User{
@@ -74,7 +78,10 @@ func CreateOrLoginUser(c *fiber.Ctx, email string, username string, role string,
 			return User{}, fmt.Errorf("new user failed validation: %s", strings.Join(validationErrors, ", "))
 		}
 		// Create the user record in the database
-		db.Create(newUser)
+		err = Database.Create(newUser).Error
+		if err != nil {
+			return User{}, err
+		}
 
 		timeLayout := "2006-01-02 15:04:05"
 		log.Printf("CREATE// id: %s, createdAt: %s, email: %s, role: %s, username: %s, image: %s, provider: %s\n",
@@ -82,5 +89,11 @@ func CreateOrLoginUser(c *fiber.Ctx, email string, username string, role string,
 
 		return *newUser, nil
 	}
+
+	if existingUser.Provider != provider {
+		return User{}, fmt.Errorf("incorrect provider. please sign in with another provider")
+	}
+
+	// User exists and has the same provider
 	return existingUser, nil
 }
