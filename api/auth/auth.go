@@ -3,7 +3,8 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-
+	"log"
+	"net/url"
 	"nextjs-go/config"
 	"strconv"
 
@@ -17,7 +18,42 @@ var DiscordURLS = DiscordLinks{
 	UserInfoURL:    "https://discord.com/api/v10/users/@me",
 }
 
-func GetDiscordAccessToken(code string) (int, []byte, error) {
+var TwitchURLS = TwitchLinks{
+	AccessTokenURL: "https://id.twitch.tv/oauth2/token",
+	AuthorizeURL:   "https://id.twitch.tv/oauth2/authorize",
+	RedirectURI:    "/login/twitch/callback",
+	UserInfoURL:    "https://api.twitch.tv/helix/users",
+}
+
+func (oauth DiscordOAuth2Config) FormatAuthURL() string {
+	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
+	scope := url.QueryEscape(oauth.Scope)
+	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&prompt=%s",
+		oauth.AuthorizeURL,
+		oauth.ResponseType,
+		oauth.ClientID,
+		scope,
+		oauth.State,
+		redirectURI,
+		oauth.Prompt,
+	)
+}
+
+func (oauth TwitchOAuth2Config) FormatAuthURL() string {
+	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
+	scope := url.QueryEscape(oauth.Scope)
+	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&force_verify=%s",
+		oauth.AuthorizeURL,
+		oauth.ResponseType,
+		oauth.ClientID,
+		scope,
+		oauth.State,
+		redirectURI,
+		oauth.ForceVerify,
+	)
+}
+
+func GetDiscordAccessToken(code string) (DiscordResponse, error) {
 	a := fiber.AcquireAgent() // Create Agent and Add URI/Headers to Request
 	defer fiber.ReleaseAgent(a)
 
@@ -37,22 +73,23 @@ func GetDiscordAccessToken(code string) (int, []byte, error) {
 	a.Form(args)
 
 	if err := a.Parse(); err != nil { // Initialize Agent
-		return 0, nil, fmt.Errorf("GetDiscordAccessToken > Error making POST Request: %w", err)
+		return DiscordResponse{}, fmt.Errorf("GetDiscordAccessToken > Error making POST Request: %w", err)
 	}
 	status, body, err := a.Bytes() // Store Status, Body, and Err. Agent Cannot be used after
 	if err != nil {
-		return 0, nil, fmt.Errorf("GetDiscordAccessToken > Error extracting Status, Body, and Error: %w", err[0])
+		return DiscordResponse{}, fmt.Errorf("GetDiscordAccessToken > Error extracting Status, Body, and Error: %w", err[0])
 	}
-	return status, body, nil
-}
-
-func GetDiscordUserInfo(status int, body []byte) (DiscordUserResponse, error) {
 	// Create and Convert Response to JSON to check for errors
 	var discordResp DiscordResponse
 	discordResp.Status = status
 	if err := json.Unmarshal(body, &discordResp); err != nil {
-		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error during JSON Unmarshal - DiscordResponse: %w", err)
+		return DiscordResponse{}, fmt.Errorf("GetDiscordUserInfo > Error during JSON Unmarshal - DiscordResponse: %w", err)
 	}
+	return discordResp, nil
+}
+
+func GetDiscordUserInfo(discordResp DiscordResponse) (DiscordUserResponse, error) {
+
 	access_token := discordResp.AccessToken
 	token_agent := fiber.AcquireAgent()
 	defer fiber.ReleaseAgent(token_agent)
@@ -92,4 +129,67 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/avatars/%s/%s.png", discordTokenResp.ID, discordTokenResp.Avatar)
 	}
 	return nil
+}
+
+func GetTwitchAccessToken(code string) (TwitchResponse, error) {
+	a := fiber.AcquireAgent() // Create Agent and Add URI/Headers to Request
+	defer fiber.ReleaseAgent(a)
+
+	req := a.Request()
+	req.Header.SetMethod("POST")
+	req.SetRequestURI(TwitchURLS.AccessTokenURL)
+	req.Header.SetContentType("application/x-www-form-urlencoded")
+
+	args := fiber.AcquireArgs() // Add Form Arguments to the Request
+	defer fiber.ReleaseArgs(args)
+
+	args.Add("client_id", config.Env.TWITCH_ID)
+	args.Add("client_secret", config.Env.TWITCH_SECRET)
+	args.Add("grant_type", "authorization_code")
+	args.Add("code", code)
+	args.Add("redirect_uri", fmt.Sprintf("%s%s", config.Env.API_URL, TwitchURLS.RedirectURI))
+	a.Form(args)
+
+	if err := a.Parse(); err != nil { // Initialize Agent
+		return TwitchResponse{}, fmt.Errorf("GetTwitchAccessToken > Error making POST Request: %w", err)
+	}
+	status, body, err := a.Bytes() // Store Status, Body, and Err. Agent Cannot be used after
+	if err != nil {
+		return TwitchResponse{}, fmt.Errorf("GetTwitchAccessToken > Error extracting Status, Body, and Error: %w", err[0])
+	}
+	var twitchResp TwitchResponse
+	twitchResp.Status = status
+	if err := json.Unmarshal(body, &twitchResp); err != nil {
+		return TwitchResponse{}, fmt.Errorf("GetTwitchUserInfo > Error during JSON Unmarshal - TwitchResponse: %w", err)
+	}
+	log.Print(twitchResp)
+	return twitchResp, nil
+}
+
+func GetTwitchUserInfo(twitchResp TwitchResponse) (TwitchUserResponse, error) {
+	access_token := twitchResp.AccessToken
+	token_agent := fiber.AcquireAgent()
+	defer fiber.ReleaseAgent(token_agent)
+
+	token_req := token_agent.Request()
+	token_req.SetRequestURI(TwitchURLS.UserInfoURL)
+	token_req.Header.SetMethod("GET")
+	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
+	token_req.Header.Add("Client-Id", config.Env.TWITCH_ID)
+	if err := token_agent.Parse(); err != nil {
+		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error making GET Request: %w", err)
+	}
+	// Store Status, Body, and Err. Agent Cannot be used after
+	token_status, token_body, err := token_agent.Bytes()
+	if err != nil {
+		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error extracting Status, Body, and Error: %w", err[0])
+	}
+	var twitchUserResp TwitchUserResponse
+	twitchUserResp.Status = token_status
+	if err := json.Unmarshal(token_body, &twitchUserResp); err != nil {
+
+		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error during JSON Unmarshal - TwitchTokenResponse: %s", err)
+	}
+	log.Print(twitchUserResp)
+	return twitchUserResp, nil
 }
