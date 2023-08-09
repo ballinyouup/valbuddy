@@ -24,7 +24,6 @@ func CheckStateAndCSRF(c *fiber.Ctx) error {
 	} else if c.Query("state") != stateFromCookie {
 		return fmt.Errorf("CheckStateAndCSRF > State Mismatch")
 	} else {
-		c.ClearCookie("oauth2_state") // Clear the OAuth2 state cookie after it has been validated
 		return nil
 	}
 
