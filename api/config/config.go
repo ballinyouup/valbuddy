@@ -16,6 +16,8 @@ type Config struct {
 	IS_LAMBDA      bool
 	FRONTEND_URL   string
 	COOKIE_DOMAIN  string
+	TWITCH_ID      string
+	TWITCH_SECRET  string
 	// Add more configuration variables here if needed
 }
 
@@ -38,8 +40,8 @@ func LoadConfig() (*Config, error) {
 		frontendURL = os.Getenv("FRONTEND_URL")
 		cookieDomain = os.Getenv("COOKIE_DOMAIN")
 	} else {
-		apiURL = "http://localhost:3000"
-		frontendURL = "http://localhost:5173"
+		apiURL = "http://localhost:3001"
+		frontendURL = "http://localhost:3000"
 		cookieDomain = "localhost"
 	}
 
@@ -52,6 +54,8 @@ func LoadConfig() (*Config, error) {
 		FRONTEND_URL:   frontendURL,
 		COOKIE_DOMAIN:  cookieDomain,
 		IS_LAMBDA:      os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
+		TWITCH_ID:      os.Getenv("TWITCH_ID"),
+		TWITCH_SECRET:  os.Getenv("TWITCH_SECRET"),
 		// Add more configuration variables here if needed
 	}
 
