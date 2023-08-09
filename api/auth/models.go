@@ -1,5 +1,19 @@
 package auth
 
+type OAuth2Config interface {
+	FormatAuthURL() string
+}
+
+type DiscordOAuth2Config struct {
+	AuthorizeURL string
+	ResponseType string
+	ClientID     string
+	Scope        string
+	State        string
+	RedirectURI  string
+	Prompt       string
+}
+
 type DiscordLinks struct {
 	AccessTokenURL string
 	AuthorizeURL   string
@@ -37,3 +51,45 @@ type DiscordUserResponse struct {
 	AvatarDecoration string  `json:"avatar_decoration,omitempty"`
 }
 
+type TwitchLinks struct {
+	AccessTokenURL string
+	AuthorizeURL   string
+	RedirectURI    string
+	UserInfoURL    string
+}
+
+type TwitchResponse struct {
+	Status       int      `json:"status"`
+	AccessToken  string   `json:"access_token"`
+	TokenType    string   `json:"token_type"`
+	ExpiresIn    int      `json:"expires_in"`
+	RefreshToken string   `json:"refresh_token"`
+	Scope        []string `json:"scope"`
+}
+
+type TwitchUserResponse struct {
+	Status int `json:"status"`
+	Data   []struct {
+		ID              string `json:"id"`
+		Login           string `json:"login"`
+		DisplayName     string `json:"display_name"`
+		Type            string `json:"type"`
+		BroadcasterType string `json:"broadcaster_type"`
+		Description     string `json:"description"`
+		ProfileImageURL string `json:"profile_image_url"`
+		OfflineImageURL string `json:"offline_image_url"`
+		ViewCount       int    `json:"view_count"`
+		Email           string `json:"email"`
+		CreatedAt       string `json:"created_at"`
+	} `json:"data"`
+}
+
+type TwitchOAuth2Config struct {
+	AuthorizeURL string
+	ResponseType string
+	ClientID     string
+	Scope        string
+	State        string
+	RedirectURI  string
+	ForceVerify  string
+}
