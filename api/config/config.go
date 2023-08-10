@@ -40,9 +40,9 @@ func LoadConfig() (*Config, error) {
 		frontendURL = os.Getenv("FRONTEND_URL")
 		cookieDomain = os.Getenv("COOKIE_DOMAIN")
 	} else {
-		apiURL = "http://localhost:3001"
-		frontendURL = "http://localhost:3000"
-		cookieDomain = "localhost"
+		apiURL = "http://127.0.0.1:3001"
+		frontendURL = "http://127.0.0.1:3000"
+		cookieDomain = "127.0.0.1"
 	}
 
 	// Create a new Config instance and populate it with the environment variables
@@ -51,12 +51,12 @@ func LoadConfig() (*Config, error) {
 		DISCORD_SECRET: os.Getenv("DISCORD_SECRET"),
 		TWITCH_ID:      os.Getenv("TWITCH_ID"),
 		TWITCH_SECRET:  os.Getenv("TWITCH_SECRET"),
-		
-		DATABASE_URL:   os.Getenv("DATABASE_URL"),
-		API_URL:        apiURL,
-		FRONTEND_URL:   frontendURL,
-		COOKIE_DOMAIN:  cookieDomain,
-		IS_LAMBDA:      os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
+
+		DATABASE_URL:  os.Getenv("DATABASE_URL"),
+		API_URL:       apiURL,
+		FRONTEND_URL:  frontendURL,
+		COOKIE_DOMAIN: cookieDomain,
+		IS_LAMBDA:     os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
 		// Add more configuration variables here if needed
 	}
 

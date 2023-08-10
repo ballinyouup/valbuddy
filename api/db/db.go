@@ -30,7 +30,7 @@ func Init() error {
 	}
 	Store = pg.New(pg.Config{
 		ConnectionURI: config.Env.DATABASE_URL,
-		Database:      Database.Name(),
+		Database:      "postgres",
 		Table:         "sessions",
 		Reset:         false,
 		GCInterval:    10 * time.Second,
@@ -38,7 +38,6 @@ func Init() error {
 	Sessions = session.New(session.Config{
 		Storage:        Store,
 		Expiration:     24 * time.Hour,
-		KeyLookup:      "cookie:auth_session",
 		CookieDomain:   config.Env.COOKIE_DOMAIN,
 		CookieSameSite: "None",
 		CookieSecure:   true,
