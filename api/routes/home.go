@@ -19,8 +19,8 @@ func Home(app *fiber.App) {
 		if !s.Fresh() {
 			userId := s.Get("user_id")
 			user := db.User{}
-			db.Database.Find(&user, "user_id = ?", userId)
-			return c.SendString(fmt.Sprintf("Welcome %s", user.Username))
+			db.Database.Where("user_id = ?", userId).First(&user)
+			return c.JSON(fiber.Map{"message": fmt.Sprintf("Welcome %s", user.Username)})
 		} else {
 			s.Destroy()
 			return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
