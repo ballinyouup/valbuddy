@@ -37,7 +37,7 @@ func Init() error {
 	})
 	Sessions = session.New(session.Config{
 		Storage:        Store,
-		Expiration:     5 * time.Minute,
+		Expiration:     24 * time.Hour,
 		KeyLookup:      "cookie:auth_session",
 		CookieDomain:   config.Env.COOKIE_DOMAIN,
 		CookieSameSite: "None",
@@ -56,7 +56,7 @@ func CreateOrLoginUser(c *fiber.Ctx, email string, username string, role string,
 	existingUser := User{}
 	err := Database.Where("email = ?", email).First(&existingUser).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return User{}, err
+		return User{}, fmt.Errorf("error with database: %w", err)
 	}
 
 	if existingUser.UserID == "" {
