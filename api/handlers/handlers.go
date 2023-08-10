@@ -53,7 +53,6 @@ func HandleLogin(c *fiber.Ctx) error {
 		Domain:   config.Env.COOKIE_DOMAIN,
 		Path:     "/",
 	})
-	c.Set("Access-Control-Allow-Origin", config.Env.FRONTEND_URL)
 	switch c.Params("provider") {
 	case "discord":
 		provider, ok := providerConfig.(auth.DiscordOAuth2Config)
@@ -162,13 +161,13 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 	}
-	// If a session already exists, delete and create a new one.
-	if !s.Fresh() {
-		s.Destroy()
-		if s, err = db.Sessions.Get(c); err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
-		}
-	}
+	// // If a session already exists, delete and create a new one.
+	// if !s.Fresh() {
+	// 	s.Destroy()
+	// 	if s, err = db.Sessions.Get(c); err != nil {
+	// 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+	// 	}
+	// }
 	s.Set("user_id", user.UserID)
 	s.Set("session_id", s.ID())
 	s.SetExpiry(24 * time.Hour)
