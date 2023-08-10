@@ -162,6 +162,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 	}
+	// If a session already exists, delete and create a new one.
 	if !s.Fresh() {
 		s.Destroy()
 		if s, err = db.Sessions.Get(c); err != nil {
