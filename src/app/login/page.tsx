@@ -1,10 +1,10 @@
 import Link from "next/link";
-
+import { config } from "@/env";
 export default function Login() {
 	return (
 		<div className="flex flex-col gap-4">
-			<Link href="http://127.0.0.1:3001/login/discord">Discord</Link>
-			<Link href="http://127.0.0.1:3001/login/twitch">Twitch</Link>
+			<Link href={`${config.API_URL}/login/discord`}>Discord</Link>
+			<Link href={`${config.API_URL}/login/twitch`}>Twitch</Link>
 		</div>
 	);
 }
