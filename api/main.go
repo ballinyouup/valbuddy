@@ -24,7 +24,7 @@ func StartFiber() *fiber.App {
 	app.Use(logger.New())
 	app.Use(recover.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     fmt.Sprintf("%s, %s", config.Env.API_URL, config.Env.FRONTEND_URL),
+		AllowOrigins:     fmt.Sprintf("%s, %s, %s", config.Env.API_URL, config.Env.FRONTEND_URL, "http://localhost:3000"),
 		AllowHeaders:     "Origin, Content-Type, Accept",
 		AllowCredentials: true,
 	}))

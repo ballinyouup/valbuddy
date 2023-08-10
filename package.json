@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"cd api && go run main.go\"",
+    "dev": "next dev",
+    "local-dev": "concurrently \"next dev\" \"cd api && go run main.go\"",
     "sst-dev": "sst bind next dev",
     "build": "next build",
     "start": "next start",
