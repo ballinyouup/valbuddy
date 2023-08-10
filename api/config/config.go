@@ -49,13 +49,14 @@ func LoadConfig() (*Config, error) {
 	Env = &Config{
 		DISCORD_ID:     os.Getenv("DISCORD_ID"),
 		DISCORD_SECRET: os.Getenv("DISCORD_SECRET"),
+		TWITCH_ID:      os.Getenv("TWITCH_ID"),
+		TWITCH_SECRET:  os.Getenv("TWITCH_SECRET"),
+		
 		DATABASE_URL:   os.Getenv("DATABASE_URL"),
 		API_URL:        apiURL,
 		FRONTEND_URL:   frontendURL,
 		COOKIE_DOMAIN:  cookieDomain,
 		IS_LAMBDA:      os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
-		TWITCH_ID:      os.Getenv("TWITCH_ID"),
-		TWITCH_SECRET:  os.Getenv("TWITCH_SECRET"),
 		// Add more configuration variables here if needed
 	}
 
