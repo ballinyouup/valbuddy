@@ -58,6 +58,6 @@ func main() {
 	if config.Env.IS_LAMBDA {
 		lambda.Start(Handler)
 	} else {
-		StartFiber().Listen(":3001")
+		StartFiber().Listen("localhost:3001")
 	}
 }
