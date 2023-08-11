@@ -18,10 +18,11 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
-			<Toaster />
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-					{children}
-					
+					<div className="h-full w-full">
+						<Toaster />
+						{children}
+					</div>
 				</ThemeProvider>
 			</body>
 		</html>
