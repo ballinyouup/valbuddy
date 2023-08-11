@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"net/url"
 	"nextjs-go/auth"
 	"nextjs-go/config"
 	"nextjs-go/db"
@@ -152,10 +153,15 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		// Create or login the user using retrieved data
 		user, err = db.CreateOrLoginUser(c, twitchUserInfo.Data[0].Email, twitchUserInfo.Data[0].DisplayName, "free", twitchUserInfo.Data[0].ProfileImageURL, "twitch")
 		if err != nil {
+			if err.Error() == "incorrect provider" {
+				errorParam := url.QueryEscape("Incorrect Provider")
+				return c.Redirect(fmt.Sprintf("%s/login?error=%s", config.Env.FRONTEND_URL, errorParam))
+			}
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 		}
 	default:
-		return c.JSON(fiber.Map{"error": "Incorrect Provider"})
+		errorParam := url.QueryEscape("Provider Not Found")
+		return c.Redirect(fmt.Sprintf("%s/login?error=%s", config.Env.FRONTEND_URL, errorParam))
 	}
 	s, err := db.Sessions.Get(c)
 	if err != nil {
