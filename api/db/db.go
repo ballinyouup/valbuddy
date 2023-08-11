@@ -90,7 +90,7 @@ func CreateOrLoginUser(c *fiber.Ctx, email string, username string, role string,
 	}
 
 	if existingUser.Provider != provider {
-		return User{}, fmt.Errorf("incorrect provider. please sign in with another provider")
+		return User{}, fmt.Errorf("incorrect provider")
 	}
 
 	// User exists and has the same provider
