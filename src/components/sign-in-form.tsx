@@ -27,7 +27,7 @@ export default function SignInForm() {
 				variant: "destructive"
 			});
 		}
-	}, []); // Empty dependency array means this effect runs only on mount
+	}, [error, toast]); // Empty dependency array means this effect runs only on mount
 
 	return (
 		<Card className="max-w-lg w-full">
