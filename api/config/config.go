@@ -40,9 +40,9 @@ func LoadConfig() (*Config, error) {
 		frontendURL = os.Getenv("FRONTEND_URL")
 		cookieDomain = os.Getenv("COOKIE_DOMAIN")
 	} else {
-		apiURL = "http://127.0.0.1:3001"
-		frontendURL = "http://127.0.0.1:3000"
-		cookieDomain = "127.0.0.1"
+		apiURL = "http://localhost:3000/api"
+		frontendURL = "http://localhost:3000"
+		cookieDomain = "localhost"
 	}
 
 	// Create a new Config instance and populate it with the environment variables
