@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body, html{
+body,
+html {
 	width: 100%;
 	height: 100%;
 }
@@ -59,5 +60,26 @@ body, html{
 	}
 	body {
 		@apply bg-background text-foreground;
+	}
+	* {
+		@apply border-border;
+	}
+	h1 {
+		@apply text-9xl font-bold;
+	}
+	h2 {
+		@apply text-7xl font-bold;
+	}
+	h3 {
+		@apply text-6xl font-bold;
+	}
+	h4 {
+		@apply text-4xl font-bold;
+	}
+	h5 {
+		@apply text-2xl font-bold;
+	}
+	h6 {
+		@apply text-xl font-bold;
 	}
 }
