@@ -167,15 +167,21 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 	}
-	// If a session already exists, delete and create a new one.
-	if s.Fresh() {
-		s.Set("user_id", user.UserID)
-		s.Set("session_id", s.ID())
-		s.SetExpiry(24 * time.Hour)
-		err = s.Save()
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
-		}
+	// Include user id, expiry, and session id inside session storage
+	s.Set("user_id", user.UserID)
+	s.Set("session_id", s.ID())
+	s.SetExpiry(24 * time.Hour)
+
+	// If the user already has a previous session, delete previous and create a new one.
+	if !s.Fresh() {
+		s.Regenerate()
 	}
+	
+	// Save Session to database
+	err = s.Save()
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+	}
+
 	return c.Redirect(config.Env.FRONTEND_URL)
 }
