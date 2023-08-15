@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { config } from "@/env";
-import { revalidateTag } from "next/cache";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 interface User {
@@ -17,7 +16,8 @@ interface User {
 
 export default async function Navbar() {
 	return (
-		<nav className="flex flex-col h-fit p-4 bg-secondary w-full items-end">
+		<nav className="flex flex-row h-fit p-4 bg-secondary w-full justify-between">
+            <h4>V</h4>
 			<NavProfile />
 		</nav>
 	);
