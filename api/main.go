@@ -30,7 +30,10 @@ func StartFiber() *fiber.App {
 	}))
 
 	// App Routes
-	routes.Home(app)
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Welcome!")
+	})
+	routes.User(app)
 	routes.Login(app)
 	return app
 }
