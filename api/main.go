@@ -34,7 +34,7 @@ func StartFiber() *fiber.App {
 		return c.SendString("Welcome!")
 	})
 	routes.User(app)
-	routes.Login(app)
+	routes.Auth(app)
 	return app
 }
 
