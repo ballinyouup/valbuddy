@@ -117,7 +117,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusInternalServerError, "HandleProviderCallback > Unexpected response type from Discord GetUserInfo")
 		}
 		// Create or login the user using retrieved data
-		user, err = db.CreateOrLoginUser(c, discordUserInfo.Email, discordUserInfo.Username, "free", discordUserInfo.Avatar, "discord")
+		user, err = db.CreateUser(c, discordUserInfo.Email, discordUserInfo.Username, "free", discordUserInfo.Avatar, "discord")
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
 		}
@@ -151,7 +151,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusInternalServerError, "HandleProviderCallback > Unexpected response type from Twitch GetAccessToken")
 		}
 		// Create or login the user using retrieved data
-		user, err = db.CreateOrLoginUser(c, twitchUserInfo.Data[0].Email, twitchUserInfo.Data[0].DisplayName, "free", twitchUserInfo.Data[0].ProfileImageURL, "twitch")
+		user, err = db.CreateUser(c, twitchUserInfo.Data[0].Email, twitchUserInfo.Data[0].DisplayName, "free", twitchUserInfo.Data[0].ProfileImageURL, "twitch")
 		if err != nil {
 			if err.Error() == "incorrect provider" {
 				errorParam := url.QueryEscape("Incorrect Provider")
