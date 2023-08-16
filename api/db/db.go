@@ -23,7 +23,7 @@ func Init() error {
 	var err error
 	Database, err = gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
 	if err != nil {
-		return fmt.Errorf("database init > error initializing database: %w", err)
+		return fmt.Errorf("error initializing database: %w", err)
 	}
 	Store = pg.New(pg.Config{
 		ConnectionURI: config.Env.DATABASE_URL,
@@ -42,7 +42,7 @@ func Init() error {
 	})
 	err = Database.AutoMigrate(&User{})
 	if err != nil {
-		return fmt.Errorf("database init > error during auto migration: %w", err)
+		return fmt.Errorf("error during auto migration: %w", err)
 	}
 	return nil
 }

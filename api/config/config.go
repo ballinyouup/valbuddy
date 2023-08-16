@@ -28,7 +28,7 @@ func LoadConfig() (*Config, error) {
 	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") == "" {
 		err := godotenv.Load("../.env")
 		if err != nil {
-			return nil, fmt.Errorf("LoadConfig > Error Loading Config: %w", err)
+			return nil, fmt.Errorf("error loading config: %w", err)
 		}
 	}
 

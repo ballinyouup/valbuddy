@@ -39,7 +39,7 @@ func GetOAuth2ProviderConfig(providerName string) (interface{}, error) {
 func HandleLogin(c *fiber.Ctx) error {
 	state, err := auth.GenerateRandomString(8)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleLogin > %s", err))
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Generating Random String: %s", err))
 	}
 	providerConfig, err := GetOAuth2ProviderConfig(c.Params("provider"))
 	if err != nil {
@@ -58,7 +58,7 @@ func HandleLogin(c *fiber.Ctx) error {
 	case "discord":
 		provider, ok := providerConfig.(auth.DiscordOAuth2Config)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleLogin > Unexpected response type from Discord Provider Config")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord Provider Config")
 		}
 		provider.State = state
 		result := provider.FormatAuthURL()
@@ -66,7 +66,7 @@ func HandleLogin(c *fiber.Ctx) error {
 	case "twitch":
 		provider, ok := providerConfig.(auth.TwitchOAuth2Config)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleLogin > Unexpected response type from Twitch Provider Config")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch Provider Config")
 		}
 		provider.State = state
 		result := provider.FormatAuthURL()
@@ -81,74 +81,74 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	code := c.Query("code")
 	err := auth.CheckStateAndCSRF(c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Checking State And CSRF: %s", err))
 	}
 	switch c.Params("provider") {
 	case "discord":
 		providerConfig, err := GetOAuth2ProviderConfig("discord")
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting OAuth2 Provider Config: %s", err))
 		}
 		provider, ok := providerConfig.(auth.DiscordOAuth2Config)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleLogin > Unexpected response type from Discord Provider Config")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord Provider Config")
 		}
 		// Get access token from the provider
 		accessToken, err := provider.GetAccessToken(code)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Access Token: %s", err))
 		}
 
 		// Convert the access token response to a DiscordResponse
 		discordAccessToken, ok := accessToken.(auth.DiscordResponse)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleProviderCallback > Unexpected response type from Discord GetAccessToken")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord GetAccessToken")
 		}
 
 		// Get user info using the access token
 		userInfo, err := provider.GetUserInfo(discordAccessToken)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting User Info: %s", err))
 		}
 
 		// Convert the user info to a DiscordUserResponse
 		discordUserInfo, ok := userInfo.(auth.DiscordUserResponse)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleProviderCallback > Unexpected response type from Discord GetUserInfo")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord GetUserInfo")
 		}
 		// Create or login the user using retrieved data
 		user, err = db.CreateUser(c, discordUserInfo.Email, discordUserInfo.Username, "free", discordUserInfo.Avatar, "discord")
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Creating User: %s", err))
 		}
 	case "twitch":
 		providerConfig, err := GetOAuth2ProviderConfig("twitch")
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting OAuth2 Provider Config: %s", err))
 		}
 		provider, ok := providerConfig.(auth.TwitchOAuth2Config)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleLogin > Unexpected response type from Twitch Provider Config")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch Provider Config")
 		}
 		// Get access token from the provider
 		accessToken, err := provider.GetAccessToken(code)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Access Token: %s", err))
 		}
 		// Convert the access token response to a TwitchResponse
 		twitchAccessToken, ok := accessToken.(auth.TwitchResponse)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleProviderCallback > Unexpected response type from Twitch GetAccessToken")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch GetAccessToken")
 		}
 		// Get user info using the access token
 		userInfo, err := provider.GetUserInfo(twitchAccessToken)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Get Twitch User Info Error: %s", err))
 		}
 		// Convert the user info to a TwitchUserResponse
 		twitchUserInfo, ok := userInfo.(auth.TwitchUserResponse)
 		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "HandleProviderCallback > Unexpected response type from Twitch GetAccessToken")
+			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch User Info")
 		}
 		// Create or login the user using retrieved data
 		user, err = db.CreateUser(c, twitchUserInfo.Data[0].Email, twitchUserInfo.Data[0].DisplayName, "free", twitchUserInfo.Data[0].ProfileImageURL, "twitch")
@@ -157,7 +157,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 				errorParam := url.QueryEscape("Incorrect Provider")
 				return c.Redirect(fmt.Sprintf("%s/login?error=%s", config.Env.FRONTEND_URL, errorParam))
 			}
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Create User Error: %s", err))
 		}
 	default:
 		errorParam := url.QueryEscape("Provider Not Found")
@@ -165,7 +165,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	}
 	s, err := db.Sessions.Get(c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}
 	// Include user id, expiry, and session id inside session storage
 	s.Set("user_id", user.UserID)
@@ -174,13 +174,16 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 
 	// If the user already has a previous session, delete previous and create a new one.
 	if !s.Fresh() {
-		s.Regenerate()
+		err = s.Regenerate()
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Regenerate Session Error: %s", err))
+		}
 	}
 
 	// Save Session to database
 	err = s.Save()
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("HandleProviderCallback > %s", err))
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("DB Save Error: %s", err))
 	}
 
 	return c.Redirect(config.Env.FRONTEND_URL)
@@ -189,10 +192,10 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 func HandleLogout(c *fiber.Ctx) error {
 	s, err := db.Sessions.Get(c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("/user > %s", err))
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}
 	if err := s.Destroy(); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("/user > %s", err))
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Destroy Session Error: %s", err))
 	}
 	return c.SendStatus(200)
 }

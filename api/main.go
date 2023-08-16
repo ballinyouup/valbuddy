@@ -52,7 +52,7 @@ func init() {
 
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if initError != nil {
-		return events.APIGatewayProxyResponse{}, fiber.NewError(fiber.StatusInternalServerError, "init > %w", initError.Error())
+		return events.APIGatewayProxyResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Init: %w", initError.Error())
 	}
 	return fiberLambda.ProxyWithContext(ctx, req)
 }

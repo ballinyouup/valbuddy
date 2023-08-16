@@ -72,17 +72,17 @@ func (oauth DiscordOAuth2Config) GetAccessToken(code string) (interface{}, error
 	a.Form(args)
 
 	if err := a.Parse(); err != nil { // Initialize Agent
-		return DiscordResponse{}, fmt.Errorf("GetDiscordAccessToken > Error making POST Request: %w", err)
+		return DiscordResponse{}, fmt.Errorf("error making POST request: %w", err)
 	}
 	status, body, err := a.Bytes() // Store Status, Body, and Err. Agent Cannot be used after
 	if err != nil {
-		return DiscordResponse{}, fmt.Errorf("GetDiscordAccessToken > Error extracting Status, Body, and Error: %w", err[0])
+		return DiscordResponse{}, fmt.Errorf("error extracting status, body, and error: %w", err[0])
 	}
 	// Create and Convert Response to JSON to check for errors
 	var discordResp DiscordResponse
 	discordResp.Status = status
 	if err := json.Unmarshal(body, &discordResp); err != nil {
-		return DiscordResponse{}, fmt.Errorf("GetDiscordUserInfo > Error during JSON Unmarshal - DiscordResponse: %w", err)
+		return DiscordResponse{}, fmt.Errorf("error during JSON Unmarshal of Discord Response: %w", err)
 	}
 	return discordResp, nil
 }
@@ -98,18 +98,18 @@ func (oauth DiscordOAuth2Config) GetUserInfo(discordResp DiscordResponse) (inter
 	token_req.Header.SetMethod("GET")
 	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
 	if err := token_agent.Parse(); err != nil {
-		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error making GET Request: %w", err)
+		return DiscordUserResponse{}, fmt.Errorf("error making GET Request: %w", err)
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
 	token_status, token_body, err := token_agent.Bytes()
 	if err != nil {
-		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error extracting Status, Body, and Error: %w", err[0])
+		return DiscordUserResponse{}, fmt.Errorf("error extracting status, body, and error: %w", err[0])
 	}
 	var discordTokenResp DiscordUserResponse
 	discordTokenResp.Status = token_status
 	if err := json.Unmarshal(token_body, &discordTokenResp); err != nil {
 
-		return DiscordUserResponse{}, fmt.Errorf("GetDiscordUserInfo > Error during JSON Unmarshal - DiscordTokenResponse: %s", err)
+		return DiscordUserResponse{}, fmt.Errorf("error during JSON Unmarshal of DiscordTokenResponse: %s", err)
 	}
 	CreateDiscordAvatar(&discordTokenResp)
 	return discordTokenResp, nil
@@ -120,7 +120,7 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	if discordTokenResp.Avatar == "" {
 		user_id, err := strconv.Atoi(discordTokenResp.ID)
 		if err != nil {
-			return fmt.Errorf("CreateDiscordAvatar > Error converting to string: %w", err)
+			return fmt.Errorf("error converting to string: %w", err)
 		}
 		shardIndex := (user_id >> 22) % 6
 		discordTokenResp.Avatar = fmt.Sprintf("https://cdn.discordapp.com/embed/avatars/%d.png", shardIndex)
@@ -150,16 +150,16 @@ func (oauth TwitchOAuth2Config) GetAccessToken(code string) (interface{}, error)
 	a.Form(args)
 
 	if err := a.Parse(); err != nil { // Initialize Agent
-		return TwitchResponse{}, fmt.Errorf("GetTwitchAccessToken > Error making POST Request: %w", err)
+		return TwitchResponse{}, fmt.Errorf("error making POST Request: %w", err)
 	}
 	status, body, err := a.Bytes() // Store Status, Body, and Err. Agent Cannot be used after
 	if err != nil {
-		return TwitchResponse{}, fmt.Errorf("GetTwitchAccessToken > Error extracting Status, Body, and Error: %w", err[0])
+		return TwitchResponse{}, fmt.Errorf("error extracting status, body, and error: %w", err[0])
 	}
 	var twitchResp TwitchResponse
 	twitchResp.Status = status
 	if err := json.Unmarshal(body, &twitchResp); err != nil {
-		return TwitchResponse{}, fmt.Errorf("GetTwitchUserInfo > Error during JSON Unmarshal - TwitchResponse: %w", err)
+		return TwitchResponse{}, fmt.Errorf("error during JSON Unmarshal of TwitchResponse: %w", err)
 	}
 	return twitchResp, nil
 }
@@ -175,18 +175,18 @@ func (oauth TwitchOAuth2Config) GetUserInfo(twitchResp TwitchResponse) (interfac
 	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
 	token_req.Header.Add("Client-Id", config.Env.TWITCH_ID)
 	if err := token_agent.Parse(); err != nil {
-		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error making GET Request: %w", err)
+		return TwitchUserResponse{}, fmt.Errorf("error making GET request: %w", err)
 	}
 	// Store Status, Body, and Err. Agent Cannot be used after
 	token_status, token_body, err := token_agent.Bytes()
 	if err != nil {
-		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error extracting Status, Body, and Error: %w", err[0])
+		return TwitchUserResponse{}, fmt.Errorf("error extracting status, body, and error: %w", err[0])
 	}
 	var twitchUserResp TwitchUserResponse
 	twitchUserResp.Status = token_status
 	if err := json.Unmarshal(token_body, &twitchUserResp); err != nil {
 
-		return TwitchUserResponse{}, fmt.Errorf("GetTwitchUserInfo > Error during JSON Unmarshal - TwitchTokenResponse: %s", err)
+		return TwitchUserResponse{}, fmt.Errorf("error during JSON Unmarshal of TwitchTokenResponse: %s", err)
 	}
 	return twitchUserResp, nil
 }

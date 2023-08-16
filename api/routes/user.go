@@ -11,7 +11,7 @@ func User(app *fiber.App) {
 	app.Get("/user", func(c *fiber.Ctx) error {
 		s, err := db.Sessions.Get(c)
 		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("/user > %s", err))
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Session: %s", err))
 		}
 		if !s.Fresh() {
 			userId := s.Get("user_id")
