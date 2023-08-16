@@ -19,11 +19,14 @@ func GenerateRandomString(stateLength int) (string, error) {
 
 func CheckStateAndCSRF(c *fiber.Ctx) error {
 	stateFromCookie := c.Cookies("oauth2_state") // Retrieve the state value from the HTTP-only cookie in the request
-	if stateFromCookie == "" {                   // Validate the state received in the callback against the one from the cookie
+	if stateFromCookie == "" {
+		c.ClearCookie("oauth2_state")                                       // Validate the state received in the callback against the one from the cookie
 		return fmt.Errorf("CheckStateAndCSRF > Cookie is empty or blocked") // Invalid state parameter, deny the request
 	} else if c.Query("state") != stateFromCookie {
+		c.ClearCookie("oauth2_state")
 		return fmt.Errorf("CheckStateAndCSRF > State Mismatch")
 	} else {
+		c.ClearCookie("oauth2_state")
 		return nil
 	}
 
