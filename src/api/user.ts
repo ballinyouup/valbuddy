@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { config } from "@/env";
+import { revalidateTag } from "next/cache";
 
 export interface User {
 	user_id: string;
@@ -21,11 +22,14 @@ export async function GetUser() {
 		credentials: "include",
 		method: "GET",
 		headers: { Cookie: cookies().toString() },
-		cache: "force-cache",
+		cache: "no-store",
 		next: {
 			tags: ["user"],
 		},
 	});
+	if(!data.ok){
+		return undefined
+	}
 	const user = (await data.json()) as User;
 	return user;
 }
