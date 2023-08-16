@@ -176,7 +176,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	if !s.Fresh() {
 		s.Regenerate()
 	}
-	
+
 	// Save Session to database
 	err = s.Save()
 	if err != nil {
@@ -184,4 +184,15 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	}
 
 	return c.Redirect(config.Env.FRONTEND_URL)
+}
+
+func HandleLogout(c *fiber.Ctx) error {
+	s, err := db.Sessions.Get(c)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("/user > %s", err))
+	}
+	if err := s.Destroy(); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("/user > %s", err))
+	}
+	return c.SendStatus(200)
 }
