@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 )
+
 func User(c *fiber.Ctx) error {
 	s, err := db.Sessions.Get(c)
 	if err != nil {
@@ -14,7 +15,7 @@ func User(c *fiber.Ctx) error {
 	if !s.Fresh() {
 		userId := s.Get("user_id")
 		user := db.User{}
-		db.Database.Where("user_id = ?", userId).First(&user)
+		db.Database.Where("id = ?", userId).First(&user)
 		return c.JSON(user)
 	} else {
 		s.Destroy()
