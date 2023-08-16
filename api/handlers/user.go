@@ -24,7 +24,7 @@ func User(c *fiber.Ctx) error {
 		user := db.User{}
 
 		// Retrieve user data from the database based on the user ID
-		db.Database.Select("id", "image", "username").Where("id = ?", userId).First(&user)
+		db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
 
 		// Return the user data as JSON response
 		return c.JSON(user)
@@ -36,4 +36,3 @@ func User(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
 	}
 }
-
