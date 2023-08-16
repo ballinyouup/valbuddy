@@ -40,7 +40,7 @@ func Init() error {
 		CookieSecure:   true,
 		CookiePath:     "/",
 	})
-	err = Database.AutoMigrate(&User{})
+	err = Database.AutoMigrate(&User{}, &Account{}, &Post{})
 	if err != nil {
 		return fmt.Errorf("error during auto migration: %w", err)
 	}
