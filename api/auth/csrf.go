@@ -29,5 +29,4 @@ func CheckStateAndCSRF(c *fiber.Ctx) error {
 		c.ClearCookie("oauth2_state")
 		return nil
 	}
-
 }
