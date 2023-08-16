@@ -20,8 +20,8 @@ async function NavProfile() {
         </Link>;
     }
     return (
-        <Avatar>
-            <AvatarImage src={user.image_url} alt="@shadcn" />
+        <Avatar className="border-[1.5px] border-transparent hover:border-secondary-foreground hover:cursor-pointer">
+            <AvatarImage src={user.image_url} alt={user.username} />
             <AvatarFallback>{user.username[0]}</AvatarFallback>
         </Avatar>
     );
