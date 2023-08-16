@@ -12,7 +12,6 @@ import (
 )
 
 // CreateUser creates a new user or returns an existing user based on provided parameters.
-// It takes email, username, role, image, and provider as input and returns the created user or an existing user.
 func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) (User, error) {
 	// Check if the user already exists in the database
 	existingUser := User{}
@@ -56,7 +55,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 		return User{}, fmt.Errorf("incorrect provider")
 	}
 
-	// User exists and has the same provider
+	// Return Existing User
 	return existingUser, nil
 }
 
