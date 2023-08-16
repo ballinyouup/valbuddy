@@ -168,7 +168,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}
 	// Include user id, expiry, and session id inside session storage
-	s.Set("user_id", user.UserID)
+	s.Set("user_id", user.ID)
 	s.Set("session_id", s.ID())
 	s.SetExpiry(24 * time.Hour)
 
