@@ -19,6 +19,7 @@ import (
 var fiberLambda *fiberadapter.FiberLambda
 var initError error
 
+// StartFiber initializes and configures the Fiber application.
 func StartFiber() *fiber.App {
 	app := fiber.New()
 	app.Use(logger.New())
@@ -39,19 +40,24 @@ func StartFiber() *fiber.App {
 }
 
 func init() {
+	// Load configuration and initialize the database
 	if _, err := config.LoadConfig(); err != nil {
 		initError = fmt.Errorf("error loading configuration: %w", err)
 	}
 	if err := db.Init(); err != nil {
 		initError = fmt.Errorf("error initializing database: %w", err)
 	}
+
+	// If running as a Lambda function, create a Fiber adapter
 	if config.Env.IS_LAMBDA {
 		fiberLambda = fiberadapter.New(StartFiber())
 	}
 }
 
+// Handler handles incoming API Gateway Proxy requests.
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if initError != nil {
+		// Return an error response if initialization encountered an error
 		return events.APIGatewayProxyResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Init: %w", initError.Error())
 	}
 	return fiberLambda.ProxyWithContext(ctx, req)
@@ -59,8 +65,10 @@ func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.API
 
 func main() {
 	if config.Env.IS_LAMBDA {
+		// If running as a Lambda function, start the Lambda handler
 		lambda.Start(Handler)
 	} else {
+		// If not running as a Lambda function, start the Fiber server
 		StartFiber().Listen("localhost:3001")
 	}
 }

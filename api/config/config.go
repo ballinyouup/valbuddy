@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Config represents the configuration for your application
+// Config represents the configuration for your application.
 type Config struct {
 	DISCORD_ID     string
 	DISCORD_SECRET string
@@ -21,17 +21,21 @@ type Config struct {
 	// Add more configuration variables here if needed
 }
 
+// Env holds the application's configuration loaded from environment variables.
 var Env *Config
 
-// LoadConfig loads the configuration from the .env file
+// LoadConfig loads the configuration from the .env file or environment variables.
 func LoadConfig() (*Config, error) {
+	// Check if running on AWS Lambda, load from environment variables accordingly
 	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") == "" {
+		// Load environment variables from .env file
 		err := godotenv.Load("../.env")
 		if err != nil {
 			return nil, fmt.Errorf("error loading config: %w", err)
 		}
 	}
 
+	// Determine appropriate API and frontend URLs based on Lambda status
 	var apiURL string
 	var frontendURL string
 	var cookieDomain string
@@ -40,6 +44,7 @@ func LoadConfig() (*Config, error) {
 		frontendURL = os.Getenv("FRONTEND_URL")
 		cookieDomain = os.Getenv("COOKIE_DOMAIN")
 	} else {
+		// Use default URLs for local development
 		apiURL = "http://localhost:3000/api"
 		frontendURL = "http://localhost:3000"
 		cookieDomain = "localhost"
@@ -62,3 +67,4 @@ func LoadConfig() (*Config, error) {
 
 	return Env, nil
 }
+

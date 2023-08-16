@@ -79,7 +79,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 // It returns an error containing validation error messages if validation fails,
 func validateCheck(data interface{}) error {
 	// Attempt to validate the provided data using the validator library
-	err := validate.Struct(data)
+	err := Validate.Struct(data)
 	if err != nil {
 		// If validation fails, store validation error messages
 		var validationErrors []string
@@ -125,7 +125,7 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, newValue int
 	}
 
 	// Validate the user struct after updating
-	err = validate.Struct(existingUser)
+	err = Validate.Struct(existingUser)
 	if err != nil {
 		var validationErrors []string
 		for _, err := range err.(validator.ValidationErrors) {
