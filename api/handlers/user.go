@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"nextjs-go/db"
-
+	"nextjs-go/config"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,7 +24,8 @@ func GetUser(c *fiber.Ctx) error {
 		user := db.User{}
 
 		// Retrieve user data from the database based on the user ID
-		db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
+		// db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
+		db.Database.Where("id = ?", userId).First(&user)
 
 		// Return the user data as JSON response
 		return c.JSON(user)
@@ -70,7 +71,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 }
 
-// Handler function that returns User Data as JSON
+// Handler function that the User from the DB
 func DeleteUser(c *fiber.Ctx) error {
 	// Get the current session/Error
 	s, err := db.Sessions.Get(c)
@@ -87,10 +88,10 @@ func DeleteUser(c *fiber.Ctx) error {
 		user := db.User{}
 
 		// Retrieve user data from the database based on the user ID
-		db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
-
-		// Return the user data as JSON response
-		return c.JSON(user)
+		db.Database.Where("id = ?", userId).First(&user)
+		db.Database.Delete(&user)
+		s.Destroy()
+		return c.Status(200).Redirect(config.Env.FRONTEND_URL)
 	} else {
 		// If the session is fresh, destroy the session
 		s.Destroy()
@@ -99,4 +100,3 @@ func DeleteUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
 	}
 }
-
