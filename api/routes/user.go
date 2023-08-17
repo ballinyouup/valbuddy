@@ -6,5 +6,7 @@ import (
 )
 
 func User(app *fiber.App) {
-	app.Get("/user", handlers.User)
+	app.Get("/user", handlers.GetUser)
+	app.Post("/user/update", handlers.UpdateUser)
+	app.Delete("/user/delete", handlers.DeleteUser)
 }
