@@ -42,12 +42,12 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 		}
 
 		// Validate the new User's data
-		if err := validateCheck(newUser); err != nil {
+		if err := ValidateCheck(newUser); err != nil {
 			return User{}, fmt.Errorf("error validating new user: %w", err)
 		}
 
 		// Validate the new Account's data
-		if err := validateCheck(newAccount); err != nil {
+		if err := ValidateCheck(newAccount); err != nil {
 			return User{}, fmt.Errorf("error validating new account: %w", err)
 		}
 
@@ -77,27 +77,28 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 
 // validateCheck performs validation on the provided data using the validator library.
 // It returns an error containing validation error messages if validation fails,
-func validateCheck(data interface{}) error {
+func ValidateCheck(data interface{}) error {
 	// Attempt to validate the provided data using the validator library
-	err := Validate.Struct(data)
-	if err != nil {
+	if err := Validate.Struct(data); err != nil {
 		// If validation fails, store validation error messages
 		var validationErrors []string
+
 		// Loop through each validation error and format error messages
 		for _, err := range err.(validator.ValidationErrors) {
 			validationErrors = append(validationErrors, fmt.Sprintf("%s validation failed for field %s", err.Tag(), err.Field()))
 		}
+
 		// Construct and return an error message containing all validation errors
 		return fmt.Errorf("validation failed: %s", strings.Join(validationErrors, ", "))
 	}
-	// If validation succeeds, return nil to indicate no errors
+
 	return nil
 }
 
 
 // UpdateUserField updates a specific field of a user with a new value.
 // It takes the userID, fieldName, and newValue as parameters.
-func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, newValue interface{}) error {
+func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interface{}) error {
 	// Check for empty userID or fieldName
 	if userID == "" || fieldName == "" {
 		return fmt.Errorf("empty userId or field name")
@@ -105,39 +106,43 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, newValue int
 
 	// Fetch the existing user from the database using the userID
 	existingUser := User{}
-	err := Database.Where("user_id = ?", userID).First(&existingUser).Error
-	if err != nil {
+	if err := Database.Where("user_id = ?", userID).First(&existingUser).Error; err != nil {
 		return fmt.Errorf("error with database: %w", err)
+	}
+
+	// Type Assert Value to string and check if ok
+	val, ok := value.(string)
+	if !ok {
+		return fmt.Errorf("error type asserting newValue to string")
+	}
+
+	// If value is empty, do nothing
+	if(val == ""){
+		return nil
 	}
 
 	// Update the specified field with the new value
 	switch fieldName {
 	case "Email":
-		existingUser.Email = newValue.(string)
+		existingUser.Email = val
 	case "Username":
-		existingUser.Username = newValue.(string)
+		existingUser.Username = val
 	case "Role":
-		existingUser.Role = newValue.(string)
+		existingUser.Role = val
 	case "Image":
-		existingUser.Image = newValue.(string)
+		existingUser.Image = val
 	default:
 		return fmt.Errorf("invalid field name: %s", fieldName)
 	}
 
-	// Validate the user struct after updating
-	err = Validate.Struct(existingUser)
-	if err != nil {
-		var validationErrors []string
-		for _, err := range err.(validator.ValidationErrors) {
-			validationErrors = append(validationErrors, fmt.Sprintf("%s validation failed for field %s", err.Tag(), err.Field()))
-		}
-		return fmt.Errorf("user update failed validation: %s", strings.Join(validationErrors, ", "))
+	// Validate the new field value and existing user.
+	if err := ValidateCheck(existingUser); err != nil{
+		return fmt.Errorf("error validating existing user: %w", err)
 	}
 
 	// Save the updated user back to the database
-	err = Database.Save(&existingUser).Error
-	if err != nil {
-		return err
+	if err := Database.Save(&existingUser).Error; err != nil {
+		return fmt.Errorf("error saving updated user to db: %w", err)
 	}
 
 	return nil
