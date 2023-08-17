@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { GetUser } from "../api/user";
+import { GetUser } from "../../../api/user";
 import {
 	Popover,
 	PopoverContent,

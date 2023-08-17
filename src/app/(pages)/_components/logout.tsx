@@ -1,6 +1,6 @@
 "use client";
 import { config } from "@/env";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { useRouter} from "next/navigation";
 
 export default function LogoutButton({ children }: { children?: React.ReactNode; }) {
