@@ -22,7 +22,7 @@ export async function GetUser() {
 		credentials: "include",
 		method: "GET",
 		headers: { Cookie: cookies().toString() },
-		cache: "no-store",
+		cache: "force-cache",
 		next: {
 			tags: ["user"],
 		},
