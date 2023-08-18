@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Providers from "@/app/(pages)/_components/providers";
 import Navbar from "@/app/(pages)/_components/navbar";
+import SidebarLeft from "./_components/sidebar-left";
+import SidebarRight from "./_components/sidebar-right";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +23,11 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<Providers>
 					<Navbar />
-					{children}
+					<div className="flex w-full items-center justify-center p-2 gap-2">
+						<SidebarLeft />
+						{children}
+						<SidebarRight />
+					</div>
 				</Providers>
 			</body>
 		</html>
