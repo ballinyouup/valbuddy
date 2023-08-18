@@ -20,12 +20,12 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={inter.className}>
+			<body className={`${inter.className} w-screen h-full`}>
 				<Providers>
 					<Navbar />
-					<div className="flex w-full items-center justify-center p-2 gap-2">
+					<div className="flex w-full h-full items-center justify-center p-2 gap-2">
 						<SidebarLeft />
-						{children}
+						<main>{children}</main>
 						<SidebarRight />
 					</div>
 				</Providers>
