@@ -12,9 +12,10 @@ import { ModeToggle } from "./theme-toggle";
 
 export default async function Navbar() {
 	return (
-		<nav className="flex flex-row h-fit p-4 bg-secondary w-full justify-between">
-			<h4>V</h4>
-			<div className="flex items-center gap-2">
+		<nav className="w-full h-20 px-8 py-4 bg-red-900 justify-between items-center inline-flex">
+			<div className="text-white text-[40px] font-black"><Link href="/">V</Link></div>
+			<div className="justify-start items-center gap-2 flex">
+				<div className="w-[260px] h-11 relative bg-white border border-black border-opacity-25" />
 				<ModeToggle />
 				<NavProfile />
 			</div>
