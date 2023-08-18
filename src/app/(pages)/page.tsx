@@ -1,17 +1,22 @@
 export default async function Home() {
 	return (
-		<main>
-			<div className="w-[820px] h-[936px] flex-col justify-start items-start gap-2 inline-flex">
-				<div className="self-stretch px-4 py-2 bg-neutral-700 justify-end items-center gap-4 inline-flex">
-					<div className="w-6 h-6 relative" />
-					<div className="w-6 h-6 relative" />
-				</div>
-				<div className="self-stretch h-[888px] bg-neutral-700 flex-col justify-start items-start flex">
-					<TitleRow />
-					<UserRow age="1m" rank="Ascendant" rating="4.7/5" region="NA" role="Smokes" username="Player #1"/>
-				</div>
+		<div className="w-[820px] h-[936px] flex-col justify-start items-start gap-2 inline-flex">
+			<div className="w-full px-4 py-2 bg-neutral-700 justify-end items-center gap-4 inline-flex">
+				<div className="w-6 h-6 relative" />
+				<div className="w-6 h-6 relative" />
 			</div>
-		</main>
+			<div className="self-stretch h-[888px] bg-neutral-700 flex-col justify-start items-start flex">
+				<TitleRow />
+				<UserRow
+					age="1m"
+					rank="Ascendant"
+					rating="4.7/5"
+					region="NA"
+					role="Smokes"
+					username="Player #1"
+				/>
+			</div>
+		</div>
 	);
 }
 
