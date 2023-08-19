@@ -25,7 +25,7 @@ export default function RootLayout({
 					<Navbar />
 					<div className="flex w-full h-full items-center justify-center p-2 gap-2">
 						<SidebarLeft />
-						<main>{children}</main>
+						{children}
 						<SidebarRight />
 					</div>
 				</Providers>

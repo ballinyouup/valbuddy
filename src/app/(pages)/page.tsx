@@ -1,90 +1,151 @@
 export default async function Home() {
-	return (
-		<div className="w-[820px] h-[936px] flex-col justify-start items-start gap-2 inline-flex">
-			<div className="w-full px-4 py-2 bg-neutral-700 justify-end items-center gap-4 inline-flex">
-				<div className="w-6 h-6 relative" />
-				<div className="w-6 h-6 relative" />
-			</div>
-			<div className="self-stretch h-[888px] bg-neutral-700 flex-col justify-start items-start flex">
-				<TitleRow />
-				<UserRow
-					age="1m"
-					rank="Ascendant"
-					rating="4.7/5"
-					region="NA"
-					role="Smokes"
-					username="Player #1"
-				/>
-			</div>
-		</div>
-	);
+  return (
+    <main className="w-full md:w-fit">
+      <div className="hidden h-[936px] w-full lg:w-[820px] flex-col items-start justify-start lg:gap-2 md:inline-flex">
+        <div className="inline-flex w-full items-center justify-end gap-4 bg-neutral-700 px-4 py-2">
+          <div className="relative h-6 w-6" />
+          <div className="relative h-6 w-6" />
+        </div>
+        <div className="flex h-[888px] flex-col items-start justify-start self-stretch bg-neutral-700">
+          <TitleRow />
+          <UserRow
+            age="1m"
+            rank="Ascendant"
+            rating="4.7/5"
+            region="NA"
+            role="Smokes"
+            username="Player #1"
+          />
+        </div>
+      </div>
+      <div className="inline-flex h-[846px] w-full flex-col items-start justify-start md:hidden">
+        <div className="inline-flex items-center justify-end gap-4 self-stretch bg-neutral-700 px-4 py-2">
+          <div className="relative h-6 w-6" />
+          <div className="relative h-6 w-6" />
+        </div>
+        <div className="flex h-[891px] flex-col items-start justify-start self-stretch bg-neutral-700">
+          <MobileUserRow
+            age="1m"
+            rank="Ascendant"
+            rating="4.7/5"
+            region="NA"
+            role="Smokes"
+            username="Player #1"
+          />
+        </div>
+      </div>
+    </main>
+  );
 }
 
 function TitleRow() {
-	return (
-		<div className="self-stretch h-[30px] bg-neutral-800 border-b border-black border-opacity-30 justify-start items-center inline-flex">
-			<div className="w-16 self-stretch px-2 border-r border-black border-opacity-20" />
-			<div className="w-[260px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center flex">
-				<div className="text-white text-base font-black capitalize">
-					USERNAME
-				</div>
-			</div>
-			<div className="w-[94px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">REGION</div>
-			</div>
-			<div className="w-[120px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">RANK</div>
-			</div>
-			<div className="w-[90px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">RATING</div>
-			</div>
-			<div className="w-[103px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">ROLE</div>
-			</div>
-			<div className="w-[73px] self-stretch px-4 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">TIME</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="inline-flex h-[30px] items-center justify-start self-stretch border-b border-black border-opacity-30 bg-neutral-800">
+      <div className="w-16 self-stretch border-r border-black border-opacity-20 px-2" />
+      <div className="flex w-[260px] items-center justify-start self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">
+          USERNAME
+        </div>
+      </div>
+      <div className="flex w-[94px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">REGION</div>
+      </div>
+      <div className="flex w-[120px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">RANK</div>
+      </div>
+      <div className="flex w-[90px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">RATING</div>
+      </div>
+      <div className="flex w-[103px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">ROLE</div>
+      </div>
+      <div className="flex w-[73px] items-center justify-start gap-2 self-stretch px-4">
+        <div className="text-base font-black capitalize text-white">TIME</div>
+      </div>
+    </div>
+  );
 }
 interface UserData {
-	username: string;
-	rank: string;
-	region: string;
-	rating: string;
-	role: string;
-	age: string;
+  username: string;
+  rank: string;
+  region: string;
+  rating: string;
+  role: string;
+  age: string;
 }
 function UserRow({ username, rank, region, rating, role, age }: UserData) {
-	return (
-		<div className="self-stretch h-[66px] bg-neutral-800 border-b border-black border-opacity-30 justify-start items-center inline-flex">
-			<div className="w-16 self-stretch px-2 border-r border-black border-opacity-20 justify-center items-center flex">
-				<div className="w-12 h-12 bg-zinc-300 rounded-full" />
-			</div>
-			<div className="w-[260px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center flex">
-				<div className="text-white text-base font-black capitalize">
-					{username}
-				</div>
-			</div>
-			<div className="w-[94px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">
-					{region}
-				</div>
-			</div>
-			<div className="w-[120px] self-stretch px-2 border-r border-black border-opacity-20 justify-start items-center flex">
-				<div className="text-white text-base font-black capitalize">{rank}</div>
-			</div>
-			<div className="w-[90px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">
-					{rating}
-				</div>
-			</div>
-			<div className="w-[103px] self-stretch px-4 border-r border-black border-opacity-20 justify-start items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">{role}</div>
-			</div>
-			<div className="grow shrink basis-0 self-stretch px-2 justify-center items-center gap-2 flex">
-				<div className="text-white text-base font-black capitalize">{age}</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="inline-flex h-[66px] items-center justify-start w-full border-b border-black border-opacity-30 bg-neutral-800">
+      <div className="flex w-16 items-center justify-center self-stretch border-r border-black border-opacity-20 px-2">
+        <div className="h-12 w-12 rounded-full bg-zinc-300" />
+      </div>
+      <div className="flex min-w-[200px] w-full max-w-[260px] items-center justify-start self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">
+          {username}
+        </div>
+      </div>
+      <div className="flex w-[94px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">
+          {region}
+        </div>
+      </div>
+      <div className="flex w-[120px] items-center justify-start self-stretch border-r border-black border-opacity-20 px-2">
+        <div className="text-base font-black capitalize text-white">{rank}</div>
+      </div>
+      <div className="flex w-[90px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">
+          {rating}
+        </div>
+      </div>
+      <div className="flex w-[103px] items-center justify-start gap-2 self-stretch border-r border-black border-opacity-20 px-4">
+        <div className="text-base font-black capitalize text-white">{role}</div>
+      </div>
+      <div className="flex shrink grow basis-0 items-center justify-center gap-2 self-stretch px-2">
+        <div className="text-base font-black capitalize text-white">{age}</div>
+      </div>
+    </div>
+  );
+}
+
+function MobileUserRow({
+  username,
+  rank,
+  region,
+  rating,
+  role,
+  age,
+}: UserData) {
+  return (
+    <div className="inline-flex h-[99px] w-full items-center justify-start border-b border-black border-opacity-30 bg-neutral-800">
+      <div className="flex w-16 items-center justify-center self-stretch border-r border-black border-opacity-20 px-2">
+        <div className="h-12 w-12 rounded-full bg-zinc-300" />
+      </div>
+      <div className="inline-flex shrink grow basis-0 flex-col items-start justify-between self-stretch border-r border-black border-opacity-20 p-4">
+        <div className="inline-flex items-center justify-between self-stretch">
+          <div className="text-base font-black capitalize text-white">
+            {username}
+          </div>
+          <div className="text-base font-black capitalize text-white">
+            {region}
+          </div>
+        </div>
+        <div className="inline-flex items-center justify-between self-stretch">
+          <div className="text-base font-black capitalize text-white">
+            {rank}
+          </div>
+          <div className="text-base font-black capitalize text-white">
+            {role}
+          </div>
+        </div>
+        <div className="inline-flex items-start justify-between self-stretch">
+          <div className="text-base font-black capitalize text-white">
+            {rating}
+          </div>
+          <div className="text-base font-black capitalize text-white">
+            {age}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
