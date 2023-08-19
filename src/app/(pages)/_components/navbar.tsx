@@ -15,7 +15,7 @@ export default async function Navbar() {
 		<nav className="w-full h-20 px-8 py-4 bg-red-900 justify-between items-center flex">
 			<div className="text-white text-[40px] font-black"><Link href="/">V</Link></div>
 			<div className="justify-start items-center gap-2 flex">
-			<input className="w-[260px] h-9 rounded-sm relative bg-white border border-black border-opacity-25 text-black p-3" />
+			<input className="w-[260px] h-9 rounded-sm relative bg-white border border-black border-opacity-25 text-black p-3 hidden md:flex" />
 				<ModeToggle />
 				<NavProfile />
 			</div>
