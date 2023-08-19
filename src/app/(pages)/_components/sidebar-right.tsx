@@ -1,6 +1,6 @@
 export default function SidebarRight() {
 	return (
-		<div className="w-[380px] h-[936px] bg-zinc-900 flex-col justify-start items-center inline-flex">
+		<div className="w-[380px] h-[936px] bg-zinc-900 flex-col justify-start items-center hidden 2xl:inline-flex">
 			<div className="self-stretch h-[237px] bg-zinc-900 flex-col justify-start items-center flex">
 				<div className="self-stretch py-2 bg-red-900 justify-center items-start gap-2 inline-flex">
 					<div className="grow shrink basis-0 text-center text-white text-2xl font-black uppercase">
