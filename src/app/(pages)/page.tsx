@@ -28,7 +28,7 @@ function UserRow({ username, rank, region, rating, role, age }: UserData) {
 			<div className="p-4">
 				<div className="h-12 w-12 rounded-full bg-white" />
 			</div>
-			<div className="flex flex-col w-full justify-evenly px-4">
+			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground">
 				<div className="flex justify-between uppercase">
 					<span>{username}</span>
 					<span>{rank}</span>

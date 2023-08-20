@@ -10,7 +10,7 @@ export default function Messages() {
 		<Accordion
 			type="single"
 			collapsible
-			className="fixed bottom-0 right-0 w-96 h-fit py-2 bg-neutral-700 justify-center items-center gap-4 hover:!cursor-pointer hover:ring ring-transparent hover:ring-black md:flex hidden"
+			className="fixed bottom-0 right-0 w-96 h-fit py-2 bg-neutral-700 justify-center items-center gap-4 hover:!cursor-pointer hover:ring ring-transparent hover:ring-black md:flex hidden text-primary-foreground"
 		>
 			<AccordionItem value="messages" className="border-0">
 				<AccordionTrigger
