@@ -1,50 +1,68 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Icons } from '@/components/ui/icons';
 export default function SidebarLeft() {
 	return (
-		<div className="sm:w-[199px] 2xl:w-56 h-[936px] px-8 py-3 bg-zinc-900 flex-col justify-start items-start gap-3 hidden lg:inline-flex">
+		<div className="w-fit h-[936px] px-8 py-3 bg-zinc-900 flex-col border-2 border-black justify-start items-start gap-3 hidden lg:inline-flex">
 			<Button
-				className="text-white text-xl justify-start font-semibold uppercase p-6"
-				variant={"ghost"}
+				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				variant={'ghost'}
 				asChild
 			>
-				<Link href="/duo">DUO</Link>
+				<Link href="/duo">
+					<Icons.users />
+					<span>DUO</span>
+				</Link>
 			</Button>
 			<Button
-				className="text-white text-xl justify-start font-semibold uppercase p-6"
-				variant={"ghost"}
+				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				variant={'ghost'}
 				asChild
 			>
-				<Link href="/scrims">Scrims</Link>
+				<Link href="/duo">
+					<Icons.swords />
+					<span>SCRIMS</span>
+				</Link>
 			</Button>
 			<Button
-				className="text-white text-xl justify-start font-semibold uppercase p-6"
-				variant={"ghost"}
+				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				variant={'ghost'}
 				asChild
 			>
-				<Link href="/team">Team</Link>
+				<Link href="/duo">
+					<Icons.gamepad />
+					<span>TEAM</span>
+				</Link>
 			</Button>
 			<Button
-				className="text-white text-xl justify-start font-semibold uppercase p-6"
-				variant={"ghost"}
+				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				variant={'ghost'}
 				asChild
 			>
-				<Link href="/coaches">Coaches</Link>
+				<Link href="/duo">
+					<Icons.bookUp />
+					<span>COACHES</span>
+				</Link>
 			</Button>
 			<Button
-				className="text-white text-xl justify-start font-semibold uppercase p-6"
-				variant={"ghost"}
+				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				variant={'ghost'}
 				asChild
 			>
-				<Link href="/clips">Clips</Link>
+				<Link href="/duo">
+					<Icons.clapperBoard />
+					<span>CLIPS</span>
+				</Link>
 			</Button>
 			<Button
-				className="text-white text-xl justify-start font-semibold uppercase p-6"
-				variant={"ghost"}
+				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				variant={'ghost'}
 				asChild
 			>
-				<Link href="/events">Events</Link>
+				<Link href="/duo">
+					<Icons.calendarSearch />
+					<span>EVENTS</span>
+				</Link>
 			</Button>
 		</div>
 	);
