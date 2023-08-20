@@ -2,7 +2,11 @@ type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
 	logo: (props: IconProps) => (
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {...props}>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 256 256"
+			{...props}
+		>
 			<rect width="256" height="256" fill="none" />
 			<line
 				x1="208"
@@ -88,4 +92,149 @@ export const Icons = {
 			<path d="M21 12a9 9 0 1 1-6.219-8.56" />
 		</svg>
 	),
+	users: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-users"
+			{...props}
+		>
+			<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+			<circle cx="9" cy="7" r="4" />
+			<path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+			<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+		</svg>
+	),
+	swords: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-swords"
+			{...props}
+		>
+			<polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
+			<line x1="13" x2="19" y1="19" y2="13" />
+			<line x1="16" x2="20" y1="16" y2="20" />
+			<line x1="19" x2="21" y1="21" y2="19" />
+			<polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5" />
+			<line x1="5" x2="9" y1="14" y2="18" />
+			<line x1="7" x2="4" y1="17" y2="20" />
+			<line x1="3" x2="5" y1="19" y2="21" />
+		</svg>
+	),
+	gamepad: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-gamepad-2"
+			{...props}
+		>
+			<line x1="6" x2="10" y1="11" y2="11" />
+			<line x1="8" x2="8" y1="9" y2="13" />
+			<line x1="15" x2="15.01" y1="12" y2="12" />
+			<line x1="18" x2="18.01" y1="10" y2="10" />
+			<path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
+		</svg>
+	),
+	bookUp: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-book-up-2"
+			{...props}
+		>
+			<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2" />
+			<path d="M18 2h2v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+			<path d="M12 13V7" />
+			<path d="m9 10 3-3 3 3" />
+			<path d="m9 5 3-3 3 3" />
+		</svg>
+	),
+	clapperBoard: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-clapperboard"
+			{...props}
+		>
+			<path d="M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8H4Z" />
+			<path d="m4 11-.88-2.87a2 2 0 0 1 1.33-2.5l11.48-3.5a2 2 0 0 1 2.5 1.32l.87 2.87L4 11.01Z" />
+			<path d="m6.6 4.99 3.38 4.2" />
+			<path d="m11.86 3.38 3.38 4.2" />
+		</svg>
+	),
+	calendarSearch: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-calendar-search"
+			{...props}
+		>
+			<path d="M21 12V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h7.5" />
+			<path d="M16 2v4" />
+			<path d="M8 2v4" />
+			<path d="M3 10h18" />
+			<path d="M18 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6v0Z" />
+			<path d="m22 22-1.5-1.5" />
+		</svg>
+	),
+	chatMessage: (props: IconProps) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="3"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			className="lucide lucide-message-square"
+			{...props}
+		>
+			<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+		</svg>
+	)
 };
