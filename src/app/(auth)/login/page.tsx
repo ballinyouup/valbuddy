@@ -7,11 +7,11 @@ import {
 	CardContent,
 	CardDescription,
 	CardHeader,
-	CardTitle,
+	CardTitle
 } from "@/components/ui/card";
 import Link from "next/link";
 export default function Login({
-	searchParams,
+	searchParams
 }: {
 	searchParams: { [key: string]: string | string[] | undefined };
 }) {
@@ -28,14 +28,24 @@ export default function Login({
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex flex-col w-full gap-4">
-					<Link href={`${config.API_URL}/login/discord`}>
-						<Button variant="outline" className="w-full text-lg font-bold">
+					<Link
+						href={`${config.API_URL}/login/discord`}
+					>
+						<Button
+							variant="outline"
+							className="w-full text-lg font-bold"
+						>
 							<Icons.discord className="mr-2 h-6 w-6" />
 							Discord
 						</Button>
 					</Link>
-					<Link href={`${config.API_URL}/login/twitch`}>
-						<Button variant="outline" className="w-full text-lg font-bold">
+					<Link
+						href={`${config.API_URL}/login/twitch`}
+					>
+						<Button
+							variant="outline"
+							className="w-full text-lg font-bold"
+						>
 							<Icons.twitch className="mr-2 h-6 w-6" />
 							Twitch
 						</Button>
