@@ -80,12 +80,6 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 		return fmt.Errorf("empty userId or field name")
 	}
 
-	// Fetch the existing user from the database using the userID
-	existingUser := User{}
-	if err := GetDatabase().Where("user_id = ?", userID).First(&existingUser).Error; err != nil {
-		return fmt.Errorf("error with database: %w", err)
-	}
-
 	// Type Assert Value to string and check if ok
 	val, ok := value.(string)
 	if !ok {
@@ -95,6 +89,12 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 	// If value is empty, do nothing
 	if val == "" {
 		return nil
+	}
+
+	// Fetch the existing user from the database using the userID
+	existingUser := User{}
+	if err := GetDatabase().Where("user_id = ?", userID).First(&existingUser).Error; err != nil {
+		return fmt.Errorf("error with database: %w", err)
 	}
 
 	// Update the specified field with the new value
