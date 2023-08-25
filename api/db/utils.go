@@ -1,14 +1,17 @@
 package db
+
 import (
-	"strings"
 	"fmt"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 )
+
 // validateCheck performs validation on the provided data using the validator library.
 // It returns an error containing validation error messages if validation fails,
 func ValidateCheck(data interface{}) error {
 	// Attempt to validate the provided data using the validator library
-	if err := Validate.Struct(data); err != nil {
+	if err := GetValidate().Struct(data); err != nil {
 		// If validation fails, store validation error messages
 		var validationErrors []string
 

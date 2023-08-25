@@ -163,7 +163,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		errorParam := url.QueryEscape("Provider Not Found")
 		return c.Redirect(fmt.Sprintf("%s/login?error=%s", config.Env.FRONTEND_URL, errorParam))
 	}
-	s, err := db.Sessions.Get(c)
+	s, err := db.GetSessions().Get(c)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}
@@ -190,7 +190,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 }
 
 func HandleLogout(c *fiber.Ctx) error {
-	s, err := db.Sessions.Get(c)
+	s, err := db.GetSessions().Get(c)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}

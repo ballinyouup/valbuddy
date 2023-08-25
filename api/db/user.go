@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/lucsky/cuid"
 
@@ -12,7 +13,7 @@ import (
 func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) (User, error) {
 	// Check if a user with the same email exists in the database
 	existingUser := User{}
-	err := Database.Where("email = ?", email).First(&existingUser).Error
+	err := GetDatabase().Where("email = ?", email).First(&existingUser).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return User{}, fmt.Errorf("error with database: %w", err)
 	}
@@ -49,12 +50,12 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 		}
 
 		// Create the new User record in the database
-		if err := Database.Create(newUser).Error; err != nil {
+		if err := GetDatabase().Create(newUser).Error; err != nil {
 			return User{}, fmt.Errorf("user creation failed: %w", err)
 		}
 
 		// Create the new Account record in the database
-		if err := Database.Create(newAccount).Error; err != nil {
+		if err := GetDatabase().Create(newAccount).Error; err != nil {
 			return User{}, fmt.Errorf("account creation failed: %w", err)
 		}
 
@@ -81,7 +82,7 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 
 	// Fetch the existing user from the database using the userID
 	existingUser := User{}
-	if err := Database.Where("user_id = ?", userID).First(&existingUser).Error; err != nil {
+	if err := GetDatabase().Where("user_id = ?", userID).First(&existingUser).Error; err != nil {
 		return fmt.Errorf("error with database: %w", err)
 	}
 
@@ -92,7 +93,7 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 	}
 
 	// If value is empty, do nothing
-	if(val == ""){
+	if val == "" {
 		return nil
 	}
 
@@ -111,12 +112,12 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 	}
 
 	// Validate the new field value and existing user.
-	if err := ValidateCheck(existingUser); err != nil{
+	if err := ValidateCheck(existingUser); err != nil {
 		return fmt.Errorf("error validating existing user: %w", err)
 	}
 
 	// Save the updated user back to the database
-	if err := Database.Save(&existingUser).Error; err != nil {
+	if err := GetDatabase().Save(&existingUser).Error; err != nil {
 		return fmt.Errorf("error saving updated user to db: %w", err)
 	}
 

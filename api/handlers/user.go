@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"fmt"
-	"nextjs-go/db"
 	"nextjs-go/config"
+	"nextjs-go/db"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 // Handler function that returns User Data as JSON
 func GetUser(c *fiber.Ctx) error {
 	// Get the current session/Error
-	s, err := db.Sessions.Get(c)
+	s, err := db.GetSessions().Get(c)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Session: %s", err))
 	}
@@ -25,7 +26,7 @@ func GetUser(c *fiber.Ctx) error {
 
 		// Retrieve user data from the database based on the user ID
 		// db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
-		db.Database.Where("id = ?", userId).First(&user)
+		db.GetDatabase().Where("id = ?", userId).First(&user)
 
 		// Return the user data as JSON response
 		return c.JSON(user)
@@ -41,7 +42,7 @@ func GetUser(c *fiber.Ctx) error {
 // Handler update function that returns the new User Data as JSON
 func UpdateUser(c *fiber.Ctx) error {
 	// Get the current session/Error
-	s, err := db.Sessions.Get(c)
+	s, err := db.GetSessions().Get(c)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Session: %s", err))
 	}
@@ -74,7 +75,7 @@ func UpdateUser(c *fiber.Ctx) error {
 // Handler function that the User from the DB
 func DeleteUser(c *fiber.Ctx) error {
 	// Get the current session/Error
-	s, err := db.Sessions.Get(c)
+	s, err := db.GetSessions().Get(c)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Session: %s", err))
 	}
@@ -88,8 +89,8 @@ func DeleteUser(c *fiber.Ctx) error {
 		user := db.User{}
 
 		// Retrieve user data from the database based on the user ID
-		db.Database.Where("id = ?", userId).First(&user)
-		db.Database.Delete(&user)
+		db.GetDatabase().Where("id = ?", userId).First(&user)
+		db.GetDatabase().Delete(&user)
 		s.Destroy()
 		return c.Status(200).Redirect(config.Env.FRONTEND_URL)
 	} else {
