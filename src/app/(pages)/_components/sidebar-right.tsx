@@ -3,14 +3,14 @@ import {
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger
-} from '@/components/ui/accordion';
+} from "@/components/ui/accordion";
 
 export default function SidebarRight() {
 	return (
 		<Accordion
 			type="multiple"
-			defaultValue={['scrims', 'communities', 'events']}
-			className="w-96 h-[936px] bg-zinc-900 flex-col justify-start items-center hidden 2xl:inline-flex border-2 border-black"
+			defaultValue={["scrims", "communities", "events"]}
+			className="w-1/3 h-fit bg-zinc-900 flex-col justify-start items-center hidden xl:inline-flex border-2 border-black"
 		>
 			<Scrims />
 			<Events />
@@ -31,9 +31,21 @@ function Scrims() {
 				</div>
 			</AccordionTrigger>
 			<AccordionContent>
-				<ScrimsRow teamName="Team #1" region="NA" time="7:00PM" />
-				<ScrimsRow teamName="Team #2" region="EU" time="11:00PM" />
-				<ScrimsRow teamName="Team #3" region="AP" time="3:00PM" />
+				<ScrimsRow
+					teamName="Team #1"
+					region="NA"
+					time="7:00PM"
+				/>
+				<ScrimsRow
+					teamName="Team #2"
+					region="EU"
+					time="11:00PM"
+				/>
+				<ScrimsRow
+					teamName="Team #3"
+					region="AP"
+					time="3:00PM"
+				/>
 			</AccordionContent>
 		</AccordionItem>
 	);
@@ -81,9 +93,18 @@ function Events() {
 				</div>
 			</AccordionTrigger>
 			<AccordionContent>
-				<EventsRow eventName="Event #1" date="01-12-2026" />
-				<EventsRow eventName="Event #2" date="02-28-2026" />
-				<EventsRow eventName="Event #3" date="04-04-2026" />
+				<EventsRow
+					eventName="Event #1"
+					date="01-12-2026"
+				/>
+				<EventsRow
+					eventName="Event #2"
+					date="02-28-2026"
+				/>
+				<EventsRow
+					eventName="Event #3"
+					date="04-04-2026"
+				/>
 			</AccordionContent>
 		</AccordionItem>
 	);
