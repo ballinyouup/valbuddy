@@ -1,3 +1,4 @@
+import SidebarRight from "./_components/sidebar-right";
 export default async function Home() {
 	const users: UserData[] = [
 		{
@@ -10,11 +11,14 @@ export default async function Home() {
 		}
 	];
 	return (
-		<main className="h-full w-full">
-			<div className="flex flex-col items-center justify-center">
-				<UserRow {...users[0]} />
-			</div>
-		</main>
+		<>
+			<main className="h-full w-full">
+				<div className="flex flex-col items-center justify-center">
+					<UserRow {...users[0]} />
+				</div>
+			</main>
+			<SidebarRight />
+		</>
 	);
 }
 
@@ -28,7 +32,7 @@ interface UserData {
 }
 
 function UserRow(user: UserData) {
-	const { username, rank, region, rating, role, age } = user
+	const { username, rank, region, rating, role, age } = user;
 	return (
 		<div className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800">
 			<div className="p-4">
