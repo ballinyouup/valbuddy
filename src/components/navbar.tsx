@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { GetUser } from "../../../api/user";
+import { GetUser } from "../api/user";
 import {
 	Popover,
 	PopoverContent,
-	PopoverTrigger,
+	PopoverTrigger
 } from "@/components/ui/popover";
 import LogoutButton from "./logout";
 import { ModeToggle } from "./theme-toggle";
@@ -13,9 +13,11 @@ import { ModeToggle } from "./theme-toggle";
 export default async function Navbar() {
 	return (
 		<nav className="w-full h-20 px-8 py-4 bg-red-900 justify-between items-center flex">
-			<div className="text-white text-[40px] font-black"><Link href="/">V</Link></div>
+			<div className="text-white text-[40px] font-black">
+				<Link href="/">V</Link>
+			</div>
 			<div className="justify-start items-center gap-2 flex">
-			<input className="w-56 h-9 rounded-sm relative bg-white border border-black border-opacity-25 text-black p-3 hidden md:flex" />
+				<input className="w-56 h-9 rounded-sm relative bg-white border border-black border-opacity-25 text-black p-3 hidden md:flex" />
 				<ModeToggle />
 				<NavProfile />
 			</div>
@@ -36,18 +38,29 @@ async function NavProfile() {
 		<Popover>
 			<PopoverTrigger>
 				<Avatar>
-					<AvatarImage src={user.image_url} alt={user.username} />
-					<AvatarFallback>{user.username[0]}</AvatarFallback>
+					<AvatarImage
+						src={user.image_url}
+						alt={user.username}
+					/>
+					<AvatarFallback>
+						{user.username[0]}
+					</AvatarFallback>
 				</Avatar>
 			</PopoverTrigger>
 			<PopoverContent className="flex flex-col justify-end gap-2">
 				<Link href="/profile">
-					<Button className="w-full" variant={"secondary"}>
+					<Button
+						className="w-full"
+						variant={"secondary"}
+					>
 						Profile
 					</Button>
 				</Link>
 				<Link href="/settings">
-					<Button className="w-full" variant={"secondary"}>
+					<Button
+						className="w-full"
+						variant={"secondary"}
+					>
 						Settings
 					</Button>
 				</Link>
