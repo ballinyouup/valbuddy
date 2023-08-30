@@ -1,3 +1,3 @@
 export default async function Home() {
-	return <main>Scrims</main>;
+	return <main className="w-full h-full">Scrims</main>;
 }
