@@ -1,14 +1,19 @@
 export default async function Home() {
+	const users: UserData[] = [
+		{
+			username: "player #1",
+			rank: "bronze",
+			region: "na",
+			rating: "4/5",
+			role: "smokes",
+			age: "1m"
+		}
+	];
 	return (
-		<main className="h-full w-full max-w-5xl border-l-0 border-r-0 border-2 border-black">
-			<UserRow
-				username="player #1"
-				rank="ascendant"
-				age="1m"
-				rating="5/5"
-				region="na"
-				role="smokes"
-			/>
+		<main className="h-full w-full">
+			<div className="flex flex-col items-center justify-center">
+				<UserRow {...users[0]} />
+			</div>
 		</main>
 	);
 }
@@ -22,9 +27,10 @@ interface UserData {
 	age: string;
 }
 
-function UserRow({ username, rank, region, rating, role, age }: UserData) {
+function UserRow(user: UserData) {
+	const { username, rank, region, rating, role, age } = user
 	return (
-		<div className="flex h-fit w-full items-center border-black border-opacity-30 bg-neutral-800">
+		<div className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800">
 			<div className="p-4">
 				<div className="h-12 w-12 rounded-full bg-white" />
 			</div>
@@ -38,7 +44,9 @@ function UserRow({ username, rank, region, rating, role, age }: UserData) {
 					<span>{rating}</span>
 				</div>
 				<div className="flex justify-between">
-					<span className="uppercase">{role}</span>
+					<span className="uppercase">
+						{role}
+					</span>
 					<span>{age}</span>
 				</div>
 			</div>
