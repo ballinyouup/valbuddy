@@ -4,7 +4,7 @@ import { ApiGatewayV1Api, Function } from "sst/constructs";
 export default function Backend({ stack }: any) {
     const lambdaFunc = new Function(stack, "goLambda", {
         handler: "./api/main.go",
-        runtime: "go1.x",
+        runtime: "go",
         environment: {
             DISCORD_ID: process.env.DISCORD_ID as string,
             DISCORD_SECRET: process.env.DISCORD_SECRET as string,
@@ -15,7 +15,7 @@ export default function Backend({ stack }: any) {
             TWITCH_ID: process.env.TWITCH_ID as string,
             TWITCH_SECRET: process.env.TWITCH_SECRET as string
         }
-    })
+    });
     new ApiGatewayV1Api(stack, "goApi", {
         routes: {
             "ANY /{proxy+}": lambdaFunc,
