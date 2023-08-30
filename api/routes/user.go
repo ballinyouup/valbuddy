@@ -21,7 +21,7 @@ func User(app *fiber.App) {
 	post := user.Group("/post")
 	post.Get("/", handlers.GetPost)
 	post.Post("/new", handlers.CreatePost)
-	post.Post("/update", handlers.UpdatePost)
+	post.Put("/update/:id", handlers.UpdatePost)
 	post.Delete("/delete", handlers.DeletePost)
 
 	// Get All Posts route
