@@ -1,3 +1,3 @@
 export default async function Profile() {
-	return <main>Profile</main>;
+	return <main className="w-full h-full">Profile</main>;
 }

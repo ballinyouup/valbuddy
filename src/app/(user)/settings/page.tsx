@@ -1,3 +1,3 @@
 export default async function Settings() {
-	return <main>Settings</main>;
+	return <main className="w-full h-full">Settings</main>;
 }
