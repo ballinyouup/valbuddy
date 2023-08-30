@@ -100,9 +100,9 @@ export const Icons = {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			className="lucide lucide-users"
 			{...props}
 		>
@@ -120,9 +120,9 @@ export const Icons = {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			className="lucide lucide-swords"
 			{...props}
 		>
@@ -144,9 +144,9 @@ export const Icons = {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			className="lucide lucide-gamepad-2"
 			{...props}
 		>
@@ -165,9 +165,9 @@ export const Icons = {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			className="lucide lucide-book-up-2"
 			{...props}
 		>
@@ -186,9 +186,9 @@ export const Icons = {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			className="lucide lucide-clapperboard"
 			{...props}
 		>
@@ -206,9 +206,9 @@ export const Icons = {
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			className="lucide lucide-calendar-search"
 			{...props}
 		>
