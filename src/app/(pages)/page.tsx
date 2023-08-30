@@ -1,4 +1,10 @@
 import SidebarRight from "./_components/sidebar-right";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger
+} from "@/components/ui/accordion";
 export default async function Home() {
 	const users: UserData[] = [
 		{
@@ -13,9 +19,51 @@ export default async function Home() {
 	return (
 		<>
 			<main className="h-full w-full">
-				<div className="flex flex-col items-center justify-center">
-					<UserRow {...users[0]} />
-				</div>
+				<Accordion
+					type="multiple"
+					defaultValue={["duos", "teams"]}
+				>
+					<AccordionItem
+						value="duos"
+						className="border-0"
+					>
+						<AccordionTrigger
+							className="flex h-fit justify-between items-center p-2 bg-red-900 border-2 border-x-0 border-b-0 border-black duration-0"
+							icon
+						>
+							<span className="font-black text-2xl">
+								DUOS
+							</span>
+						</AccordionTrigger>
+						<AccordionContent>
+							<div className="flex flex-col items-center justify-center">
+								<UserRow
+									{...users[0]}
+								/>
+							</div>
+						</AccordionContent>
+					</AccordionItem>
+					<AccordionItem
+						value="teams"
+						className="border-0"
+					>
+						<AccordionTrigger
+							className="flex h-fit justify-between items-center p-2 bg-red-900 border-2 border-x-0 border-b-0 border-black duration-0"
+							icon
+						>
+							<span className="font-black text-2xl">
+								TEAMS
+							</span>
+						</AccordionTrigger>
+						<AccordionContent>
+							<div className="flex flex-col items-center justify-center">
+								<UserRow
+									{...users[0]}
+								/>
+							</div>
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
 			</main>
 			<SidebarRight />
 		</>
@@ -35,10 +83,10 @@ function UserRow(user: UserData) {
 	const { username, rank, region, rating, role, age } = user;
 	return (
 		<div className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800">
-			<div className="p-4">
-				<div className="h-12 w-12 rounded-full bg-white" />
+			<div className="p-2">
+				<div className="h-20 w-20 bg-white" />
 			</div>
-			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground">
+			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground font-black text-lg">
 				<div className="flex justify-between uppercase">
 					<span>{username}</span>
 					<span>{rank}</span>
