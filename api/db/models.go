@@ -22,7 +22,7 @@ type Account struct {
 	UserID   string `json:"user_id" validate:"required,min=1"`              // ID from User Model
 	Username string `json:"username" validate:"omitempty"`                  // VALORANT Username
 	Rank     string `json:"rank" validate:"omitempty"`                      // VALORANT RANK
-	Role     string `json:"role" validate:"required,min=1"`                 // Role FREE or PAID
+	Role     string `json:"role" validate:"required"` // Role FREE or PAID
 
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
