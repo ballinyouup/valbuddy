@@ -38,7 +38,7 @@ func GetUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
 	}
 }
-
+//TODO: Refactor to not call UpdateUserField three times
 // Handler update function that returns the new User Data as JSON
 func UpdateUser(c *fiber.Ctx) error {
 	// Get the current session/Error

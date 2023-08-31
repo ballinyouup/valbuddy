@@ -72,6 +72,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 	return existingUser, nil
 }
 
+// TODO: Refactor to take in an object
 // UpdateUserField updates a specific field of a user with a new value.
 // It takes the userID, fieldName, and newValue as parameters.
 func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interface{}) error {
