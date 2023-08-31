@@ -1,3 +1,4 @@
+"use server";
 import { cookies } from "next/headers";
 import { config } from "@/env";
 import { revalidateTag } from "next/cache";
@@ -27,9 +28,25 @@ export async function GetUser() {
 			tags: ["user"],
 		},
 	});
-	if(!data.ok){
-		return undefined
+	if (!data.ok) {
+		return undefined;
 	}
 	const user = (await data.json()) as User;
 	return user;
 }
+
+export async function UpdateUser(formData: FormData) {
+
+	try {
+		await fetch(`${config.API_URL}/user/update`, {
+			credentials: "include",
+			headers: { Cookie: cookies().toString() },
+			method: "POST",
+			body: formData,
+		});
+		revalidateTag("user");
+	} catch (error) {
+		console.error("Error submitting form:", error);
+	}
+}
+
