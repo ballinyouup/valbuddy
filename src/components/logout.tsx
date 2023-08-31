@@ -15,7 +15,7 @@ export default function LogoutButton({
 			method: "GET"
 		});
 		if (data.ok) {
-			router.refresh();
+			router.push("/");
 		}
 	}
 
