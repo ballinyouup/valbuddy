@@ -28,7 +28,6 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 			ID:       userId,
 			Email:    email,
 			Username: username,
-			Role:     role,
 			Image:    image,
 			Provider: provider,
 		}
@@ -103,8 +102,6 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 		existingUser.Email = val
 	case "Username":
 		existingUser.Username = val
-	case "Role":
-		existingUser.Role = val
 	case "Image":
 		existingUser.Image = val
 	default:
