@@ -36,6 +36,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 		newAccount := &Account{
 			ID:     cuid.New(),
 			UserID: userId,
+			Role:   role,
 		}
 
 		// Validate the new User's data
@@ -92,17 +93,17 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 
 	// Fetch the existing user from the database using the userID
 	existingUser := User{}
-	if err := GetDatabase().Where("user_id = ?", userID).First(&existingUser).Error; err != nil {
+	if err := GetDatabase().Where("id = ?", userID).First(&existingUser).Error; err != nil {
 		return fmt.Errorf("error with database: %w", err)
 	}
 
 	// Update the specified field with the new value
 	switch fieldName {
-	case "Email":
+	case "email":
 		existingUser.Email = val
-	case "Username":
+	case "username":
 		existingUser.Username = val
-	case "Image":
+	case "image":
 		existingUser.Image = val
 	default:
 		return fmt.Errorf("invalid field name: %s", fieldName)
