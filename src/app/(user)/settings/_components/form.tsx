@@ -66,10 +66,10 @@ export default function UserForm(user: User) {
 			</div>
 			<div className="flex gap-2 w-full flex-col">
 				<h5 className="border-b border-foreground/10 pb-2 tracking-wide">
-					PROFILE IMAGE
+					EMAIL
 				</h5>
 				<div className="py-4">
-					<span className="font-black text-lg tracking-wide uppercase">
+					<span className="text-md tracking-wide uppercase">
 						{user.email}
 					</span>
 				</div>
@@ -78,7 +78,7 @@ export default function UserForm(user: User) {
 				<h5 className="border-b border-foreground/10 pb-2 tracking-wide">
 					USERNAME
 				</h5>
-				<span className="font-black text-lg tracking-wide uppercase py-4">
+				<span className="text-lg tracking-wide uppercase py-4">
 					{user.username}
 				</span>
 			</div>
@@ -86,7 +86,10 @@ export default function UserForm(user: User) {
 				<h5 className="border-b border-foreground/10 pb-2 tracking-wide">
 					MESSAGES
 				</h5>
-				<div className="py-4">
+				<div className="flex py-4 gap-4 items-center">
+					<span className="text-lg tracking-wide uppercase ">
+						ALLOW MESSAGES FROM
+					</span>
 					<Select defaultValue="all">
 						<SelectTrigger className="w-fit">
 							<SelectValue />
