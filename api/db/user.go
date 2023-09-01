@@ -72,24 +72,22 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 	return existingUser, nil
 }
 
-// TODO: Refactor to take in an object
+type FormData struct {
+	Username string
+	Image    string
+}
+
 // UpdateUserField updates a specific field of a user with a new value.
 // It takes the userID, fieldName, and newValue as parameters.
-func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interface{}) error {
+func UpdateUserField(c *fiber.Ctx, userID string, data interface{}) error {
 	// Check for empty userID or fieldName
-	if userID == "" || fieldName == "" {
+	if userID == "" {
 		return fmt.Errorf("empty userId or field name")
 	}
-
-	// Type Assert Value to string and check if ok
-	val, ok := value.(string)
+	// Convert data to FormData type
+	formData, ok := data.(FormData)
 	if !ok {
-		return fmt.Errorf("error type asserting newValue to string")
-	}
-
-	// If value is empty, do nothing
-	if val == "" {
-		return nil
+		return fmt.Errorf("error converting data to FormData")
 	}
 
 	// Fetch the existing user from the database using the userID
@@ -97,17 +95,11 @@ func UpdateUserField(c *fiber.Ctx, userID string, fieldName string, value interf
 	if err := GetDatabase().Where("id = ?", userID).First(&existingUser).Error; err != nil {
 		return fmt.Errorf("error with database: %w", err)
 	}
-
-	// Update the specified field with the new value
-	switch fieldName {
-	case "email":
-		existingUser.Email = val
-	case "username":
-		existingUser.Username = val
-	case "image":
-		existingUser.Image = val
-	default:
-		return fmt.Errorf("invalid field name: %s", fieldName)
+	if formData.Image != "" {
+		existingUser.Image = formData.Image
+	}
+	if formData.Username != "" {
+		existingUser.Username = formData.Username
 	}
 
 	// Validate the new field value and existing user.

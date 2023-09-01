@@ -38,7 +38,7 @@ func GetUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
 	}
 }
-//TODO: Refactor to not call UpdateUserField three times
+
 // Handler update function that returns the new User Data as JSON
 func UpdateUser(c *fiber.Ctx) error {
 	// Get the current session/Error
@@ -52,15 +52,19 @@ func UpdateUser(c *fiber.Ctx) error {
 		// Retrieve the user ID from the session
 		userIdFromSession := s.Get("user_id")
 		userId := userIdFromSession.(string)
-		if err := db.UpdateUserField(c, userId, "email", c.FormValue("email")); err != nil {
+
+		type FormData struct {
+			Username string
+			Image    string
+		}
+		formData := FormData{
+			Username: c.FormValue("username"),
+			Image: c.FormValue("image"),
+		}
+		if err := db.UpdateUserField(c, userId, formData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Updating Field: %s", err))
 		}
-		if err := db.UpdateUserField(c, userId, "username", c.FormValue("username")); err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Updating Field: %s", err))
-		}
-		if err := db.UpdateUserField(c, userId, "image", c.FormValue("image")); err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Updating Field: %s", err))
-		}
+
 		// Return the updated user data by calling the GetUser function
 		return GetUser(c)
 	} else {
