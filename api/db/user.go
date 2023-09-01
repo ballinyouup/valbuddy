@@ -79,15 +79,10 @@ type FormData struct {
 
 // UpdateUserField updates a specific field of a user with a new value.
 // It takes the userID, fieldName, and newValue as parameters.
-func UpdateUserField(c *fiber.Ctx, userID string, data interface{}) error {
+func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
 	// Check for empty userID or fieldName
 	if userID == "" {
 		return fmt.Errorf("empty userId or field name")
-	}
-	// Convert data to FormData type
-	formData, ok := data.(FormData)
-	if !ok {
-		return fmt.Errorf("error converting data to FormData")
 	}
 
 	// Fetch the existing user from the database using the userID
