@@ -6,10 +6,8 @@ export default async function Settings() {
 	const user = await GetUser();
 	if (!user) redirect("/login");
 	return (
-		<main className="w-full h-full">
-			Settings
+		<main className="w-full h-full border-t-2 border-black">
 			<UserForm {...user} />
 		</main>
 	);
 }
-// <input type="file" name="image" />
