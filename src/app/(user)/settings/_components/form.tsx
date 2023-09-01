@@ -56,7 +56,7 @@ export default function UserForm(user: User) {
 				</div>
 				{toggleEdit === false ? (
 					<Button
-						className="font-black text-lg tracking-wide w-fit uppercase"
+						className="font-black text-lg tracking-wide w-fit uppercase rounded-none"
 						variant={"destructive"}
 						type="button"
 						onClick={handleEdit}
@@ -64,20 +64,34 @@ export default function UserForm(user: User) {
 						Edit
 					</Button>
 				) : (
-					<Button
-						className="font-black text-lg tracking-wide w-fit uppercase"
-						type="submit"
-						variant={"destructive"}
-					>
-						Save
-					</Button>
+					<div className="flex gap-1">
+						<Button
+							className="font-black text-lg tracking-wide w-fit uppercase rounded-none"
+							variant={"destructive"}
+							type="button"
+							onClick={() =>
+								setToggleEdit(
+									false
+								)
+							}
+						>
+							X
+						</Button>
+						<Button
+							className="font-black text-lg tracking-wide w-fit uppercase rounded-none"
+							type="submit"
+							variant={"destructive"}
+						>
+							Save
+						</Button>
+					</div>
 				)}
 			</div>
 			<div className="flex gap-4 flex-col">
 				<h6 className="border-b border-foreground/10 pb-2 tracking-wide">
 					PROFILE IMAGE
 				</h6>
-				<div className="w-40 py-4">
+				<div className="w-fit py-4 flex gap-3">
 					<Avatar className="rounded-none w-12 h-12">
 						<AvatarImage
 							src={user.image_url}
@@ -119,24 +133,39 @@ export default function UserForm(user: User) {
 					<span className="text-lg tracking-wide uppercase ">
 						ALLOW MESSAGES FROM
 					</span>
-					<Select defaultValue="all">
-						<SelectTrigger className="w-fit">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectItem value="all">
-									ALL
-								</SelectItem>
-								<SelectItem value="friends">
-									FRIENDS
-								</SelectItem>
-								<SelectItem value="nobody">
-									NOBODY
-								</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
+					{toggleEdit ? (
+						<Select defaultValue="all">
+							<SelectTrigger className="w-fit h-fit p-2 rounded-none">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent className="rounded-none">
+								<SelectGroup>
+									<SelectItem
+										className="rounded-none"
+										value="all"
+									>
+										ALL
+									</SelectItem>
+									<SelectItem
+										className="rounded-none"
+										value="friends"
+									>
+										FRIENDS
+									</SelectItem>
+									<SelectItem
+										className="rounded-none"
+										value="nobody"
+									>
+										NOBODY
+									</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					) : (
+						<span className="p-2 bg-background">
+							ALL
+						</span>
+					)}
 				</div>
 			</div>
 			<div className="flex flex-col gap-2">
@@ -148,7 +177,7 @@ export default function UserForm(user: User) {
 						<AlertDialogTrigger asChild>
 							<Button
 								variant="destructive"
-								className="font-black text-lg tracking-wide w-fit uppercase"
+								className="font-black text-lg tracking-wide w-fit uppercase rounded-none"
 							>
 								DELETE ACCOUNT
 							</Button>
