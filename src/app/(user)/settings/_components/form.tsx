@@ -23,14 +23,29 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 //TODO: Add change email functionality. Requires change to auth flow.
 //TODO: Add on image hover, edit icon, upload image modal
+//TODO: Add useOptimistic/useFormStatus
 export default function UserForm(user: User) {
+	const [toggleEdit, setToggleEdit] = useState(false);
+
+	async function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+		const formData = new FormData(e.target as HTMLFormElement);
+		await UpdateUser(formData);
+		setToggleEdit(false);
+	}
+
+	function handleEdit(e: React.MouseEvent) {
+		e.preventDefault();
+		setToggleEdit(true);
+	}
 	return (
 		<form
 			className="flex flex-col p-4 gap-2 bg-secondary"
-			action={UpdateUser}
+			onSubmit={handleSubmit}
 		>
 			<div className="flex pb-4 justify-between">
 				<div className="flex flex-col">
@@ -39,13 +54,24 @@ export default function UserForm(user: User) {
 						Manage your user settings
 					</span>
 				</div>
-				<Button
-					className="font-black text-lg tracking-wide w-fit uppercase"
-					type="submit"
-					variant={"destructive"}
-				>
-					Edit
-				</Button>
+				{toggleEdit === false ? (
+					<Button
+						className="font-black text-lg tracking-wide w-fit uppercase"
+						variant={"destructive"}
+						type="button"
+						onClick={handleEdit}
+					>
+						Edit
+					</Button>
+				) : (
+					<Button
+						className="font-black text-lg tracking-wide w-fit uppercase"
+						type="submit"
+						variant={"destructive"}
+					>
+						Save
+					</Button>
+				)}
 			</div>
 			<div className="flex gap-4 flex-col">
 				<h6 className="border-b border-foreground/10 pb-2 tracking-wide">
@@ -62,6 +88,9 @@ export default function UserForm(user: User) {
 							<Skeleton className="h-10 w-10" />
 						</AvatarFallback>
 					</Avatar>
+					{toggleEdit ? (
+						<input type="file" />
+					) : null}
 				</div>
 			</div>
 			<div className="flex gap-2 w-full flex-col">
