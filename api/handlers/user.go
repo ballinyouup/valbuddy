@@ -53,12 +53,9 @@ func UpdateUser(c *fiber.Ctx) error {
 		userIdFromSession := s.Get("user_id")
 		userId := userIdFromSession.(string)
 
-		type FormData struct {
-			Username string
-			Image    string
-		}
-		formData := FormData{
-			Username: c.FormValue("username"),
+		
+		formData := db.FormData{
+			Username: c.FormValue("username") ,
 			Image: c.FormValue("image"),
 		}
 		if err := db.UpdateUserField(c, userId, formData); err != nil {
