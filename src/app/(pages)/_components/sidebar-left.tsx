@@ -9,9 +9,9 @@ export default function SidebarLeft() {
 				variant={"ghost"}
 				asChild
 			>
-				<Link href="/duo">
+				<Link href="/duos">
 					<Icons.users />
-					<span>DUO</span>
+					<span>DUOS</span>
 				</Link>
 			</Button>
 			<Button

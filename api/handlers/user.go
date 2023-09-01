@@ -7,7 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 )
-
+//TODO: Create a fetch for a users public account profile, no session required
 // Handler function that returns User Data as JSON
 func GetUser(c *fiber.Ctx) error {
 	// Get the current session/Error
