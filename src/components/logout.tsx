@@ -20,7 +20,10 @@ export default function LogoutButton({
 	}
 
 	return (
-		<Button onClick={() => Logout()} className="w-full">
+		<Button
+			onClick={() => Logout()}
+			className="w-full rounded-none font-black text-lg uppercase tracking-wide"
+		>
 			{children}
 		</Button>
 	);

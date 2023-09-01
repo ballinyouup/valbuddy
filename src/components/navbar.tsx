@@ -48,10 +48,10 @@ async function NavProfile() {
 					</AvatarFallback>
 				</Avatar>
 			</PopoverTrigger>
-			<PopoverContent className="flex flex-col justify-end gap-2">
+			<PopoverContent className="flex flex-col justify-end gap-2 rounded-none">
 				<Link href="/profile">
 					<Button
-						className="w-full"
+						className="w-full rounded-none font-black text-lg uppercase tracking-wide"
 						variant={"secondary"}
 					>
 						Profile
@@ -59,7 +59,7 @@ async function NavProfile() {
 				</Link>
 				<Link href="/settings">
 					<Button
-						className="w-full"
+						className="w-full rounded-none font-black text-lg uppercase tracking-wide"
 						variant={"secondary"}
 					>
 						Settings
