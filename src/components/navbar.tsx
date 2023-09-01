@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import LogoutButton from "./logout";
 import { ModeToggle } from "./theme-toggle";
+import { Skeleton } from "./ui/skeleton";
 
 export default async function Navbar() {
 	return (
@@ -43,7 +44,7 @@ async function NavProfile() {
 						alt={user.username}
 					/>
 					<AvatarFallback>
-						{user.username[0]}
+						<Skeleton className="h-10 w-10" />
 					</AvatarFallback>
 				</Avatar>
 			</PopoverTrigger>
