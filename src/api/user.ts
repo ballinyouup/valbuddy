@@ -13,30 +13,38 @@ export interface User {
 	created_at: Date;
 	updated_at: Date;
 }
-
 export async function GetUser() {
+	const session = cookies().get("session_id");
+	if (!session) {
+		return undefined
+	}
+	try {
+		const data = await fetch(`${config.API_URL}/user`, {
+			credentials: "include",
+			method: "GET",
+			headers: { Cookie: cookies().toString() },
+			cache: "force-cache",
+			next: {
+				tags: [session.value],
+			},
+		});
+		if (!data.ok) {
+			throw new Error("Error fetching User: Bad response from server");
+		}
+		const user = (await data.json()) as User;
+		return user;
+	} catch (error) {
+		console.error("Error getting user:", error);
+		return undefined
+	}
+}
+
+
+export async function UpdateUser(formData: FormData) {
 	const session = cookies().get("session_id");
 	if (!session) {
 		return undefined;
 	}
-	const data = await fetch(`${config.API_URL}/user`, {
-		credentials: "include",
-		method: "GET",
-		headers: { Cookie: cookies().toString() },
-		cache: "force-cache",
-		next: {
-			tags: ["user"],
-		},
-	});
-	if (!data.ok) {
-		return undefined;
-	}
-	const user = (await data.json()) as User;
-	return user;
-}
-
-export async function UpdateUser(formData: FormData) {
-
 	try {
 		await fetch(`${config.API_URL}/user/update`, {
 			credentials: "include",
@@ -44,9 +52,10 @@ export async function UpdateUser(formData: FormData) {
 			method: "POST",
 			body: formData,
 		});
-		revalidateTag("user");
+		revalidateTag(session.value);
 	} catch (error) {
 		console.error("Error submitting form:", error);
 	}
 }
+
 
