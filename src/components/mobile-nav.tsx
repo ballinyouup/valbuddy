@@ -29,9 +29,11 @@ export default async function MobileNav() {
 					alignOffset={-20}
 					className="w-screen md:hidden flex flex-col rounded-none"
 				>
-					<DropdownMenuItem asChild>
-						<SheetForm mobile />
-					</DropdownMenuItem>
+					{user ? (
+						<DropdownMenuItem asChild>
+							{<SheetForm mobile />}
+						</DropdownMenuItem>
+					) : null}
 					<DropdownMenuItem
 						className="rounded-none"
 						asChild
