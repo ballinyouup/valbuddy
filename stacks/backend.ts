@@ -1,7 +1,19 @@
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
-import { ApiGatewayV1Api, Function } from "sst/constructs";
+import { HttpMethods } from "aws-cdk-lib/aws-s3";
+import { ApiGatewayV1Api, Bucket, Function } from "sst/constructs";
 
 export default function Backend({ stack }: any) {
+    const bucket = new Bucket(stack, "imageBucket", {
+        cors: false,
+        cdk: {
+            bucket: {
+                publicReadAccess: true,
+                bucketName: "valbuddy-images",
+                autoDeleteObjects: false,
+                enforceSSL: false,
+            }
+        }
+    });
     const lambdaFunc = new Function(stack, "goLambda", {
         handler: "./api/main.go",
         runtime: "go",
@@ -14,11 +26,12 @@ export default function Backend({ stack }: any) {
             COOKIE_DOMAIN: process.env.COOKIE_DOMAIN as string,
             TWITCH_ID: process.env.TWITCH_ID as string,
             TWITCH_SECRET: process.env.TWITCH_SECRET as string
-        }
+        },
+        bind: [bucket]
     });
     new ApiGatewayV1Api(stack, "goApi", {
         routes: {
-            "ANY /{proxy+}": lambdaFunc,
+            "ANY /{proxy+}": lambdaFunc
         },
         cdk: {
             restApi: {
@@ -29,10 +42,10 @@ export default function Backend({ stack }: any) {
                     allowOrigins: ["*"],
                     allowCredentials: false,
                     allowHeaders: ["*"],
-                    allowMethods: ["ANY"],
+                    allowMethods: ["ANY"]
                 }
-            },
-        },
+            }
+        }
     });
 
 }
