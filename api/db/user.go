@@ -80,32 +80,30 @@ type FormData struct {
 // UpdateUserField updates a specific field of a user with a new value.
 // It takes the userID, fieldName, and newValue as parameters.
 func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
-	// Check for empty userID or fieldName
-	if userID == "" {
-		return fmt.Errorf("empty userId or field name")
-	}
+    // Check for empty userID or fieldName
+    if userID == "" {
+        return fmt.Errorf("error updating user: no user id")
+    }
 
-	// Fetch the existing user from the database using the userID
-	existingUser := User{}
-	if err := GetDatabase().Where("id = ?", userID).First(&existingUser).Error; err != nil {
-		return fmt.Errorf("error with database: %w", err)
-	}
-	if formData.Image != "" {
-		existingUser.Image = formData.Image
-	}
-	if formData.Username != "" {
-		existingUser.Username = formData.Username
-	}
+    // Create a map to store the fields you want to update
+    updates := map[string]interface{}{}
 
-	// Validate the new field value and existing user.
-	if err := ValidateCheck(existingUser); err != nil {
-		return fmt.Errorf("error validating existing user: %w", err)
+    // Update user fields based on non-empty form data
+    if formData.Image != "" {
+        updates["Image"] = formData.Image
+    }
+    if formData.Username != "" {
+        updates["Username"] = formData.Username
+    }
+	query := &User{
+		ID: userID,
 	}
+	
+    // Use Updates to save the updated fields back to the database
+    if err := GetDatabase().Model(&User{}).Where(query).Updates(updates).Error; err != nil {
+        return fmt.Errorf("error updating user in the database: %w", err)
+    }
 
-	// Save the updated user back to the database
-	if err := GetDatabase().Save(&existingUser).Error; err != nil {
-		return fmt.Errorf("error saving updated user to db: %w", err)
-	}
-
-	return nil
+    return nil
 }
+

@@ -19,7 +19,7 @@ func User(app *fiber.App) {
 
 	// url/user/post
 	post := user.Group("/post")
-	post.Get("/", handlers.GetPost)
+	post.Get("/", handlers.GetUserPosts)
 	post.Post("/new", handlers.CreatePost)
 	post.Put("/update/:id", handlers.UpdatePost)
 	post.Delete("/delete", handlers.DeletePost)
