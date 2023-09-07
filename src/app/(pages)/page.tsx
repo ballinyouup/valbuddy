@@ -1,3 +1,4 @@
+import { GetAllPosts, type Post } from "@/api/post";
 import SidebarRight from "./_components/sidebar-right";
 import {
 	Accordion,
@@ -6,16 +7,8 @@ import {
 	AccordionTrigger
 } from "@/components/ui/accordion";
 export default async function Home() {
-	const users: UserData[] = [
-		{
-			username: "player #1",
-			rank: "bronze",
-			region: "na",
-			rating: "4/5",
-			role: "smokes",
-			age: "1m"
-		}
-	];
+	const posts = await GetAllPosts();
+	if (!posts) return null;
 	return (
 		<>
 			<main className="h-full w-full">
@@ -27,19 +20,28 @@ export default async function Home() {
 						value="duos"
 						className="border-0"
 					>
-						<AccordionTrigger
-							className="flex h-fit justify-between items-center p-2 bg-red-900 border-2 border-x-0 border-b-0 border-black duration-0"
-							icon
-						>
+						<AccordionTrigger className="flex h-fit items-center p-2 bg-red-900 border-2 border-x-0 border-b-0 border-black duration-0">
 							<span className="font-black text-2xl">
 								DUOS
 							</span>
 						</AccordionTrigger>
 						<AccordionContent>
 							<div className="flex flex-col items-center justify-center">
-								<UserRow
-									{...users[0]}
-								/>
+								{posts.map(
+									(
+										post,
+										index
+									) => (
+										<UserRow
+											key={String(
+												index
+											)}
+											post={
+												post
+											}
+										/>
+									)
+								)}
 							</div>
 						</AccordionContent>
 					</AccordionItem>
@@ -55,13 +57,13 @@ export default async function Home() {
 								TEAMS
 							</span>
 						</AccordionTrigger>
-						<AccordionContent>
+						{/**<AccordionContent>
 							<div className="flex flex-col items-center justify-center">
 								<UserRow
-									{...users[0]}
+									{...posts[0]}
 								/>
 							</div>
-						</AccordionContent>
+										</AccordionContent> */}
 					</AccordionItem>
 				</Accordion>
 			</main>
@@ -70,36 +72,69 @@ export default async function Home() {
 	);
 }
 
-interface UserData {
-	username: string;
-	rank: string;
-	region: string;
-	rating: string;
-	role: string;
-	age: string;
-}
+function UserRow({ post, key }: { post: Post; key: string }) {
+	const roles = JSON.parse(
+		Buffer.from(post.player_roles, "base64").toString("utf-8")
+	);
+	const ranks = JSON.parse(
+		Buffer.from(post.player_ranks, "base64").toString("utf-8")
+	);
 
-function UserRow(user: UserData) {
-	const { username, rank, region, rating, role, age } = user;
 	return (
-		<div className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800">
+		<div key={key} className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800">
 			<div className="p-2">
 				<div className="h-20 w-20 bg-white" />
 			</div>
-			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground font-black text-lg">
+			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground font-medium text-base">
 				<div className="flex justify-between uppercase">
-					<span>{username}</span>
-					<span>{rank}</span>
+					<span>{post.username}</span>
+					<div className="flex gap-2">
+						{ranks.map(
+							(
+								rank: string,
+								index: number
+							) => (
+								<span
+									key={
+										index
+									}
+								>
+									{rank}
+								</span>
+							)
+						)}
+					</div>
 				</div>
 				<div className="flex justify-between uppercase">
-					<span>{region}</span>
-					<span>{rating}</span>
+					<span>{post.region}</span>
+					<span>{post.player_amount}</span>
 				</div>
 				<div className="flex justify-between">
 					<span className="uppercase">
-						{role}
+						{roles.map(
+							(
+								role: string,
+								index: number
+							) => (
+								<span
+									key={
+										index
+									}
+								>
+									{role}
+								</span>
+							)
+						)}
 					</span>
-					<span>{age}</span>
+					<span>
+						{post.created_at?.toLocaleString()}
+					</span>
+				</div>
+				<div className="flex justify-between">
+					<span className="uppercase">
+						{post.text}
+					</span>
+					<span>{post.category}</span>
 				</div>
 			</div>
 		</div>
