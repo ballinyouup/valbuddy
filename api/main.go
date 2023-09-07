@@ -47,6 +47,9 @@ func init() {
 	if err := db.Init(); err != nil {
 		initError = fmt.Errorf("error initializing database: %w", err)
 	}
+	if err := config.AWSInit(); err != nil {
+		initError = fmt.Errorf("error initializing aws config: %w", err)
+	}
 
 	// If running as a Lambda function, create a Fiber adapter
 	if config.Env.IS_LAMBDA {
