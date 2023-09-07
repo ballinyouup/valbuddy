@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 )
 
 // validateCheck performs validation on the provided data using the validator library.
@@ -25,4 +27,20 @@ func ValidateCheck(data interface{}) error {
 	}
 
 	return nil
+}
+
+func ValidateSession(c *fiber.Ctx) (*session.Session, error){
+	s, err := GetSessions().Get(c)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Session: %s", err))
+	}
+	// Check if the session is not fresh (has been authenticated)
+	if s.Fresh() {
+		// If the session is fresh, destroy the session
+		s.Destroy()
+
+		// Return an unauthorized error response
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+	}
+	return s, nil
 }
