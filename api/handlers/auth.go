@@ -83,7 +83,8 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Checking State And CSRF: %s", err))
 	}
-	switch c.Params("provider") {
+	provider := c.Params("provider")
+	switch provider {
 	case "discord":
 		providerConfig, err := GetOAuth2ProviderConfig("discord")
 		if err != nil {
@@ -167,22 +168,20 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}
+	// If the user already has a previous session, delete previous and create a new one.
+	if !s.Fresh() {
+		if err = s.Regenerate(); err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Regenerate Session Error: %s", err))
+		}
+	}
+
 	// Include user id, expiry, and session id inside session storage
 	s.Set("user_id", user.ID)
 	s.Set("session_id", s.ID())
 	s.SetExpiry(24 * time.Hour)
 
-	// If the user already has a previous session, delete previous and create a new one.
-	if !s.Fresh() {
-		err = s.Regenerate()
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Regenerate Session Error: %s", err))
-		}
-	}
-
 	// Save Session to database
-	err = s.Save()
-	if err != nil {
+	if err = s.Save(); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("DB Save Error: %s", err))
 	}
 
@@ -190,9 +189,9 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 }
 
 func HandleLogout(c *fiber.Ctx) error {
-	s, err := db.GetSessions().Get(c)
+	s, err := db.ValidateSession(c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
+		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}
 	if err := s.Destroy(); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Destroy Session Error: %s", err))
