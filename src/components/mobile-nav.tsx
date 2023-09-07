@@ -1,3 +1,4 @@
+import { GetUser } from "@/api/user";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,7 +8,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-export default function MobileNav() {
+import SheetForm from "@/app/(pages)/_components/sheet-form";
+import { Button } from "./ui/button";
+import { Icons } from "./ui/icons";
+export default async function MobileNav() {
+	const user = await GetUser();
 	return (
 		<div className="fixed bottom-0 w-full h-fit px-2 py-2 bg-primary md:hidden">
 			<DropdownMenu>
@@ -24,56 +29,135 @@ export default function MobileNav() {
 					alignOffset={-20}
 					className="w-screen md:hidden flex flex-col rounded-none"
 				>
+					<DropdownMenuItem asChild>
+						<SheetForm mobile />
+					</DropdownMenuItem>
 					<DropdownMenuItem
+						className="rounded-none"
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
 					>
-						<Link href="/duo">Duos</Link>
+						<Link href="/duos">
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.users />
+								<span>
+									Duos
+								</span>
+							</Button>
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
+						className="rounded-none"
 					>
-						<Link href="/teams">Teams</Link>
+						<Link href="/teams">
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.gamepad />
+								<span>
+									Teams
+								</span>
+							</Button>
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
+						className="rounded-none"
 					>
 						<Link href="/scrims">
-							Scrims
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.swords />
+								<span>
+									Scrims
+								</span>
+							</Button>
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
+						className="rounded-none"
 					>
 						<Link href="/events">
-							Events
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.calendarSearch />
+								<span>
+									Events
+								</span>
+							</Button>
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
+						className="rounded-none"
 					>
-						<Link href="/events">
-							Coaches
+						<Link href="/coaches">
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.bookUp />
+								<span>
+									Coaches
+								</span>
+							</Button>
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
+						className="rounded-none"
 					>
 						<Link href="/communities">
-							Communities
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.bookUp />
+								<span>
+									Communities
+								</span>
+							</Button>
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem
 						asChild
-						className="text-lg font-extrabold uppercase rounded-none"
+						className="rounded-none"
 					>
-						<Link href="/clips">Clips</Link>
+						<Link href="/clips">
+							<Button
+								className="text-white w-full h-fit text-xl items-center justify-start font-black uppercase gap-2 p-0"
+								variant={
+									"ghost"
+								}
+							>
+								<Icons.clapperBoard />
+								<span>
+									Clips
+								</span>
+							</Button>
+						</Link>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

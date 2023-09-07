@@ -27,7 +27,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 
-export default function SheetForm() {
+export default function SheetForm({ mobile = false }: { mobile?: boolean }) {
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const formData = new FormData(e.target as HTMLFormElement);
@@ -36,7 +36,7 @@ export default function SheetForm() {
 
 	return (
 		<Sheet>
-			<Trigger />
+			<Trigger mobile={mobile} />
 			<SheetContent side={"left"} className="overflow-scroll">
 				<form
 					onSubmit={handleSubmit}
@@ -56,11 +56,15 @@ export default function SheetForm() {
 		</Sheet>
 	);
 }
-function Trigger() {
+function Trigger({ mobile = false }: { mobile: boolean }) {
 	return (
 		<SheetTrigger asChild>
 			<Button
-				className="text-white text-xl items-center justify-start font-black uppercase p-6 gap-2"
+				className={
+					mobile
+						? "text-white w-full text-xl items-center justify-start font-black uppercase px-2 gap-2"
+						: "text-white w-full h-12 text-xl items-center justify-start font-black uppercase px-6 gap-2"
+				}
 				variant={"ghost"}
 			>
 				<Icons.plus />
