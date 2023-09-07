@@ -7,7 +7,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 )
-//TODO: Create a fetch for a users public account profile, no session required: GetPublicUser()
+
+// TODO: Create a fetch for a users public account profile, no session required: GetPublicUser()
 // Handler function that returns User Data as JSON
 func GetUser(c *fiber.Ctx) error {
 	s, err := db.ValidateSession(c)
@@ -17,7 +18,7 @@ func GetUser(c *fiber.Ctx) error {
 
 	// Retrieve the user ID from the session
 	userId := s.Get("user_id").(string)
-	
+
 	// Create an empty User object
 	user := db.User{}
 	query := db.User{
@@ -42,17 +43,29 @@ func UpdateUser(c *fiber.Ctx) error {
 	userIdFromSession := s.Get("user_id")
 	userId := userIdFromSession.(string)
 
+	// S3 Configuration
 	
+	fileHeader, err := c.FormFile("image")
+	if err != nil {
+		return fmt.Errorf("error extracting file header from form: %w", err)
+	}
+	file, err := fileHeader.Open()
+	if err != nil {
+		return err
+	}
+	
+	url, err := config.UploadFile(file, fileHeader.Filename)
+	if err != nil {
+		return fmt.Errorf("error executing config.UploadFile: %w", err)
+	}
 	formData := db.FormData{
-		Username: c.FormValue("username") ,
-		Image: c.FormValue("image"),
+		Image:    url,
 	}
 	if err := db.UpdateUserField(c, userId, formData); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Updating Field: %s", err))
 	}
 
-	// Return the updated user data by calling the GetUser function
-	return GetUser(c)
+	return c.SendStatus(200)
 }
 
 // Handler function that the User from the DB
