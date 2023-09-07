@@ -24,17 +24,24 @@ import {
 	AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 //TODO: Add change email functionality. Requires change to auth flow.
 //TODO: Add on image hover, edit icon, upload image modal
 //TODO: Add useOptimistic/useFormStatus
 export default function UserForm(user: User) {
 	const [toggleEdit, setToggleEdit] = useState(false);
-
+	const router = useRouter();
+	const currentPath = usePathname();
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const formData = new FormData(e.target as HTMLFormElement);
-		await UpdateUser(formData);
+		const res = await UpdateUser(formData, currentPath);
+		if (!res) {
+			router.push("/login");
+		}
 		setToggleEdit(false);
 	}
 
@@ -92,18 +99,31 @@ export default function UserForm(user: User) {
 					PROFILE IMAGE
 				</h6>
 				<div className="w-fit py-4 flex gap-3">
-					<Avatar className="rounded-none w-12 h-12">
+					<Avatar className="rounded-none w-16 h-16">
 						<AvatarImage
 							src={user.image_url}
 							alt={user.username}
-							className="w-12 h-12"
+							className="w-16 h-16"
 						/>
 						<AvatarFallback>
-							<Skeleton className="h-10 w-10" />
+							<Skeleton className="h-16 w-16" />
 						</AvatarFallback>
 					</Avatar>
 					{toggleEdit ? (
-						<input type="file" />
+						<div className="grid w-full max-w-sm items-center gap-1">
+							<Label
+								htmlFor="image"
+								className="p-0"
+							>
+								Upload new image
+							</Label>
+							<Input
+								id="image"
+								type="file"
+								name="image"
+								className="rounded-none"
+							/>
+						</div>
 					) : null}
 				</div>
 			</div>
