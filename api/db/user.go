@@ -73,12 +73,9 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 }
 
 type FormData struct {
-	Username string
 	Image    string
 }
 
-// UpdateUserField updates a specific field of a user with a new value.
-// It takes the userID, fieldName, and newValue as parameters.
 func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
     // Check for empty userID or fieldName
     if userID == "" {
@@ -92,9 +89,7 @@ func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
     if formData.Image != "" {
         updates["Image"] = formData.Image
     }
-    if formData.Username != "" {
-        updates["Username"] = formData.Username
-    }
+
 	query := &User{
 		ID: userID,
 	}
