@@ -26,17 +26,29 @@ import {
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
+import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 //TODO: Add change email functionality. Requires change to auth flow.
 //TODO: Add on image hover, edit icon, upload image modal
 //TODO: Add useOptimistic/useFormStatus
 export default function UserForm(user: User) {
 	const [toggleEdit, setToggleEdit] = useState(false);
+	const router = useRouter();
+
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const formData = new FormData(e.target as HTMLFormElement);
-		await UpdateUser(formData);
-		
+		const res = await UpdateUser(formData);
+		if (!res) {
+			toast({
+				title: "Error saving user data",
+				description: "Please try again",
+				variant: "destructive"
+			});
+			setToggleEdit(false);
+			return;
+		}
+		router.refresh();
 		setToggleEdit(false);
 	}
 
