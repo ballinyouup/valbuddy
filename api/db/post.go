@@ -3,14 +3,38 @@ package db
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/lucsky/cuid"
 )
 
-func GetPosts() ([]Post, error) {
+func GetDuosPosts(limit int) ([]Post, error) {
 	var posts []Post
-	if err := GetDatabase().Find(&posts).Error; err != nil {
+	query := Post{
+		Category: "duos",
+	}
+	if err := GetDatabase().Where(query).Limit(limit).Find(&posts).Error; err != nil {
+		return posts, fmt.Errorf("error fetching all posts: %w", err)
+	}
+	return posts, nil
+}
+
+func GetTeamsPosts(limit int) ([]Post, error) {
+	var posts []Post
+	query := Post{
+		Category: "teams",
+	}
+	if err := GetDatabase().Where(query).Limit(limit).Find(&posts).Error; err != nil {
+		return posts, fmt.Errorf("error fetching all posts: %w", err)
+	}
+	return posts, nil
+}
+
+func GetScrimsPosts(limit int) ([]Post, error) {
+	var posts []Post
+	query := Post{
+		Category: "scrims",
+	}
+	if err := GetDatabase().Where(query).Limit(limit).Find(&posts).Error; err != nil {
 		return posts, fmt.Errorf("error fetching all posts: %w", err)
 	}
 	return posts, nil
@@ -21,20 +45,14 @@ func GetUserPosts(id string, limit int) ([]Post, error) {
 	searchQuery := &Post{
 		UserID: id,
 	}
-	if err := GetDatabase().Limit(limit).Where(searchQuery).Find(&posts).Error; err != nil {
+	if err := GetDatabase().Where(searchQuery).Limit(limit).Find(&posts).Error; err != nil {
 		return posts, fmt.Errorf("error fetching post: %w", err)
 	}
 	return posts, nil
 }
 
 func CreatePost(UserID string, Text string, Username string, Region string, Category string, PlayerAmount int, PlayerRoles []string, PlayerRanks []string) error {
-	var account Account
-	query := Account{
-		ID: UserID,
-	}
-	if err := GetDatabase().Where(query).Find(&account).Error; err != nil {
-		return fmt.Errorf("error finding user in create post: %w", err)
-	}
+	//Convert the roles and ranks string[] into JSON
 	roles, err := json.Marshal(PlayerRoles)
 	if err != nil {
 		return fmt.Errorf("error marshaling PlayerRoles: %w", err)
@@ -43,10 +61,22 @@ func CreatePost(UserID string, Text string, Username string, Region string, Cate
 	if err != nil {
 		return fmt.Errorf("error marshaling PlayerRoles: %w", err)
 	}
+
+	// Get the user with UserID and return only the image field
+	var image string
+	query := User{
+		ID: UserID,
+	}
+	if err := GetDatabase().Where(query).Pluck("image", &image).Error; err != nil {
+		return fmt.Errorf("error finding user in create post: %w", err)
+	}
+
+	// Fill the post with fields required
 	post := &Post{
 		ID:          cuid.New(),
 		UserID:      UserID,
 		Username:    Username,
+		Image:       image,
 		Category:    Category,
 		Text:        Text,
 		Players:     PlayerAmount,
@@ -54,7 +84,8 @@ func CreatePost(UserID string, Text string, Username string, Region string, Cate
 		PlayerRanks: ranks,
 		Region:      Region,
 	}
-	log.Print(post)
+
+	// Create the post into the database
 	if err := GetDatabase().Create(post).Error; err != nil {
 		return fmt.Errorf("error creating post: %w", err)
 	}
