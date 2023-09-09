@@ -44,22 +44,23 @@ func UpdateUser(c *fiber.Ctx) error {
 	userId := userIdFromSession.(string)
 
 	// S3 Configuration
-	
+
 	fileHeader, err := c.FormFile("image")
 	if err != nil {
 		return fmt.Errorf("error extracting file header from form: %w", err)
 	}
 	file, err := fileHeader.Open()
 	if err != nil {
+		file.Close()
 		return err
 	}
-	
+	defer file.Close()
 	url, err := config.UploadFile(file, fileHeader.Filename)
 	if err != nil {
 		return fmt.Errorf("error executing config.UploadFile: %w", err)
 	}
 	formData := db.FormData{
-		Image:    url,
+		Image: url,
 	}
 	if err := db.UpdateUserField(c, userId, formData); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Updating Field: %s", err))
