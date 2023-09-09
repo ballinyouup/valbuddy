@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
-	"mime/multipart"
+	"io"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -27,12 +27,13 @@ func AWSInit() error {
 	return nil
 }
 
-func UploadFile(file multipart.File, fileName string) (string, error) {
+func UploadFile(file io.Reader, fileName string) (string, error) {
 	result, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
-		Bucket: aws.String("valbuddy-images"),
-		Key:    aws.String(fileName),
-		Body:   file,
-		ACL:    "public-read",
+		Bucket:      aws.String("valbuddy-images"),
+		Key:         aws.String(fileName),
+		Body:        file,
+		ContentType: aws.String("image/jpeg"),
+		ACL:         "public-read",
 	})
 	if err != nil {
 		return "", fmt.Errorf("error uploading file: %w", err)
