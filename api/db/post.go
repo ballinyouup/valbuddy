@@ -21,7 +21,7 @@ func GetDuosPosts(limit int) ([]Post, error) {
 func GetTeamsPosts(limit int) ([]Post, error) {
 	var posts []Post
 	query := Post{
-		Category: "teams",
+		Category: "Teams",
 	}
 	if err := GetDatabase().Where(query).Limit(limit).Find(&posts).Error; err != nil {
 		return posts, fmt.Errorf("error fetching all posts: %w", err)
@@ -64,10 +64,10 @@ func CreatePost(UserID string, Text string, Username string, Region string, Cate
 
 	// Get the user with UserID and return only the image field
 	var image string
-	query := User{
+	query := &User{
 		ID: UserID,
 	}
-	if err := GetDatabase().Where(query).Pluck("image", &image).Error; err != nil {
+	if err := GetDatabase().Model(&User{}).Where(query).Pluck("image", &image).Error; err != nil {
 		return fmt.Errorf("error finding user in create post: %w", err)
 	}
 
