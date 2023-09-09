@@ -35,6 +35,7 @@ type Post struct {
 	ID       string `json:"id" gorm:"primaryKey" validate:"required,min=1"` // Post ID
 	UserID   string `json:"user_id" validate:"required,min=1"`              // ID from User Model
 	Username string `json:"username" validate:"omitempty"`                  // VALORANT Username
+	Image    string `json:"image_url" validate:"required,min=1"`            // Image from User Model
 
 	Region      string `json:"region" validate:"required"`                    // NA/EU etc...
 	Category    string `json:"category" validate:"required,min=1"`            // Category: Duos, Team, etc.
