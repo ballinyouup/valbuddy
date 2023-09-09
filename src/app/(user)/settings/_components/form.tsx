@@ -24,7 +24,6 @@ import {
 	AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
@@ -33,15 +32,11 @@ import { Input } from "@/components/ui/input";
 //TODO: Add useOptimistic/useFormStatus
 export default function UserForm(user: User) {
 	const [toggleEdit, setToggleEdit] = useState(false);
-	const router = useRouter();
-	const currentPath = usePathname();
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const formData = new FormData(e.target as HTMLFormElement);
-		const res = await UpdateUser(formData, currentPath);
-		if (!res) {
-			router.push("/login");
-		}
+		await UpdateUser(formData);
+		
 		setToggleEdit(false);
 	}
 
@@ -121,6 +116,7 @@ export default function UserForm(user: User) {
 								id="image"
 								type="file"
 								name="image"
+								accept="image/*"
 								className="rounded-none"
 							/>
 						</div>
