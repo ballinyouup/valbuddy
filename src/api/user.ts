@@ -44,10 +44,10 @@ export async function GetUser() {
 export async function UpdateUser(formData: FormData) {
 	const session = cookies().get("session_id");
 	if (!session) {
-		return undefined;
+		return false;
 	}
 	try {
-		await fetch(`${config.API_URL}/user/update`, {
+		const res = await fetch(`${config.API_URL}/user/update`, {
 			credentials: "include",
 			headers: {
 				Cookie: cookies().toString(),
@@ -57,10 +57,13 @@ export async function UpdateUser(formData: FormData) {
 			body: formData,
 			mode: "no-cors"
 		});
-		return { status: 200 };
+		if(!res.ok){
+			throw new Error("Error updating user")
+		}
+		revalidateTag(session.value);
+		return true
 	} catch (error) {
 		console.error("Error submitting form:", error);
-	} finally {
-		revalidateTag(session.value);
+		return false
 	}
 }
