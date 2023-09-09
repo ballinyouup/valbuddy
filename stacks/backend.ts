@@ -1,19 +1,30 @@
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 import { HttpMethods } from "aws-cdk-lib/aws-s3";
-import { ApiGatewayV1Api, Bucket, Function } from "sst/constructs";
+import { ApiGatewayV1Api, Bucket, Function, StackContext } from "sst/constructs";
 
-export default function Backend({ stack }: any) {
-    const bucket = new Bucket(stack, "imageBucket", {
-        cors: false,
+export default function Backend({ stack }: StackContext) {
+    const bucket = new Bucket(stack, "valbuddyImages", {
         cdk: {
             bucket: {
                 publicReadAccess: true,
                 bucketName: "valbuddy-images",
-                autoDeleteObjects: false,
-                enforceSSL: false,
+                cors: [
+                    {
+                        allowedMethods: [
+                            HttpMethods.GET,
+                            HttpMethods.POST,
+                            HttpMethods.PUT,
+                            HttpMethods.DELETE,
+                            HttpMethods.HEAD
+                        ],
+                        allowedOrigins: ["*"],
+                        allowedHeaders: ["*"]
+                    }
+                ],
             }
         }
     });
+
     const lambdaFunc = new Function(stack, "goLambda", {
         handler: "./api/main.go",
         runtime: "go",
@@ -27,9 +38,11 @@ export default function Backend({ stack }: any) {
             TWITCH_ID: process.env.TWITCH_ID as string,
             TWITCH_SECRET: process.env.TWITCH_SECRET as string
         },
+        permissions: ["s3"],
         bind: [bucket]
     });
-    new ApiGatewayV1Api(stack, "goApi", {
+
+    const gateway = new ApiGatewayV1Api(stack, "goApi", {
         routes: {
             "ANY /{proxy+}": lambdaFunc
         },
@@ -40,12 +53,17 @@ export default function Backend({ stack }: any) {
                 },
                 defaultCorsPreflightOptions: {
                     allowOrigins: ["*"],
-                    allowCredentials: false,
+                    allowCredentials: true,
                     allowHeaders: ["*"],
                     allowMethods: ["ANY"]
-                }
-            }
+                },
+                binaryMediaTypes: ["multipart/form-data"]
+            },
+        },
+        customDomain: {
+            domainName: "api.valbuddy.com",
+            hostedZone: "valbuddy.com",
+            endpointType: "regional",
         }
     });
-
 }
