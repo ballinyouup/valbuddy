@@ -20,7 +20,7 @@ func GetUser(c *fiber.Ctx) error {
 	userId := s.Get("user_id").(string)
 
 	// Create an empty User object
-	user := db.User{}
+	var user db.User
 	query := db.User{
 		ID: userId,
 	}
@@ -39,12 +39,15 @@ func UpdateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}
 
-	// Retrieve the user ID from the session
-	userIdFromSession := s.Get("user_id")
-	userId := userIdFromSession.(string)
+	// Retrieve the user ID from the session and get user
+	userId := s.Get("user_id").(string)
+	var user db.User
+	query := db.User{
+		ID: userId,
+	}
+	db.GetDatabase().Where(query).First(&user)
 
 	// S3 Configuration
-
 	fileHeader, err := c.FormFile("image")
 	if err != nil {
 		return fmt.Errorf("error extracting file header from form: %w", err)
@@ -55,7 +58,8 @@ func UpdateUser(c *fiber.Ctx) error {
 		return err
 	}
 	defer file.Close()
-	url, err := config.UploadFile(file, fileHeader.Filename)
+
+	url, err := config.UploadFile(file, fmt.Sprintf("%s/image", user.Username))
 	if err != nil {
 		return fmt.Errorf("error executing config.UploadFile: %w", err)
 	}
@@ -80,7 +84,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	userId := s.Get("user_id").(string)
 
 	// Create an empty User object
-	user := db.User{}
+	var user db.User
 	query := db.User{
 		ID: userId,
 	}
