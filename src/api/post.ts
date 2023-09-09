@@ -47,14 +47,12 @@ export async function CreatePost(formData: FormData) {
 				"Content-Type": "application/json"
 			},
 			method: "POST",
-			cache: "no-store",
 			body: JSON.stringify(post),
-			mode: "no-cors"
 		});
 	} catch (error) {
 		console.error("Error submitting create post form:", error);
 	} finally {
-		switch (post.category) {
+		switch (post.category.toLowerCase()) {
 			case "duos":
 				revalidateTag("duos");
 			case "teams":
@@ -73,6 +71,7 @@ export interface Post {
 	id: string;
 	user_id: string;
 	username: string;
+	image_url: string;
 	region: string;
 	category: string;
 	text: string;
