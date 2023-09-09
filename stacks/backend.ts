@@ -1,13 +1,18 @@
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 import { HttpMethods } from "aws-cdk-lib/aws-s3";
-import { ApiGatewayV1Api, Bucket, Function, StackContext } from "sst/constructs";
+import {
+    ApiGatewayV1Api,
+    Bucket,
+    Function,
+    StackContext,
+} from "sst/constructs";
 
 export default function Backend({ stack }: StackContext) {
     const bucket = new Bucket(stack, "valbuddyImages", {
         cdk: {
             bucket: {
                 publicReadAccess: true,
-                bucketName: "valbuddy-images",
+                bucketName: "img.valbuddy.com",
                 cors: [
                     {
                         allowedMethods: [
@@ -24,7 +29,7 @@ export default function Backend({ stack }: StackContext) {
             }
         }
     });
-
+    
     const lambdaFunc = new Function(stack, "goLambda", {
         handler: "./api/main.go",
         runtime: "go",
@@ -58,12 +63,12 @@ export default function Backend({ stack }: StackContext) {
                     allowMethods: ["ANY"]
                 },
                 binaryMediaTypes: ["multipart/form-data"]
-            },
+            }
         },
         customDomain: {
             domainName: "api.valbuddy.com",
             hostedZone: "valbuddy.com",
-            endpointType: "regional",
+            endpointType: "regional"
         }
     });
 }
