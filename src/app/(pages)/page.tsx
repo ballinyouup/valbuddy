@@ -6,6 +6,8 @@ import {
 	AccordionItem,
 	AccordionTrigger
 } from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Suspense } from "react";
 export default async function Home() {
 	return (
 		<>
@@ -24,7 +26,15 @@ export default async function Home() {
 							</span>
 						</AccordionTrigger>
 						<AccordionContent>
-							<Duos />
+							<Suspense
+								fallback={
+									<>
+										Loading...
+									</>
+								}
+							>
+								<Duos />
+							</Suspense>
 						</AccordionContent>
 					</AccordionItem>
 					<AccordionItem
@@ -40,7 +50,15 @@ export default async function Home() {
 							</span>
 						</AccordionTrigger>
 						<AccordionContent>
-							<Teams />
+							<Suspense
+								fallback={
+									<>
+										Loading...
+									</>
+								}
+							>
+								<Teams />
+							</Suspense>
 						</AccordionContent>
 					</AccordionItem>
 				</Accordion>
@@ -54,15 +72,20 @@ async function Duos() {
 	const posts = await GetDuosPosts();
 	if (!posts) return <>No posts T_T </>;
 	return (
-		<div className="flex flex-col items-center justify-center">
+		<div className="flex flex-col items-center justify-center gap-0.5 mt-0.5">
 			{posts.map((post) => (
-				<DuosRow key={post.id} post={post} />
+				<div
+					key={post.id}
+					className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800"
+				>
+					<DuosRow post={post} />
+				</div>
 			))}
 		</div>
 	);
 }
 
-function DuosRow({ post, key }: { post: Post; key: string }) {
+function DuosRow({ post }: { post: Post }) {
 	const roles = JSON.parse(
 		Buffer.from(post.player_roles, "base64").toString("utf-8")
 	);
@@ -71,12 +94,12 @@ function DuosRow({ post, key }: { post: Post; key: string }) {
 	);
 
 	return (
-		<div
-			key={key}
-			className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800"
-		>
+		<>
 			<div className="p-2">
-				<div className="h-20 w-20 bg-white" />
+				<Avatar className="w-20 h-20 rounded-none">
+					<AvatarImage src={post.image_url} />
+					<AvatarFallback></AvatarFallback>
+				</Avatar>
 			</div>
 			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground font-medium text-base">
 				<div className="flex justify-between uppercase">
@@ -130,7 +153,7 @@ function DuosRow({ post, key }: { post: Post; key: string }) {
 					<span>{post.category}</span>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 
@@ -138,15 +161,20 @@ async function Teams() {
 	const posts = await GetTeamsPosts();
 	if (!posts) return <>No posts T_T </>;
 	return (
-		<div className="flex flex-col items-center justify-center">
+		<div className="flex flex-col items-center justify-center gap-0.5 mt-0.5">
 			{posts.map((post) => (
-				<TeamsRow key={post.id} post={post} />
+				<div
+					key={post.id}
+					className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800"
+				>
+					<TeamsRow post={post} />
+				</div>
 			))}
 		</div>
 	);
 }
 
-function TeamsRow({ post, key }: { post: Post; key: string }) {
+function TeamsRow({ post }: { post: Post }) {
 	const roles = JSON.parse(
 		Buffer.from(post.player_roles, "base64").toString("utf-8")
 	);
@@ -155,12 +183,12 @@ function TeamsRow({ post, key }: { post: Post; key: string }) {
 	);
 
 	return (
-		<div
-			key={key}
-			className="flex h-fit w-full max-w-7xl items-center border-black border-opacity-30 bg-neutral-800"
-		>
+		<>
 			<div className="p-2">
-				<div className="h-20 w-20 bg-white" />
+				<Avatar className="w-20 h-20 rounded-none">
+					<AvatarImage src={post.image_url} />
+					<AvatarFallback></AvatarFallback>
+				</Avatar>
 			</div>
 			<div className="flex flex-col w-full justify-evenly px-4 text-primary-foreground font-medium text-base">
 				<div className="flex justify-between uppercase">
@@ -214,6 +242,6 @@ function TeamsRow({ post, key }: { post: Post; key: string }) {
 					<span>{post.category}</span>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
