@@ -48,12 +48,24 @@ export async function CreatePost(formData: FormData) {
 			},
 			method: "POST",
 			cache: "no-store",
-			body: JSON.stringify(post)
+			body: JSON.stringify(post),
+			mode: "no-cors"
 		});
 	} catch (error) {
 		console.error("Error submitting create post form:", error);
 	} finally {
-		revalidateTag("posts");
+		switch (post.category) {
+			case "duos":
+				revalidateTag("duos");
+			case "teams":
+				revalidateTag("teams");
+			case "scrims":
+				revalidateTag("scrims");
+			default:
+				revalidateTag("posts");
+		}
+
+
 	}
 }
 
@@ -71,17 +83,40 @@ export interface Post {
 	updated_at: string;
 }
 
-export async function GetAllPosts() {
+export async function GetDuosPosts() {
 	try {
-		const data = await fetch(`${config.API_URL}/posts`, {
+		const data = await fetch(`${config.API_URL}/posts/duos`, {
 			method: "GET",
 			credentials: "omit",
 			headers: {
 				"Content-Type": "application/json"
 			},
-			cache: "force-cache",
+			cache: "no-cache",
 			next: {
-				tags: ["posts"]
+				tags: ["posts", "duos"]
+			}
+		});
+		if (!data.ok) {
+			throw new Error("Fetch request failed");
+		}
+		const post = (await data.json()) as Post[];
+		return post;
+	} catch (error) {
+		console.error("Error Getting all Posts: ", error);
+	}
+}
+
+export async function GetTeamsPosts() {
+	try {
+		const data = await fetch(`${config.API_URL}/posts/teams`, {
+			method: "GET",
+			credentials: "omit",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			cache: "no-cache",
+			next: {
+				tags: ["posts", "teams"]
 			}
 		});
 		if (!data.ok) {
