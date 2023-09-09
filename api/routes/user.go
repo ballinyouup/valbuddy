@@ -2,10 +2,13 @@ package routes
 
 import (
 	"nextjs-go/handlers"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func User(app *fiber.App) {
+	
+	// url/user/account
 	user := app.Group("/user")
 	user.Get("/", handlers.GetUser)
 	user.Post("/update", handlers.UpdateUser)
@@ -18,14 +21,15 @@ func User(app *fiber.App) {
 	account.Delete("/delete", handlers.DeleteAccount)
 
 	// url/user/post
-	post := user.Group("/post")
-	post.Get("/", handlers.GetUserPosts)
-	post.Post("/new", handlers.CreatePost)
-	post.Put("/update/:id", handlers.UpdatePost)
-	post.Delete("/delete", handlers.DeletePost)
+	userPosts := user.Group("/post")
+	userPosts.Get("/", handlers.GetUserPosts)
+	userPosts.Post("/new", handlers.CreatePost)
+	userPosts.Put("/update/:id", handlers.UpdatePost)
+	userPosts.Delete("/delete", handlers.DeletePost)
 
-	// Get All Posts route
-	app.Get("/posts", handlers.GetPosts)
+	// url/posts
+	posts := app.Group("/posts")
+	posts.Get("/duos", handlers.GetDuosPosts)
+	posts.Get("/teams", handlers.GetTeamsPosts)
+	posts.Get("/scrims", handlers.GetScrimsPosts)
 }
-
-
