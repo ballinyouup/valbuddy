@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { config } from "@/env";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export interface User {
 	user_id: string;
@@ -41,7 +41,7 @@ export async function GetUser() {
 	}
 }
 
-export async function UpdateUser(formData: FormData, currentPath: string) {
+export async function UpdateUser(formData: FormData) {
 	const session = cookies().get("session_id");
 	if (!session) {
 		return undefined;
@@ -49,14 +49,18 @@ export async function UpdateUser(formData: FormData, currentPath: string) {
 	try {
 		await fetch(`${config.API_URL}/user/update`, {
 			credentials: "include",
-			headers: { Cookie: cookies().toString() },
+			headers: {
+				Cookie: cookies().toString(),
+			},
+			cache: "no-store",
 			method: "POST",
-			body: formData
+			body: formData,
+			mode: "no-cors"
 		});
-		revalidateTag(session.value);
-		revalidatePath(currentPath);
 		return { status: 200 };
 	} catch (error) {
 		console.error("Error submitting form:", error);
+	} finally {
+		revalidateTag(session.value);
 	}
 }
