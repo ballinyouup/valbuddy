@@ -10,8 +10,56 @@ import (
 )
 
 // TODO: Finish Post CRUD Functions
-func GetPosts(c *fiber.Ctx) error {
-	posts, err := db.GetPosts()
+func GetDuosPosts(c *fiber.Ctx) error {
+	// Get the query params /posts?limit=5. if empty, set to 10
+	query := c.Query("limit")
+	if query == "" {
+		query = "10"
+	}
+	// Convert string to int
+	limit, err := strconv.Atoi(query)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
+	}
+	// Get the posts and return as JSON
+	posts, err := db.GetDuosPosts(limit)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
+	}
+	return c.JSON(posts)
+}
+func GetTeamsPosts(c *fiber.Ctx) error {
+	// Get the query params /posts?limit=5. if empty, set to 10
+	query := c.Query("limit")
+	if query == "" {
+		query = "10"
+	}
+	// Convert string to int
+	limit, err := strconv.Atoi(query)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
+	}
+	// Get the posts and return as JSON
+	posts, err := db.GetTeamsPosts(limit)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
+	}
+	return c.JSON(posts)
+}
+
+func GetScrimsPosts(c *fiber.Ctx) error {
+	// Get the query params /posts?limit=5. if empty, set to 10
+	query := c.Query("limit")
+	if query == "" {
+		query = "10"
+	}
+	// Convert string to int
+	limit, err := strconv.Atoi(query)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
+	}
+	// Get the posts and return as JSON
+	posts, err := db.GetScrimsPosts(limit)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
 	}
@@ -23,8 +71,13 @@ func GetUserPosts(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}
-
-	limit, err := strconv.Atoi(c.Params("limit"))
+	// Get the query params /posts?limit=5. if empty, set to 10
+	query := c.Query("limit")
+	if query == "" {
+		query = "10"
+	}
+	// Convert string to int
+	limit, err := strconv.Atoi(query)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting string %s", err))
 	}
