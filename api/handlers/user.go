@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// TODO: Create a fetch for a users public account profile, no session required: GetPublicUser()
 // Handler function that returns User Data as JSON
 func GetUser(c *fiber.Ctx) error {
 	s, err := db.ValidateSession(c)
@@ -17,17 +16,12 @@ func GetUser(c *fiber.Ctx) error {
 	}
 
 	// Retrieve the user ID from the session
-	userId := s.Get("user_id").(string)
+	userID := s.Get("user_id").(string)
 
-	// Create an empty User object
-	var user db.User
-	query := db.User{
-		ID: userId,
+	user, err := db.GetUser(userID)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing GetUser: %s", err))
 	}
-	// Retrieve user data from the database based on the user ID
-	// db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
-	db.GetDatabase().Where(query).First(&user)
-
 	// Return the user data as JSON response
 	return c.JSON(user)
 }
