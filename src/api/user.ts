@@ -4,11 +4,10 @@ import { config } from "@/env";
 import { revalidateTag } from "next/cache";
 
 export interface User {
-	user_id: string;
-	email: string;
+	id: string;
 	username: string;
+	email: string;
 	role: string;
-	image_url: string;
 	provider: string;
 	created_at: Date;
 	updated_at: Date;
