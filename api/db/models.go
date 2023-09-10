@@ -24,8 +24,8 @@ type Account struct {
 
 	Username string `json:"username" validate:"omitempty"` // VALBuddy Username
 	Rank     string `json:"rank" validate:"omitempty"`     // VALORANT RANK
-	Role     string `json:"role" validate:"required"`      // Role FREE or PAID
-	Region   string `json:"region" validate:"required"`    // NA/EU etc...
+	Role     string `json:"role" validate:"required"`      // Role FREE/PAID/MOD/ADMIN
+	Region   string `json:"region" validate:"omitempty"`    // NA/EU etc...
 
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
