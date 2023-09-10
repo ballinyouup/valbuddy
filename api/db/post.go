@@ -51,15 +51,15 @@ func GetUserPosts(id string, limit int) ([]Post, error) {
 	return posts, nil
 }
 
-func CreatePost(UserID string, Text string, Username string, Region string, Category string, PlayerAmount int, PlayerRoles []string, PlayerRanks []string) error {
+func CreatePost(UserID string, Text string, Username string, Region string, Category string, Amount int, Roles []string, Ranks []string) error {
 	//Convert the roles and ranks string[] into JSON
-	roles, err := json.Marshal(PlayerRoles)
+	roles, err := json.Marshal(Roles)
 	if err != nil {
-		return fmt.Errorf("error marshaling PlayerRoles: %w", err)
+		return fmt.Errorf("error marshaling Roles: %w", err)
 	}
-	ranks, err := json.Marshal(PlayerRanks)
+	ranks, err := json.Marshal(Ranks)
 	if err != nil {
-		return fmt.Errorf("error marshaling PlayerRoles: %w", err)
+		return fmt.Errorf("error marshaling Roles: %w", err)
 	}
 
 	// Get the user with UserID and return only the image field
@@ -73,16 +73,16 @@ func CreatePost(UserID string, Text string, Username string, Region string, Cate
 
 	// Fill the post with fields required
 	post := &Post{
-		ID:          cuid.New(),
-		UserID:      UserID,
-		Username:    Username,
-		Image:       image,
-		Category:    Category,
-		Text:        Text,
-		Players:     PlayerAmount,
-		PlayerRoles: roles,
-		PlayerRanks: ranks,
-		Region:      Region,
+		ID:       cuid.New(),
+		UserID:   UserID,
+		Username: Username,
+		Image:    image,
+		Category: Category,
+		Text:     Text,
+		Amount:   Amount,
+		Roles:    roles,
+		Ranks:    ranks,
+		Region:   Region,
 	}
 
 	// Create the post into the database
