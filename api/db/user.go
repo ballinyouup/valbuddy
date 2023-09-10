@@ -28,15 +28,16 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 			ID:       userId,
 			Email:    email,
 			Username: username,
-			Image:    image,
 			Provider: provider,
+			Role:     role,
 		}
-
+		// TODO: Add check if username already exists
 		// Create a new Account associated with the user
 		newAccount := &Account{
-			ID:     cuid.New(),
-			UserID: userId,
-			Role:   role,
+			ID:       cuid.New(),
+			UserID:   userId,
+			Username: username,
+			Image:    image,
 		}
 
 		// Validate the new User's data
@@ -72,33 +73,46 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 	return existingUser, nil
 }
 
+func GetUser(userID string)(User, error) {
+	// Create an empty User object
+	var user User
+	query := User{
+		ID: userID,
+	}
+	// Retrieve user data from the database based on the user ID
+	// db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
+	if err := GetDatabase().Where(query).First(&user).Error; err != nil {
+		return User{}, fmt.Errorf("error getting user: %w", err)
+	}
+	return user, nil
+}
+
 type FormData struct {
-	Image    string
+	Image string
 }
 
 func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
-    // Check for empty userID or fieldName
-    if userID == "" {
-        return fmt.Errorf("error updating user: no user id")
-    }
+	// Check for empty userID or fieldName
+	if userID == "" {
+		return fmt.Errorf("error updating user: no user id")
+	}
 
-    // Create a map to store the fields you want to update
-    updates := map[string]interface{}{}
+	// Create a map to store the fields you want to update
+	updates := map[string]interface{}{}
 
-    // Update user fields based on non-empty form data
-    if formData.Image != "" {
-        updates["Image"] = formData.Image
-    }
+	// Update user fields based on non-empty form data
+	if formData.Image != "" {
+		updates["Image"] = formData.Image
+	}
 
 	query := &User{
 		ID: userID,
 	}
-	
-    // Use Updates to save the updated fields back to the database
-    if err := GetDatabase().Model(&User{}).Where(query).Updates(updates).Error; err != nil {
-        return fmt.Errorf("error updating user in the database: %w", err)
-    }
 
-    return nil
+	// Use Updates to save the updated fields back to the database
+	if err := GetDatabase().Model(&User{}).Where(query).Updates(updates).Error; err != nil {
+		return fmt.Errorf("error updating user in the database: %w", err)
+	}
+
+	return nil
 }
-
