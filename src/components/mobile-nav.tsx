@@ -1,4 +1,4 @@
-import { GetUser } from "@/api/user";
+import { GetAccount } from "@/api/account";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -12,7 +12,7 @@ import SheetForm from "@/app/(pages)/_components/sheet-form";
 import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
 export default async function MobileNav() {
-	const user = await GetUser();
+	const account = await GetAccount();
 	return (
 		<div className="fixed bottom-0 w-full h-fit px-2 py-2 bg-primary md:hidden">
 			<DropdownMenu>
@@ -29,7 +29,7 @@ export default async function MobileNav() {
 					alignOffset={-20}
 					className="w-screen md:hidden flex flex-col rounded-none"
 				>
-					{user ? (
+					{account ? (
 						<DropdownMenuItem asChild>
 							{<SheetForm mobile />}
 						</DropdownMenuItem>

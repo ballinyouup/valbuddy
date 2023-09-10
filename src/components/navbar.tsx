@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { GetUser } from "../api/user";
+import { GetAccount } from "../api/account";
 import {
 	Popover,
 	PopoverContent,
@@ -27,8 +27,8 @@ export default async function Navbar() {
 }
 
 async function NavProfile() {
-	const user = await GetUser();
-	if (!user) {
+	const account = await GetAccount();
+	if (!account) {
 		return (
 			<Link href="/login">
 				<Button>Sign In</Button>
@@ -40,8 +40,8 @@ async function NavProfile() {
 			<PopoverTrigger>
 				<Avatar>
 					<AvatarImage
-						src={user.image_url}
-						alt={user.username}
+						src={account.image_url}
+						alt={account.username}
 					/>
 					<AvatarFallback>
 						<Skeleton className="h-10 w-10" />
