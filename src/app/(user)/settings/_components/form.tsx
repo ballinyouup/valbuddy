@@ -101,40 +101,7 @@ export default function UserForm(user: User) {
 					</div>
 				)}
 			</div>
-			<div className="flex gap-4 flex-col">
-				<h6 className="border-b border-foreground/10 pb-2 tracking-wide">
-					PROFILE IMAGE
-				</h6>
-				<div className="w-fit py-4 flex gap-3">
-					<Avatar className="rounded-none w-16 h-16">
-						<AvatarImage
-							src={user.image_url}
-							alt={user.username}
-							className="w-16 h-16"
-						/>
-						<AvatarFallback>
-							<Skeleton className="h-16 w-16" />
-						</AvatarFallback>
-					</Avatar>
-					{toggleEdit ? (
-						<div className="grid w-full max-w-sm items-center gap-1">
-							<Label
-								htmlFor="image"
-								className="p-0"
-							>
-								Upload new image
-							</Label>
-							<Input
-								id="image"
-								type="file"
-								name="image"
-								accept="image/*"
-								className="rounded-none"
-							/>
-						</div>
-					) : null}
-				</div>
-			</div>
+			
 			<div className="flex gap-2 w-full flex-col">
 				<h5 className="border-b border-foreground/10 pb-2 tracking-wide">
 					EMAIL

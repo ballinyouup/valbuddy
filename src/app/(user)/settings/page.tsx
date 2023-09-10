@@ -7,7 +7,7 @@ export default async function Settings() {
 	if (!user) redirect("/login");
 	return (
 		<main className="w-full h-full border-t-2 border-black md:p-0 pb-12">
-			<UserForm {...user} />
+			User Settings
 		</main>
 	);
 }
