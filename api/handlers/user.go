@@ -58,8 +58,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		return err
 	}
 	defer file.Close()
-
-	url, err := config.UploadFile(file, fmt.Sprintf("%s/image", user.Username))
+	url, err := config.UploadFile(file, fileHeader.Filename, fmt.Sprintf("%s/", user.Username))
 	if err != nil {
 		return fmt.Errorf("error executing config.UploadFile: %w", err)
 	}
