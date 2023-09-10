@@ -86,12 +86,8 @@ async function Duos() {
 }
 
 function DuosRow({ post }: { post: Post }) {
-	const roles = JSON.parse(
-		Buffer.from(post.player_roles, "base64").toString("utf-8")
-	);
-	const ranks = JSON.parse(
-		Buffer.from(post.player_ranks, "base64").toString("utf-8")
-	);
+	const roles = JSON.parse(post.roles)["roles"];
+	const ranks = JSON.parse(post.ranks)["ranks"];
 
 	return (
 		<>
@@ -123,7 +119,7 @@ function DuosRow({ post }: { post: Post }) {
 				</div>
 				<div className="flex justify-between uppercase">
 					<span>{post.region}</span>
-					<span>{post.player_amount}</span>
+					<span>{post.amount}</span>
 				</div>
 				<div className="flex justify-between">
 					<span className="uppercase">
@@ -175,12 +171,8 @@ async function Teams() {
 }
 
 function TeamsRow({ post }: { post: Post }) {
-	const roles = JSON.parse(
-		Buffer.from(post.player_roles, "base64").toString("utf-8")
-	);
-	const ranks = JSON.parse(
-		Buffer.from(post.player_ranks, "base64").toString("utf-8")
-	);
+	const roles = JSON.parse(post.roles)["roles"];
+	const ranks = JSON.parse(post.ranks)["ranks"];
 
 	return (
 		<>
@@ -212,7 +204,7 @@ function TeamsRow({ post }: { post: Post }) {
 				</div>
 				<div className="flex justify-between uppercase">
 					<span>{post.region}</span>
-					<span>{post.player_amount}</span>
+					<span>{post.amount}</span>
 				</div>
 				<div className="flex justify-between">
 					<span className="uppercase">
