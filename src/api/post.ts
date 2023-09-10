@@ -75,9 +75,9 @@ export interface Post {
 	region: string;
 	category: string;
 	text: string;
-	player_amount: number;
-	player_roles: string;
-	player_ranks: string;
+	amount: number;
+	roles: string;
+	ranks: string;
 	created_at: string;
 	updated_at: string;
 }
