@@ -1,7 +1,0 @@
-{
-	"prettier.useTabs": true,
-	"prettier.tabWidth": 8,
-	"editor.formatOnSave": true,
-	"editor.fontFamily": "Fira Code",
-	"editor.fontSize": 14
-}
