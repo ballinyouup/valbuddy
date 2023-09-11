@@ -10,6 +10,7 @@ export interface Account {
     username: string;
     rank: string;
     region: string;
+    roles: string;
     created_at: string;
     updated_at: string;
 }
