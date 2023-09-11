@@ -3,8 +3,11 @@ const nextConfig = {
     experimental: {
         serverActions: true,
     },
-	async rewrites() {
-        if(process.env.NODE_ENV === "development"){
+    images: {
+        domains: ["cdn.discordapp.com", "static-cdn.jtvnw.net", "img.valbuddy.com"]
+    },
+    async rewrites() {
+        if (process.env.NODE_ENV === "development") {
             return [
                 {
                     source: "/api/:path*",
@@ -12,9 +15,9 @@ const nextConfig = {
                 },
             ];
         } else {
-            return []
+            return [];
         }
-	},
+    },
 };
 
 export default nextConfig;
