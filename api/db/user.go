@@ -23,6 +23,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 		// Generate a new unique user ID using cuid
 		userId := cuid.New()
 
+		// TODO: Add check if username already exists
 		// Create a new User object with provided data
 		newUser := &User{
 			ID:       userId,
@@ -30,14 +31,12 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 			Username: username,
 			Provider: provider,
 			Role:     role,
-		}
-		// TODO: Add check if username already exists
-		// Create a new Account associated with the user
-		newAccount := &Account{
-			ID:       cuid.New(),
-			UserID:   userId,
-			Username: username,
-			Image:    image,
+			Account:  Account{
+				ID:       cuid.New(),
+				UserID:   userId,
+				Username: username,
+				Image:    image,
+			},
 		}
 
 		// Validate the new User's data
@@ -46,18 +45,13 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 		}
 
 		// Validate the new Account's data
-		if err := ValidateCheck(newAccount); err != nil {
+		if err := ValidateCheck(newUser.Account); err != nil {
 			return User{}, fmt.Errorf("error validating new account: %w", err)
 		}
 
 		// Create the new User record in the database
 		if err := GetDatabase().Create(newUser).Error; err != nil {
 			return User{}, fmt.Errorf("user creation failed: %w", err)
-		}
-
-		// Create the new Account record in the database
-		if err := GetDatabase().Create(newAccount).Error; err != nil {
-			return User{}, fmt.Errorf("account creation failed: %w", err)
 		}
 
 		// Return the newly created User
@@ -73,7 +67,7 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 	return existingUser, nil
 }
 
-func GetUser(userID string)(User, error) {
+func GetUser(userID string) (User, error) {
 	// Create an empty User object
 	var user User
 	query := User{
@@ -81,7 +75,7 @@ func GetUser(userID string)(User, error) {
 	}
 	// Retrieve user data from the database based on the user ID
 	// db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
-	if err := GetDatabase().Where(query).First(&user).Error; err != nil {
+	if err := GetDatabase().Omit("Account", "Posts").Where(query).First(&user).Error; err != nil {
 		return User{}, fmt.Errorf("error getting user: %w", err)
 	}
 	return user, nil
