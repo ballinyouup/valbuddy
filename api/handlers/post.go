@@ -93,7 +93,6 @@ func GetUserPosts(c *fiber.Ctx) error {
 }
 
 type Post struct {
-	Username string   `json:"username"`
 	Category string   `json:"category"`
 	Text     string   `json:"text"`
 	Amount   int      `json:"amount"`
@@ -112,7 +111,7 @@ func CreatePost(c *fiber.Ctx) error {
 	if err := c.BodyParser(&post); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error parsing body: %s", err))
 	}
-	if err := db.CreatePost(userId, post.Text, post.Username, post.Region, post.Category, post.Amount, post.Roles, post.Ranks); err != nil {
+	if err := db.CreatePost(userId, post.Text, post.Region, post.Category, post.Amount, post.Roles, post.Ranks); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing create posts: %s", err))
 	}
 	return c.SendStatus(fiber.StatusOK)

@@ -51,7 +51,7 @@ func GetUserPosts(id string, limit int) ([]Post, error) {
 	return posts, nil
 }
 
-func CreatePost(UserID string, Text string, Username string, Region string, Category string, Amount int, Roles []string, Ranks []string) error {
+func CreatePost(UserID string, Text string, Region string, Category string, Amount int, Roles []string, Ranks []string) error {
 	//Convert the roles and ranks string[] into JSON
 	roles, err := json.Marshal(Roles)
 	if err != nil {
@@ -62,21 +62,22 @@ func CreatePost(UserID string, Text string, Username string, Region string, Cate
 		return fmt.Errorf("error marshaling Roles: %w", err)
 	}
 
-	// Get the user with UserID and return only the image field
-	var image string
+	var user User
 	query := &User{
 		ID: UserID,
 	}
-	if err := GetDatabase().Model(&User{}).Where(query).Pluck("image", &image).Error; err != nil {
+	if err := GetDatabase().Preload("Account").Where(query).First(&user).Error; err != nil {
 		return fmt.Errorf("error finding user in create post: %w", err)
 	}
 
 	// Fill the post with fields required
-	post := &Post{
+	post := Post{
 		ID:       cuid.New(),
-		UserID:   UserID,
-		Username: Username,
-		Image:    image,
+		UserID:   user.ID,
+		Username: user.Account.Username,
+		Image: user.Account.Image,
+		AccountRank: user.Account.Rank,
+		AccountRoles: user.Account.Roles,
 		Category: Category,
 		Text:     Text,
 		Amount:   Amount,
@@ -84,9 +85,9 @@ func CreatePost(UserID string, Text string, Username string, Region string, Cate
 		Ranks:    ranks,
 		Region:   Region,
 	}
-
+	user.Posts = append(user.Posts, post)
 	// Create the post into the database
-	if err := GetDatabase().Create(post).Error; err != nil {
+	if err := GetDatabase().Save(user).Error; err != nil {
 		return fmt.Errorf("error creating post: %w", err)
 	}
 	return nil
