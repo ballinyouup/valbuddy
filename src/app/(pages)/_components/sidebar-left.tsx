@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icons } from "@/components/ui/icons";
 import SheetForm from "./sheet-form";
-import { GetUser } from "@/api/user";
+import { GetAccount } from "@/api/account";
 export default async function SidebarLeft() {
-	const user = await GetUser();
+	const account = await GetAccount();
 	return (
-		<div className="w-fit h-[936px] px-8 py-3 bg-zinc-900 flex-col border-2 border-black justify-start items-start gap-0 hidden md:inline-flex">
-			{user ? <SheetForm /> : null}
+		<div className="hidden h-[936px] w-fit flex-col items-start justify-start gap-0 border-2 border-black bg-zinc-900 px-8 py-3 md:inline-flex">
+			{account ? <SheetForm account={account} /> : null}
 			<Button
-				className="text-white h-16 text-xl items-center justify-start font-black uppercase p-6 gap-2 w-full"
+				className="h-16 w-full items-center justify-start gap-2 p-6 text-xl font-black uppercase text-white"
 				variant={"ghost"}
 				asChild
 			>
@@ -20,7 +20,7 @@ export default async function SidebarLeft() {
 				</Link>
 			</Button>
 			<Button
-				className="text-white h-16 text-xl items-center justify-start font-black uppercase p-6 gap-2 w-full"
+				className="h-16 w-full items-center justify-start gap-2 p-6 text-xl font-black uppercase text-white"
 				variant={"ghost"}
 				asChild
 			>
@@ -30,7 +30,7 @@ export default async function SidebarLeft() {
 				</Link>
 			</Button>
 			<Button
-				className="text-white h-16 text-xl items-center justify-start font-black uppercase p-6 gap-2 w-full"
+				className="h-16 w-full items-center justify-start gap-2 p-6 text-xl font-black uppercase text-white"
 				variant={"ghost"}
 				asChild
 			>
@@ -40,7 +40,7 @@ export default async function SidebarLeft() {
 				</Link>
 			</Button>
 			<Button
-				className="text-white h-16 text-xl items-center justify-start font-black uppercase p-6 gap-2 w-full"
+				className="h-16 w-full items-center justify-start gap-2 p-6 text-xl font-black uppercase text-white"
 				variant={"ghost"}
 				asChild
 			>
@@ -50,7 +50,7 @@ export default async function SidebarLeft() {
 				</Link>
 			</Button>
 			<Button
-				className="text-white h-16 text-xl items-center justify-start font-black uppercase p-6 gap-2 w-full"
+				className="h-16 w-full items-center justify-start gap-2 p-6 text-xl font-black uppercase text-white"
 				variant={"ghost"}
 				asChild
 			>
@@ -60,7 +60,7 @@ export default async function SidebarLeft() {
 				</Link>
 			</Button>
 			<Button
-				className="text-white h-16 text-xl items-center justify-start font-black uppercase p-6 gap-2 w-full"
+				className="h-16 w-full items-center justify-start gap-2 p-6 text-xl font-black uppercase text-white"
 				variant={"ghost"}
 				asChild
 			>
