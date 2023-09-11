@@ -78,6 +78,8 @@ export interface Post {
 	amount: number;
 	roles: string;
 	ranks: string;
+	account_ranks: string;
+	account_roles: string;
 	created_at: string;
 	updated_at: string;
 }
