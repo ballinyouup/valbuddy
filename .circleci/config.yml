@@ -1,0 +1,18 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@3.1.0
+
+jobs:
+  deploy:
+    executor: ubuntu-latest
+
+    steps:
+      - checkout
+
+      - aws-cli/setup:
+          region: ${{ secrets.AWS_REGION }}
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - run: npx sst deploy --stage prod --region ${{ secrets.AWS_REGION }}
