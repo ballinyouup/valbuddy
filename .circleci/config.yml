@@ -15,15 +15,15 @@ jobs:
           configure_profile_region: true
           disable_aws_pager: true
           override_installed: false
-          aws_access_key_id: ${secrets.AWS_ACCESS_KEY_ID}
-          aws_secret_access_key: ${secrets.AWS_ACCESS_KEY_ID}
-          region: ${secrets.AWS_REGION}
+          aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key: ${AWS_ACCESS_KEY_ID}
+          region: ${AWS_REGION}
       - node/install
       - run:
-          command: npm run sst deploy --stage prod --region ${secrets.AWS_REGION}
+          command: npm run sst deploy --stage prod --region ${AWS_REGION}
 
 workflows:
-  deploy:
+  run-deploy:
     jobs:
       - deploy:
           context: valbuddy
