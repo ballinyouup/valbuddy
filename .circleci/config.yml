@@ -23,7 +23,7 @@ jobs:
       - run:
           command: npm ci
           name: Install NPM packages
-      - docker/install-docker
+      - docker/install-docker-tools
       - run:
           command: sudo service docker start
           name: Start Docker
