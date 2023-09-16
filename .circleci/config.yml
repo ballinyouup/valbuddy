@@ -25,6 +25,9 @@ jobs:
           name: Install NPM packages
       - docker/install-docker
       - run:
+          command: dockerd
+          name: Run Docker Daemon
+      - run:
           command: npx sst deploy --stage prod --region ${AWS_REGION}
           name: Run SST Deploy CMD
 
