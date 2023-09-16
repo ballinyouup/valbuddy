@@ -39,7 +39,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="h-desktop w-1/2 overflow-hidden object-cover">
+      <div className="h-desktop hidden w-1/2 overflow-hidden object-cover md:flex">
         <Image
           src={"/hero-image.png"}
           width={2500}
