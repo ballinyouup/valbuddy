@@ -37,7 +37,6 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-            - ./.next/cache
 
 workflows:
   run-deploy:
