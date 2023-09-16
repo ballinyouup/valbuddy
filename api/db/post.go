@@ -63,31 +63,32 @@ func CreatePost(UserID string, Text string, Region string, Category string, Amou
 	}
 
 	var user User
-	query := &User{
+	query := User{
 		ID: UserID,
 	}
-	if err := GetDatabase().Preload("Account").Where(query).First(&user).Error; err != nil {
+	if err := GetDatabase().Preload("Account").Preload("Posts").Where(query).First(&user).Error; err != nil {
 		return fmt.Errorf("error finding user in create post: %w", err)
 	}
 
 	// Fill the post with fields required
 	post := Post{
-		ID:       cuid.New(),
-		UserID:   user.ID,
-		Username: user.Account.Username,
-		Image: user.Account.Image,
-		AccountRank: user.Account.Rank,
+		ID:           cuid.New(),
+		UserID:       user.ID,
+		Username:     user.Account.Username,
+		Image:        user.Account.Image,
+		AccountRank:  user.Account.Rank,
 		AccountRoles: user.Account.Roles,
-		Category: Category,
-		Text:     Text,
-		Amount:   Amount,
-		Roles:    roles,
-		Ranks:    ranks,
-		Region:   Region,
+		Category:     Category,
+		Text:         Text,
+		Amount:       Amount,
+		Roles:        roles,
+		Ranks:        ranks,
+		Region:       Region,
 	}
+
 	user.Posts = append(user.Posts, post)
 	// Create the post into the database
-	if err := GetDatabase().Save(user).Error; err != nil {
+	if err := GetDatabase().Save(&user).Error; err != nil {
 		return fmt.Errorf("error creating post: %w", err)
 	}
 	return nil
