@@ -6,8 +6,9 @@ orbs:
 
 jobs:
   deploy:
-    docker:
-      - image: cimg/base:stable
+    machine:
+      image: ubuntu-2204:current
+    resource_class: arm.medium
     steps:
       - checkout
       - aws-cli/setup:
@@ -23,7 +24,7 @@ jobs:
           command: npm ci
           name: Install NPM packages
       - setup_remote_docker:
-          version: default
+          version: 20.10.23
       - run:
           command: npx sst deploy --stage prod --region ${AWS_REGION}
           name: Run SST Deploy CMD
