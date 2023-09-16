@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@4.1.1
   node: circleci/node@5.1.0
+  docker: circleci/docker@2.2.0
 
 jobs:
   deploy:
@@ -22,6 +23,7 @@ jobs:
       - run:
           command: npm ci
           name: Install NPM packages
+      - docker/install-docker
       - run:
           command: npx sst deploy --stage prod --region ${AWS_REGION}
           name: Run SST Deploy CMD
