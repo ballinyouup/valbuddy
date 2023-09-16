@@ -1,18 +1,29 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@3.1.0
+  aws-cli: circleci/aws-cli@4.1.1
+  node: circleci/node@5.1.0
 
 jobs:
   deploy:
-    executor: ubuntu-latest
-
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
-
       - aws-cli/setup:
-          region: ${{ secrets.AWS_REGION }}
-          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          configure_default_region: false
+          configure_profile_region: true
+          disable_aws_pager: true
+          override_installed: false
+          aws_access_key_id: ${secrets.AWS_ACCESS_KEY_ID}
+          aws_secret_access_key: ${secrets.AWS_ACCESS_KEY_ID}
+          region: ${secrets.AWS_REGION}
+      - node/install
+      - run:
+          command: npm run sst deploy --stage prod --region ${secrets.AWS_REGION}
 
-      - run: npx sst deploy --stage prod --region ${{ secrets.AWS_REGION }}
+workflows:
+  deploy:
+    jobs:
+      - deploy:
+          context: valbuddy
