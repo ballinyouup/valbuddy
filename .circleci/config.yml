@@ -5,15 +5,16 @@ orbs:
 
 jobs:
   deploy:
-    executor: ubuntu-latest
     context: valbuddy
+
+    executor: ubuntu-latest
 
     steps:
       - checkout
 
       - aws-cli/setup:
-          region: ${{ context.valbuddy.AWS_REGION }}
-          access-key-id: ${{ context.valbuddy.AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ context.valbuddy.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ secrets.AWS_REGION }}
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - run: npx sst deploy --stage prod --region ${{ context.valbuddy.AWS_REGION }}
+      - run: npx sst deploy --stage prod --region ${{ secrets.AWS_REGION }}
