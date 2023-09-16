@@ -29,10 +29,10 @@ export default function Backend({ stack }: StackContext) {
             }
         }
     });
-    
-    const lambdaFunc = new Function(stack, "goLambda", {
-        handler: "./api/main.go",
-        runtime: "go",
+
+    const lambdaFunc = new Function(stack, "al2GoLambda", {
+        handler: "./api",
+        runtime: "container",
         environment: {
             DISCORD_ID: process.env.DISCORD_ID as string,
             DISCORD_SECRET: process.env.DISCORD_SECRET as string,
@@ -44,7 +44,9 @@ export default function Backend({ stack }: StackContext) {
             TWITCH_SECRET: process.env.TWITCH_SECRET as string
         },
         permissions: ["s3"],
-        bind: [bucket]
+        bind: [bucket],
+        description: "VALBUDDY Backend Lambda using provided.al2 runtime",
+        architecture: "arm_64",
     });
 
     const gateway = new ApiGatewayV1Api(stack, "goApi", {
