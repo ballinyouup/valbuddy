@@ -6,7 +6,7 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -16,6 +16,15 @@ module.exports = {
       },
     },
     extend: {
+      height: {
+        "desktop": "960px",
+      },
+      width: {
+        "desktop": "1440px",
+      },
+      maxWidth: {
+        "desktop": "1440px",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -73,4 +82,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
