@@ -8,7 +8,7 @@ jobs:
   deploy:
     machine:
       image: ubuntu-2204:current
-    resource_class: arm.medium
+    resource_class: arm.large
     steps:
       - checkout
       - aws-cli/setup:
