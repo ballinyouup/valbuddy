@@ -19,7 +19,7 @@ export default async function Navbar() {
 			</div>
 			<div className="justify-start items-center gap-2 flex">
 				<input className="w-56 h-9 rounded-sm relative bg-white border border-black border-opacity-25 text-black p-3 hidden md:flex" />
-				<ModeToggle />
+				{/* {<ModeToggle />} */}
 				<NavProfile />
 			</div>
 		</nav>
