@@ -1,4 +1,4 @@
-import SignInToast from "@/app/(pages)/sign-in-toast";
+import SignInToast from "@/app/dashboard/sign-in-toast";
 import { config } from "@/env";
 import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
