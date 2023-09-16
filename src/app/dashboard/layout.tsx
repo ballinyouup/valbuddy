@@ -10,28 +10,28 @@ import MobileNav from "@/components/mobile-nav";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "VALBuddy",
-	description: "Find Val Friends"
+  title: "VALBuddy",
+  description: "Find Val Friends"
 };
 
 export default function RootLayout({
-	children
+  children
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	return (
-		<html lang="en" suppressHydrationWarning>
-			<body className={`${inter.className} w-screen h-full`}>
-				<Providers>
-					<Navbar />
-					<div className="flex w-full h-full items-start justify-center">
-						<SidebarLeft />
-						{children}
-						<Messages />
-						<MobileNav />
-					</div>
-				</Providers>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} h-full w-screen`}>
+        <Providers>
+          <Navbar />
+          <div className="flex h-full w-full items-start justify-center">
+            <SidebarLeft />
+            {children}
+            <Messages />
+            <MobileNav />
+          </div>
+        </Providers>
+      </body>
+    </html>
+  );
 }

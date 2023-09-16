@@ -1,3 +1,3 @@
 export default async function Communities() {
-	return <main className="w-full h-full">Communities</main>;
+  return <main className="h-full w-full">Communities</main>;
 }

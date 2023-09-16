@@ -20,7 +20,7 @@ export default function Page() {
           <div className="HeroParagraphText">
             <p className="text-xl">
               Build a lasting community. Valbuddy is more than just a place to
-              find teammates. It's a place to build lasting friendships and
+              find teammates. It&apos;s a place to build lasting friendships and
               connections. Join our vibrant community and make new friends who
               share your passion for Valorant.
             </p>

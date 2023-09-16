@@ -1,3 +1,3 @@
 export default async function Home() {
-	return <main className="w-full h-full">Events</main>;
+  return <main className="h-full w-full">Events</main>;
 }

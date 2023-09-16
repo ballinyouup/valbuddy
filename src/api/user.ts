@@ -12,6 +12,7 @@ export interface User {
 	created_at: Date;
 	updated_at: Date;
 }
+
 export async function GetUser() {
 	const session = cookies().get("session_id");
 	if (!session) {
@@ -56,13 +57,13 @@ export async function UpdateUser(formData: FormData) {
 			body: formData,
 			mode: "no-cors"
 		});
-		if(!res.ok){
-			throw new Error("Error updating user")
+		if (!res.ok) {
+			throw new Error("Error updating user");
 		}
 		revalidateTag(session.value);
-		return true
+		return true;
 	} catch (error) {
 		console.error("Error submitting form:", error);
-		return false
+		return false;
 	}
 }

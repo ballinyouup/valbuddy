@@ -4,15 +4,15 @@ import { config } from "@/env";
 import { revalidateTag } from "next/cache";
 
 export interface Account {
-    id: string;
-    user_id: string;
-    image_url: string;
-    username: string;
-    rank: string;
-    region: string;
-    roles: string;
-    created_at: string;
-    updated_at: string;
+	id: string;
+	user_id: string;
+	image_url: string;
+	username: string;
+	rank: string;
+	region: string;
+	roles: string;
+	created_at: string;
+	updated_at: string;
 }
 
 export async function GetAccount() {

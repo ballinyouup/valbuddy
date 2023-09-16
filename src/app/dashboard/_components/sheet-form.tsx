@@ -200,7 +200,6 @@ export default function SheetForm({
   mobile?: boolean;
   account: Account;
 }) {
-  
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);

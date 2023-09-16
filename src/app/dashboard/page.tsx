@@ -25,9 +25,7 @@ export default async function Home() {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="teams" className="border-0">
-            <AccordionTrigger
-              className="flex h-fit items-center justify-between border-2 border-x-0 border-b-0 border-black bg-red-900 p-2 duration-0"
-            >
+            <AccordionTrigger className="flex h-fit items-center justify-between border-2 border-x-0 border-b-0 border-black bg-red-900 p-2 duration-0">
               <span className="text-2xl font-black">TEAMS</span>
             </AccordionTrigger>
             <AccordionContent>
