@@ -36,7 +36,7 @@ function UserRow(user: UserData) {
       </div>
       <div className="flex w-full flex-col justify-evenly px-4 text-primary-foreground">
         <div className="flex justify-between uppercase">
-          <span>{username}</span>
+          <span>{username} </span>
           <span>{rank}</span>
         </div>
         <div className="flex justify-between uppercase">
