@@ -26,7 +26,7 @@ jobs:
       - docker/install-docker
       - run:
           command: sudo systemctl start docker
-          name: Run Docker Daemon
+          name: Start Docker
       - run:
           command: npx sst deploy --stage prod --region ${AWS_REGION}
           name: Run SST Deploy CMD
