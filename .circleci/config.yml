@@ -11,6 +11,10 @@ jobs:
     resource_class: arm.large
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
+            - dependency-cache-
       - aws-cli/setup:
           configure_default_region: false
           configure_profile_region: true
@@ -26,6 +30,11 @@ jobs:
       - run:
           command: npx sst deploy --stage prod --region ${AWS_REGION}
           name: Run SST Deploy CMD
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+            - ./.next/cache
 
 workflows:
   run-deploy:
