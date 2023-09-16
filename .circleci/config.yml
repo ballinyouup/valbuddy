@@ -20,7 +20,7 @@ jobs:
           region: ${AWS_REGION}
       - node/install
       - run:
-          command: npm run sst deploy --stage prod --region ${AWS_REGION}
+          command: npx sst deploy --stage prod --region ${AWS_REGION}
 
 workflows:
   run-deploy:
