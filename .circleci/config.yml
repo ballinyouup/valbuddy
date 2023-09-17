@@ -6,7 +6,7 @@ orbs:
 
 jobs:
     deploy-frontend:
-        working_directory: ~/frontend
+        working_directory: ~/app/frontend
         docker:
             - image: cimg/base:current
         resource_class: arm.large
@@ -14,7 +14,7 @@ jobs:
             - setup_remote_docker:
                   version: default
             - checkout:
-                  path: ~/frontend
+                  path: ~/app
             - restore_cache:
                   keys:
                       - dependency-cache-{{ checksum "package-lock.json" }}
@@ -29,20 +29,17 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  name: Verify package-lock.json
-                  command: ls ~/backend/package-lock.json
-            - run:
-                  command: npm ci --prefix ~/frontend
+                  command: npm ci
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION} --prefix ~/frontend
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
                   name: Go to Frontend Folder/Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
                   paths:
                       - ./node_modules
     deploy-backend:
-        working_directory: ~/backend
+        working_directory: ~/app/backend
         docker:
             - image: cimg/base:current
         resource_class: arm.large
@@ -50,7 +47,7 @@ jobs:
             - setup_remote_docker:
                   version: default
             - checkout:
-                  path: ~/backend
+                  path: ~/app
             - restore_cache:
                   keys:
                       - dependency-cache-{{ checksum "package-lock.json" }}
@@ -65,13 +62,10 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  name: Verify package-lock.json
-                  command: ls ~/backend/package-lock.json
-            - run:
-                  command: npm ci --prefix ~/backend
+                  command: npm ci
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION} --prefix ~/backend
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
                   name: Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
