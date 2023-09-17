@@ -6,6 +6,7 @@ orbs:
 
 jobs:
     deploy-frontend:
+        working_directory: ~/frontend
         docker:
             - image: cimg/base:current
         resource_class: arm.large
@@ -30,13 +31,14 @@ jobs:
                   command: npm ci
                   name: Install packages
             - run:
-                  command: cd frontend && npx sst deploy --stage prod --region ${AWS_REGION}
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
                   name: Go to Frontend Folder/Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
                   paths:
                       - ./node_modules
     deploy-backend:
+        working_directory: ~/backend
         docker:
             - image: cimg/base:current
         resource_class: arm.large
@@ -61,8 +63,8 @@ jobs:
                   command: npm ci
                   name: Install packages
             - run:
-                  command: cd backend && npx sst deploy --stage prod --region ${AWS_REGION}
-                  name: Go to Backend Folder/Run SST Deploy CMD
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
+                  name: Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
                   paths:
