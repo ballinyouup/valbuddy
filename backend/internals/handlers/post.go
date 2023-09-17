@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"nextjs-go/db"
+	"valbuddy/internals/db"
 	"strconv"
 	"strings"
 

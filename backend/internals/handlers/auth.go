@@ -3,9 +3,9 @@ package handlers
 import (
 	"fmt"
 	"net/url"
-	"nextjs-go/auth"
-	"nextjs-go/config"
-	"nextjs-go/db"
+	"valbuddy/internals/auth"
+	"valbuddy/internals/config"
+	"valbuddy/internals/db"
 	"time"
 
 	"github.com/gofiber/fiber/v2"

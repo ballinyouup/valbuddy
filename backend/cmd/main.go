@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"nextjs-go/config"
-	"nextjs-go/db"
-	"nextjs-go/routes"
+	"valbuddy/internals/config"
+	"valbuddy/internals/db"
+	"valbuddy/internals/routes"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"

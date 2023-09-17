@@ -7,8 +7,8 @@ import {
     StackContext,
 } from "sst/constructs";
 
-export default function Backend({ stack }: StackContext) {
-    const bucket = new Bucket(stack, "valbuddyImages", {
+export default function ValbuddyBackend({ stack }: StackContext) {
+    const bucket = new Bucket(stack, "valbuddy-images", {
         cdk: {
             bucket: {
                 publicReadAccess: true,
@@ -30,8 +30,8 @@ export default function Backend({ stack }: StackContext) {
         }
     });
 
-    const lambdaFunc = new Function(stack, "al2GoLambda", {
-        handler: "./api",
+    const lambda = new Function(stack, "valbuddy-lambda", {
+        handler: "./",
         runtime: "container",
         environment: {
             DISCORD_ID: process.env.DISCORD_ID as string,
@@ -49,9 +49,9 @@ export default function Backend({ stack }: StackContext) {
         architecture: "arm_64",
     });
 
-    const gateway = new ApiGatewayV1Api(stack, "goApi", {
+    const gateway = new ApiGatewayV1Api(stack, "valbuddy-gateway", {
         routes: {
-            "ANY /{proxy+}": lambdaFunc
+            "ANY /{proxy+}": lambda
         },
         cdk: {
             restApi: {
@@ -77,12 +77,12 @@ export default function Backend({ stack }: StackContext) {
     stack.addOutputs({
         bucketURL: bucket.bucketName,
         backendURL: gateway.customDomainUrl,
-        lambdaURL: lambdaFunc.url
+        lambdaURL: lambda.url
     });
 
     return {
         bucket: bucket,
-        lambda: lambdaFunc,
+        lambda: lambda,
         gateway: gateway,
     };
 }

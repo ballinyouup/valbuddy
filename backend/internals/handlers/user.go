@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"fmt"
-	"nextjs-go/config"
-	"nextjs-go/db"
+	"valbuddy/internals/config"
+	"valbuddy/internals/db"
 
 	"github.com/gofiber/fiber/v2"
 )

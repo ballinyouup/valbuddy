@@ -1,4 +1,4 @@
-module nextjs-go
+module valbuddy
 
 go 1.20
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
-	"nextjs-go/config"
+	"valbuddy/internals/config"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"

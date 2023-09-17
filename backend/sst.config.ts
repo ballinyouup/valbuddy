@@ -1,16 +1,14 @@
 import { SSTConfig } from "sst";
-import Site from "./stacks/site";
 import Backend from "./stacks/backend";
 
 export default {
   config(_input) {
     return {
-      name: "nextjs-go",
+      name: "valbuddy-backend",
       region: "us-east-2",
     };
   },
   stacks(app) {
-    app.stack(Site);
     app.stack(Backend)
   },
 } satisfies SSTConfig;

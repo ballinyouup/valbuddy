@@ -1,44 +1,77 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@4.1.1
-  node: circleci/node@5.1.0
+    aws-cli: circleci/aws-cli@4.1.1
+    node: circleci/node@5.1.0
 
 jobs:
-  deploy:
-    docker:
-      - image: cimg/base:current
-    resource_class: arm.large
-    steps:
-      - setup_remote_docker:
-          version: default
-      - checkout
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package-lock.json" }}
-            - dependency-cache-
-      - aws-cli/setup:
-          configure_default_region: false
-          configure_profile_region: false
-          disable_aws_pager: true
-          override_installed: false
-          aws_access_key_id: ${AWS_ACCESS_KEY_ID}
-          aws_secret_access_key: ${AWS_ACCESS_KEY_ID}
-          region: ${AWS_REGION}
-      - node/install
-      - run:
-          command: npm ci
-          name: Install NPM packages
-      - run:
-          command: npx sst deploy --stage prod --region ${AWS_REGION}
-          name: Run SST Deploy CMD
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
+    deploy-frontend:
+        docker:
+            - image: cimg/base:current
+        resource_class: arm.large
+        steps:
+            - setup_remote_docker:
+                  version: default
+            - checkout
+            - restore_cache:
+                  keys:
+                      - dependency-cache-{{ checksum "package-lock.json" }}
+                      - dependency-cache-
+            - aws-cli/setup:
+                  configure_default_region: false
+                  configure_profile_region: false
+                  disable_aws_pager: true
+                  override_installed: false
+                  aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+                  aws_secret_access_key: ${AWS_ACCESS_KEY_ID}
+                  region: ${AWS_REGION}
+            - node/install
+            - run:
+                  command: cd frontend && npm ci
+                  name: Open Frontend Folder/Install NPM packages
+            - run:
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
+                  name: Run SST Deploy CMD
+            - save_cache:
+                  key: dependency-cache-{{ checksum "package-lock.json" }}
+                  paths:
+                      - ./node_modules
+    deploy-backend:
+        docker:
+            - image: cimg/base:current
+        resource_class: arm.large
+        steps:
+            - setup_remote_docker:
+                  version: default
+            - checkout
+            - restore_cache:
+                  keys:
+                      - dependency-cache-{{ checksum "package-lock.json" }}
+                      - dependency-cache-
+            - aws-cli/setup:
+                  configure_default_region: false
+                  configure_profile_region: false
+                  disable_aws_pager: true
+                  override_installed: false
+                  aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+                  aws_secret_access_key: ${AWS_ACCESS_KEY_ID}
+                  region: ${AWS_REGION}
+            - node/install
+            - run:
+                  command: cd backend && npm ci
+                  name: Open Backend Folder/Install NPM packages
+            - run:
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
+                  name: Run SST Deploy CMD
+            - save_cache:
+                  key: dependency-cache-{{ checksum "package-lock.json" }}
+                  paths:
+                      - ./node_modules
 
 workflows:
-  run-deploy:
-    jobs:
-      - deploy:
-          context: valbuddy
+    run-deploy:
+        jobs:
+            - deploy-frontend:
+                  context: valbuddy
+            - deploy-backend:
+                  context: valbuddy

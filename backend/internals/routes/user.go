@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"nextjs-go/handlers"
+	"valbuddy/internals/handlers"
 
 	"github.com/gofiber/fiber/v2"
 )

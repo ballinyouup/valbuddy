@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"nextjs-go/config"
+	"valbuddy/internals/config"
 	"time"
 
 	"github.com/go-playground/validator/v10"

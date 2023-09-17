@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "next-dev": "next dev",
-    "dev": "concurrently \"next dev\" \"cd api && go run main.go\"",
+    "dev": "concurrently \"next dev\" \"cd .. && cd backend && go run cmd\\main.go\"",
     "sst-dev": "sst bind next dev",
     "build": "next build",
     "start": "next start",

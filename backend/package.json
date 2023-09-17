@@ -1,0 +1,19 @@
+{
+  "name": "valbuddy-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "next-dev": "next dev",
+    "dev": "concurrently \"next dev\" \"cd .. && cd backend && go run cmd\\main.go\"",
+    "sst-dev": "sst bind next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "devDependencies": {
+    "aws-cdk-lib": "2.84.0",
+    "concurrently": "^8.2.0",
+    "constructs": "10.1.156",
+    "sst": "^2.23.13"
+  }
+}
