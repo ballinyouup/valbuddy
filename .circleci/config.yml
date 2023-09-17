@@ -69,11 +69,13 @@ jobs:
                       - ./node_modules
 
 workflows:
-    run-deploy:
+    run-deploy-frontend:
         jobs:
             - deploy-frontend:
                   context:
                       - valbuddy
+    run-deploy-backend:
+        jobs:
             - deploy-backend:
                   context:
                       - valbuddy
