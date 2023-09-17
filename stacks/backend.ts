@@ -73,4 +73,16 @@ export default function Backend({ stack }: StackContext) {
             endpointType: "regional"
         }
     });
+
+    stack.addOutputs({
+        bucketURL: bucket.bucketName,
+        backendURL: gateway.customDomainUrl,
+        lambdaURL: lambdaFunc.url
+    });
+
+    return {
+        bucket: bucket,
+        lambda: lambdaFunc,
+        gateway: gateway,
+    };
 }

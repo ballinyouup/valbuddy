@@ -12,6 +12,6 @@ export default function Site({ stack }: StackContext) {
         }
     });
     stack.addOutputs({
-        url: site.url,
+        url: site.customDomainUrl,
     });
 }
