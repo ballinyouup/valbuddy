@@ -44,7 +44,7 @@ export async function GetUser() {
 export async function UpdateUser(formData: FormData) {
 	const session = cookies().get("session_id");
 	if (!session) {
-		return false;
+		return undefined;
 	}
 	try {
 		const res = await fetch(`${config.API_URL}/user/update`, {
@@ -61,9 +61,9 @@ export async function UpdateUser(formData: FormData) {
 			throw new Error("Error updating user");
 		}
 		revalidateTag(session.value);
-		return true;
+		return res.ok;
 	} catch (error) {
 		console.error("Error submitting form:", error);
-		return false;
+		return undefined;
 	}
 }

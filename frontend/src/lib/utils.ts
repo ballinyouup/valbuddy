@@ -10,6 +10,7 @@ export function parseJSON(json: string) {
   try {
     j = JSON.parse(atob(json));
   } catch {
+    console.log("Error parsing JSON")
     j = [];
   }
   return j;
