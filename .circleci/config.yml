@@ -29,7 +29,7 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: npm ci
+                  command: npm install
                   name: Install packages
             - run:
                   command: npx sst deploy --stage prod --region ${AWS_REGION}
@@ -62,7 +62,7 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: npm ci
+                  command: npm install
                   name: Install packages
             - run:
                   command: npx sst deploy --stage prod --region ${AWS_REGION}
