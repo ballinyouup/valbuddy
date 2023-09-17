@@ -29,10 +29,13 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: npm ci
+                  name: Verify package-lock.json
+                  command: ls ~/backend/package-lock.json
+            - run:
+                  command: npm ci --prefix ~/frontend
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION}
+                  command: npx sst deploy --stage prod --region ${AWS_REGION} --prefix ~/frontend
                   name: Go to Frontend Folder/Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
@@ -62,10 +65,13 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: npm ci
+                  name: Verify package-lock.json
+                  command: ls ~/backend/package-lock.json
+            - run:
+                  command: npm ci --prefix ~/backend
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION}
+                  command: npx sst deploy --stage prod --region ${AWS_REGION} --prefix ~/backend
                   name: Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
