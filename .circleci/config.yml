@@ -72,6 +72,8 @@ workflows:
     run-deploy:
         jobs:
             - deploy-frontend:
-                  context: valbuddy
+                  context:
+                      - valbuddy
             - deploy-backend:
-                  context: valbuddy
+                  context:
+                      - valbuddy
