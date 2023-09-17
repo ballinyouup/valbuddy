@@ -157,7 +157,7 @@ function FeatureTwo() {
           </div>
           <p className="text-lg">
             Peep player profiles to see their rank, Agents, play style and
-            vibes. Get matched with teammates you'll gel with.
+            vibes. Get matched with teammates you&apos;ll gel with.
           </p>
         </div>
       </div>
