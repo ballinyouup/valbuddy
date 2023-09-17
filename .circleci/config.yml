@@ -13,7 +13,8 @@ jobs:
         steps:
             - setup_remote_docker:
                   version: default
-            - checkout
+            - checkout:
+                  path: ~/frontend
             - restore_cache:
                   keys:
                       - dependency-cache-{{ checksum "package-lock.json" }}
@@ -28,10 +29,10 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: npm --prefix ./frontend ci
+                  command: npm ci
                   name: Install packages
             - run:
-                  command: npx --prefix ./frontend sst deploy --stage prod --region ${AWS_REGION}
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
                   name: Go to Frontend Folder/Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
@@ -45,7 +46,8 @@ jobs:
         steps:
             - setup_remote_docker:
                   version: default
-            - checkout
+            - checkout:
+                  path: ~/backend
             - restore_cache:
                   keys:
                       - dependency-cache-{{ checksum "package-lock.json" }}
