@@ -27,11 +27,11 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: cd frontend && npm ci
-                  name: Open Frontend Folder/Install NPM packages
+                  command: npm ci
+                  name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION}
-                  name: Run SST Deploy CMD
+                  command: cd frontend && npx sst deploy --stage prod --region ${AWS_REGION}
+                  name: Go to Frontend Folder/Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
                   paths:
@@ -58,11 +58,11 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: cd backend && npm ci
-                  name: Open Backend Folder/Install NPM packages
+                  command: npm ci
+                  name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION}
-                  name: Run SST Deploy CMD
+                  command: cd backend && npx sst deploy --stage prod --region ${AWS_REGION}
+                  name: Go to Backend Folder/Run SST Deploy CMD
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
                   paths:
