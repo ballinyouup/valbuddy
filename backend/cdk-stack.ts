@@ -8,7 +8,7 @@ import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
-
+import { env } from "./env";
 
 export class BackendStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -20,18 +20,18 @@ export class BackendStack extends cdk.Stack {
     });
 
     const lambdaFunction = new lambda.Function(this, "valbuddy-lambda", {
-      code: lambda.Code.fromAsset(`${process.env.HOME_PATH as string}/backend/zip`),
+      code: lambda.Code.fromAsset(`${env.HOME_PATH}/backend/zip`),
       handler: "bootstrap",
       runtime: lambda.Runtime.PROVIDED_AL2,
       environment: {
-        DISCORD_ID: process.env.DISCORD_ID as string,
-        DISCORD_SECRET: process.env.DISCORD_SECRET as string,
-        DATABASE_URL: process.env.DATABASE_URL as string,
-        API_URL: process.env.API_URL as string,
-        FRONTEND_URL: process.env.FRONTEND_URL as string,
-        COOKIE_DOMAIN: process.env.COOKIE_DOMAIN as string,
-        TWITCH_ID: process.env.TWITCH_ID as string,
-        TWITCH_SECRET: process.env.TWITCH_SECRET as string,
+        DISCORD_ID: env.DISCORD_ID,
+        DISCORD_SECRET: env.DISCORD_SECRET,
+        DATABASE_URL: env.DATABASE_URL,
+        API_URL: env.API_URL,
+        FRONTEND_URL: env.FRONTEND_URL,
+        COOKIE_DOMAIN: env.COOKIE_DOMAIN,
+        TWITCH_ID: env.TWITCH_ID,
+        TWITCH_SECRET: env.TWITCH_SECRET,
       },
       memorySize: 1024,
       timeout: Duration.seconds(30),
@@ -102,6 +102,14 @@ export class BackendStack extends cdk.Stack {
     //   recordName: 'api',
     // });
 
+    new route53.ARecord(this, "ApiARecord", {
+      zone: hostedZone,
+      target: route53.RecordTarget.fromAlias(
+        new route53Targets.ApiGateway(gateway)
+      ),
+      recordName: "api",
+    });
+
     new route53.ARecord(this, "ImgCDNARecord", {
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(
@@ -119,7 +127,7 @@ export class BackendStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, "LambdaURL", {
-      value: lambdaFunction.functionArn,
+      value: lambdaFunction.addFunctionUrl().url,
     });
   }
 }
