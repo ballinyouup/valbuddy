@@ -3,7 +3,7 @@ version: 2.1
 orbs:
     aws-cli: circleci/aws-cli@4.1.1
     node: circleci/node@5.1.0
-
+    go: circleci/go@1.8.0
 jobs:
     deploy-frontend:
         working_directory: ~/app/frontend
@@ -61,6 +61,7 @@ jobs:
                   aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
                   region: ${AWS_REGION}
             - node/install
+            - go/install
             - run:
                   command: mkdir -p ~/app/backend/zip/
                   name: Make zip folder
