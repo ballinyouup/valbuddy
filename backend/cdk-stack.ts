@@ -34,7 +34,7 @@ export class BackendStack extends cdk.Stack {
         TWITCH_SECRET: process.env.TWITCH_SECRET as string,
       },
       memorySize: 1024,
-      timeout: Duration.seconds(15),
+      timeout: Duration.seconds(30),
       architecture: lambda.Architecture.ARM_64,
     });
 
@@ -63,6 +63,7 @@ export class BackendStack extends cdk.Stack {
         lambdaFunction
       ),
       anyMethod: true,
+
     });
 
     const bucket = new s3.Bucket(this, "valbuddy-images", {
