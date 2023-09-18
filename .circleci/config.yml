@@ -14,10 +14,6 @@ jobs:
                   version: default
             - checkout:
                   path: ~/app
-            - restore_cache:
-                  keys:
-                      - dependency-cache-{{ checksum "package-lock.json" }}
-                      - dependency-cache-
             - aws-cli/setup:
                   configure_default_region: false
                   configure_profile_region: false
@@ -33,10 +29,6 @@ jobs:
             - run:
                   command: npx sst deploy --stage prod --region ${AWS_REGION}
                   name: Go to Frontend Folder/Run SST Deploy CMD
-            - save_cache:
-                  key: dependency-cache-{{ checksum "package-lock.json" }}
-                  paths:
-                      - ./node_modules
     deploy-backend:
         working_directory: ~/app/backend
         docker:
@@ -47,10 +39,6 @@ jobs:
                   version: default
             - checkout:
                   path: ~/app
-            - restore_cache:
-                  keys:
-                      - dependency-cache-{{ checksum "package-lock.json" }}
-                      - dependency-cache-
             - aws-cli/setup:
                   configure_default_region: false
                   configure_profile_region: false
@@ -67,7 +55,7 @@ jobs:
                   command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
                   name: Build Binary
             - run:
-                  command: npm install && npm run build
+                  command: npm install -g aws-cdk && npm install && npm run build
                   name: Install packages/Run Build
             - run:
                   name: Set HOME environment variable
@@ -76,10 +64,6 @@ jobs:
             - run:
                   command: cdk synth && cdk deploy --require-approval never
                   name: Deploy using CDK
-            - save_cache:
-                  key: dependency-cache-{{ checksum "package-lock.json" }}
-                  paths:
-                      - ./node_modules
 
 workflows:
     run-deploy-frontend:
