@@ -67,8 +67,8 @@ jobs:
                   command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
                   name: Build Binary
             - run:
-                  command: npm install -g aws-cdk && npm install
-                  name: Install packages
+                  command: npm install && npm run build
+                  name: Install packages/Run Build
             - run:
                   name: Set HOME environment variable
                   command: echo 'export HOME_PATH=~/app' >> $BASH_ENV
