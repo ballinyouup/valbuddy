@@ -8,7 +8,7 @@ jobs:
     deploy-frontend:
         working_directory: ~/app/frontend
         docker:
-            - image: cimg/base:current
+            - image: cimg/go:current
         resource_class: arm.large
         steps:
             - setup_remote_docker:
