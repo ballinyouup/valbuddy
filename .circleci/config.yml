@@ -66,7 +66,7 @@ jobs:
                   command: mkdir -p ~/app/backend/zip/
                   name: Make zip folder
             - run:
-                  command: GOOS=linux GOARCH=arm64 go build -o zip/bootstrap cmd/main.go
+                  command: go build -o zip/bootstrap cmd/main.go
                   name: Build Binary
             - run:
                   command: npm install
