@@ -14,7 +14,7 @@ jobs:
             - setup_remote_docker:
                   version: default
             - checkout:
-                  path: ~/app
+                  path: ~/app/frontend
             - restore_cache:
                   keys:
                       - dependency-cache-{{ checksum "package-lock.json" }}
@@ -47,7 +47,7 @@ jobs:
             - setup_remote_docker:
                   version: default
             - checkout:
-                  path: ~/app
+                  path: ~/app/backend
             - restore_cache:
                   keys:
                       - dependency-cache-{{ checksum "package-lock.json" }}
@@ -62,11 +62,18 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
+                  command: go build -o zip/bootstrap cmd/main.go
+                  name: Build Binary
+            - run:
                   command: npm install
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION}
-                  name: Run SST Deploy CMD
+                  name: Set HOME environment variable
+                  command: echo 'export HOME_PATH=$HOME' >> $BASH_ENV
+
+            - run:
+                  command: cdk deploy --require-approval never
+                  name: Deploy using CDK
             - save_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
                   paths:
