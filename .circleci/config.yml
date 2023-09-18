@@ -71,7 +71,7 @@ jobs:
                   name: Install packages
             - run:
                   name: Set HOME environment variable
-                  command: echo 'export HOME_PATH=~/app/backend' >> $BASH_ENV
+                  command: echo 'export HOME_PATH=~/app' >> $BASH_ENV
 
             - run:
                   command: cdk synth && cdk deploy --require-approval never
