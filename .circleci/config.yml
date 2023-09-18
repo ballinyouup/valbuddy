@@ -62,7 +62,10 @@ jobs:
                   region: ${AWS_REGION}
             - node/install
             - run:
-                  command: go build -o zip/bootstrap cmd/main.go
+                  command: mkdir -p $HOME/backend/zip/
+                  name: Make zip folder
+            - run:
+                  command: GOOS=linux GOARCH=arm64 go build -o $HOME/backend/zip/bootstrap $HOME/backend/cmd/main.go
                   name: Build Binary
             - run:
                   command: npm install
