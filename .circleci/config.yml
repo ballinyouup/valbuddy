@@ -64,7 +64,7 @@ jobs:
                   command: mkdir -p ~/app/backend/zip/
                   name: Make zip folder
             - run:
-                  command: go build -o ~/app/backend/zip/bootstrap cmd/main.go
+                  command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
                   name: Build Binary
             - run:
                   command: npm install -g aws-cdk && npm install
