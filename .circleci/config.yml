@@ -62,7 +62,7 @@ jobs:
           command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap ~/app/backend/cmd/main.go
           name: Build Binary
       - run:
-          command: chmod +x bootstrap && zip lambda.zip bootstrap
+          command: chmod +x ~/app/backend/zip/bootstrap && zip ~/app/backend/zip/lambda.zip ~/app/backend/zip/bootstrap
           name: Add Permissions/Zip Binary
       - run:
           command: npm install
