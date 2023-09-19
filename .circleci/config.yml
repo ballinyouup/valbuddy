@@ -27,8 +27,8 @@ jobs:
                   command: npm install
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod --region ${AWS_REGION}
-                  name: Go to Frontend Folder/Run SST Deploy CMD
+                  command: npx sst deploy --stage prod
+                  name: Run SST Deploy CMD
     deploy-backend:
         working_directory: ~/app/backend
         docker:
@@ -55,8 +55,8 @@ jobs:
                   command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
                   name: Build Binary
             - run:
-                  command: npm install -g aws-cdk && npm install && npm run build
-                  name: Install packages/Run Build
+                  command: npm install -g aws-cdk && npm install
+                  name: Install packages
             - run:
                   name: Set HOME environment variable
                   command: echo 'export HOME_PATH=~/app' >> $BASH_ENV
