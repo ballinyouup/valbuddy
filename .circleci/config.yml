@@ -56,20 +56,27 @@ jobs:
           aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
           region: $AWS_DEFAULT_REGION
       - run:
-          command: mkdir -p ~/app/backend/zip/
           name: Make zip folder
+          command: |
+            mkdir -p ~/app/backend/zip/
+            ls -l ~/app/backend
       - run:
-          command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap ~/app/backend/cmd/main.go
           name: Build Binary
+          command: |
+            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap ~/app/backend/cmd/main.go
+            ls -l ~/app/backend/zip
       - run:
-          command: chmod +x ~/app/backend/zip/bootstrap && zip ~/app/backend/zip/lambda.zip ~/app/backend/zip/bootstrap
           name: Add Permissions/Zip Binary
+          command: |
+            chmod +x ~/app/backend/zip/bootstrap
+            zip ~/app/backend/zip/lambda.zip ~/app/backend/zip/bootstrap
+            ls -l ~/app/backend/zip
       - run:
-          command: npm install
           name: Install packages
+          command: npm install
       - run:
-          command: npx sst deploy --stage=prod --region=us-east-1
           name: Deploy using SST/CDK
+          command: npx sst deploy --stage=prod --region=us-east-1
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
