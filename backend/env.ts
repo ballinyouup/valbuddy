@@ -13,7 +13,7 @@ const schema = z.object({
     TWITCH_ID: z.string().min(1),
     TWITCH_SECRET: z.string().min(1),
     NEXT_PUBLIC_API_URL: z.string().min(1),
-    AWS_REGION: z.string().min(1),
+    AWS_DEFAULT_REGION: z.string().min(1),
     AWS_ACCESS_KEY_ID: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
     HOME_PATH: z.string().min(1),
@@ -23,7 +23,7 @@ type EnvSchema = z.infer<typeof schema>;
 export const env: EnvSchema = schema.parse({
     API_URL: process.env.API_URL!,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
-    AWS_REGION: process.env.AWS_REGION!,
+    AWS_DEFAULT_REGION: process.env.AWS_DEFAULT_REGION!,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
     COOKIE_DOMAIN: process.env.COOKIE_DOMAIN!,
     DATABASE_URL: process.env.DATABASE_URL!,

@@ -44,6 +44,9 @@ jobs:
           version: default
       - checkout:
           path: ~/app
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
       - aws-cli/setup:
           configure_default_region: true
           configure_profile_region: true
@@ -59,24 +62,18 @@ jobs:
           command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap ~/app/backend/cmd/main.go
           name: Build Binary
       - run:
-          command: npm install -g aws-cdk && npm install
+          command: chmod +x bootstrap && zip lambda.zip bootstrap
+          name: Add Permissions/Zip Binary
+      - run:
+          command: npm install
           name: Install packages
       - run:
-          name: Set HOME environment variable
-          command: |
-            echo 'export HOME_PATH=~/app' >> $BASH_ENV
-            echo 'export DISCORD_ID=${DISCORD_ID}' >> $BASH_ENV
-            echo 'export DISCORD_SECRET=${DISCORD_SECRET}' >> $BASH_ENV
-            echo 'export DATABASE_URL=${DATABASE_URL}' >> $BASH_ENV
-            echo 'export API_URL=${API_URL}' >> $BASH_ENV
-            echo 'export FRONTEND_URL=${FRONTEND_URL}' >> $BASH_ENV
-            echo 'export COOKIE_DOMAIN=${COOKIE_DOMAIN}' >> $BASH_ENV
-            echo 'export TWITCH_ID=${TWITCH_ID}' >> $BASH_ENV
-            echo 'export TWITCH_SECRET=${TWITCH_SECRET}' >> $BASH_ENV
-            echo 'export NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}' >> $BASH_ENV
-      - run:
-          command: cdk bootstrap aws://846925104213/us-east-1 && cdk synth && cdk deploy --require-approval never
-          name: Deploy using CDK
+          command: npx sst deploy --stage=prod --region=us-east-1
+          name: Deploy using SST/CDK
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
 workflows:
   run-deploy-frontend:
     jobs:

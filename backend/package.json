@@ -1,25 +1,24 @@
 {
-	"name": "cdk",
-	"version": "0.1.0",
-	"bin": {
-		"cdk": "./bin/cdk.ts"
-	},
-	"scripts": {
-		"build": "tsc",
-		"watch": "tsc -w",
-		"cdk": "cdk"
-	},
-	"devDependencies": {
-		"@types/node": "^20.5.9",
-		"aws-cdk": "2.96.2",
-		"ts-node": "^10.9.1",
-		"typescript": "~5.2.2"
-	},
-	"dependencies": {
-		"aws-cdk-lib": "2.96.2",
-		"constructs": "^10.0.0",
-		"dotenv": "^16.3.1",
-		"source-map-support": "^0.5.21",
-		"zod": "^3.22.2"
-	}
+  "name": "my-sst-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sst dev",
+    "build": "sst build",
+    "deploy": "sst deploy",
+    "remove": "sst remove",
+    "console": "sst console",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "sst": "^2.25.3",
+    "aws-cdk-lib": "2.95.1",
+    "constructs": "10.2.69",
+    "typescript": "^5.2.2",
+    "@tsconfig/node18": "^18.2.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
