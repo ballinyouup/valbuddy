@@ -1,93 +1,93 @@
 version: 2.1
 
 orbs:
-	aws-cli: circleci/aws-cli@4.1.1
-	node: circleci/node@5.1.0
+    aws-cli: circleci/aws-cli@4.1.1
+    node: circleci/node@5.1.0
 jobs:
-	deploy-frontend:
-		working_directory: ~/app/frontend
-		docker:
-			- image: cimg/base:current
-		resource_class: arm.large
-		steps:
-			- setup_remote_docker:
-					version: default
-			- checkout:
-					path: ~/app
-			- restore_cache:
-					keys:
-						- dependency-cache-{{ checksum "package-lock.json" }}
-			- aws-cli/setup:
-					configure_default_region: false
-					configure_profile_region: false
-					disable_aws_pager: true
-					override_installed: false
-					aws_access_key_id: ${AWS_ACCESS_KEY_ID}
-					aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
-					region: ${AWS_REGION}
-			- node/install
-			- run:
-					command: npm install
-					name: Install packages
-			- run:
-					command: npx sst deploy --stage prod
-					name: Run SST Deploy CMD
-			- save_cache:
-					key: dependency-cache-{{ checksum "package-lock.json" }}
-					paths:
-						- ./node_modules
-	deploy-backend:
-		working_directory: ~/app/backend
-		docker:
-			- image: cimg/go:1.20
-		resource_class: arm.large
-		steps:
-			- setup_remote_docker:
-					version: default
-			- checkout:
-					path: ~/app
-			- aws-cli/setup:
-					configure_default_region: false
-					configure_profile_region: false
-					disable_aws_pager: true
-					override_installed: false
-					aws_access_key_id: ${AWS_ACCESS_KEY_ID}
-					aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
-					region: ${AWS_REGION}
-			- node/install
-			- run:
-					command: mkdir -p ~/app/backend/zip/
-					name: Make zip folder
-			- run:
-					command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
-					name: Build Binary
-			- run:
-					command: npm install -g aws-cdk && npm install
-					name: Install packages
-			- run:
-					name: Set HOME environment variable
-					command: |
-						echo 'export HOME_PATH=~/app' >> $BASH_ENV
-						echo 'export DISCORD_ID=${DISCORD_ID}' >> $BASH_ENV
-						echo 'export DISCORD_SECRET=${DISCORD_SECRET}' >> $BASH_ENV
-						echo 'export DATABASE_URL=${DATABASE_URL}' >> $BASH_ENV
-						echo 'export API_URL=${API_URL}' >> $BASH_ENV
-						echo 'export FRONTEND_URL=${FRONTEND_URL}' >> $BASH_ENV
-						echo 'export COOKIE_DOMAIN=${COOKIE_DOMAIN}' >> $BASH_ENV
-						echo 'export TWITCH_ID=${TWITCH_ID}' >> $BASH_ENV
-						echo 'export TWITCH_SECRET=${TWITCH_SECRET}' >> $BASH_ENV
-						echo 'export NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}' >> $BASH_ENV
-			- run:
-					command: cdk synth && cdk deploy --require-approval never
-					name: Deploy using CDK
+    deploy-frontend:
+        working_directory: ~/app/frontend
+        docker:
+            - image: cimg/base:current
+        resource_class: arm.large
+        steps:
+            - setup_remote_docker:
+                    version: default
+            - checkout:
+                    path: ~/app
+            - restore_cache:
+                    keys:
+                        - dependency-cache-{{ checksum "package-lock.json" }}
+            - aws-cli/setup:
+                    configure_default_region: false
+                    configure_profile_region: false
+                    disable_aws_pager: true
+                    override_installed: false
+                    aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+                    aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+                    region: ${AWS_REGION}
+            - node/install
+            - run:
+                    command: npm install
+                    name: Install packages
+            - run:
+                    command: npx sst deploy --stage prod
+                    name: Run SST Deploy CMD
+            - save_cache:
+                    key: dependency-cache-{{ checksum "package-lock.json" }}
+                    paths:
+                        - ./node_modules
+    deploy-backend:
+        working_directory: ~/app/backend
+        docker:
+            - image: cimg/go:1.20
+        resource_class: arm.large
+        steps:
+            - setup_remote_docker:
+                    version: default
+            - checkout:
+                    path: ~/app
+            - aws-cli/setup:
+                    configure_default_region: false
+                    configure_profile_region: false
+                    disable_aws_pager: true
+                    override_installed: false
+                    aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+                    aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+                    region: ${AWS_REGION}
+            - node/install
+            - run:
+                    command: mkdir -p ~/app/backend/zip/
+                    name: Make zip folder
+            - run:
+                    command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
+                    name: Build Binary
+            - run:
+                    command: npm install -g aws-cdk && npm install
+                    name: Install packages
+            - run:
+                    name: Set HOME environment variable
+                    command: |
+                        echo 'export HOME_PATH=~/app' >> $BASH_ENV
+                        echo 'export DISCORD_ID=${DISCORD_ID}' >> $BASH_ENV
+                        echo 'export DISCORD_SECRET=${DISCORD_SECRET}' >> $BASH_ENV
+                        echo 'export DATABASE_URL=${DATABASE_URL}' >> $BASH_ENV
+                        echo 'export API_URL=${API_URL}' >> $BASH_ENV
+                        echo 'export FRONTEND_URL=${FRONTEND_URL}' >> $BASH_ENV
+                        echo 'export COOKIE_DOMAIN=${COOKIE_DOMAIN}' >> $BASH_ENV
+                        echo 'export TWITCH_ID=${TWITCH_ID}' >> $BASH_ENV
+                        echo 'export TWITCH_SECRET=${TWITCH_SECRET}' >> $BASH_ENV
+                        echo 'export NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}' >> $BASH_ENV
+            - run:
+                    command: cdk synth && cdk deploy --require-approval never
+                    name: Deploy using CDK
 workflows:
-	run-deploy-frontend:
-		jobs:
-			- deploy-frontend:
-					context:
-						- valbuddy
-	run-deploy-backend:
-		jobs:
-			- deploy-backend:
-					context:
-						- valbuddy
+    run-deploy-frontend:
+        jobs:
+            - deploy-frontend:
+                    context:
+                        - valbuddy
+    run-deploy-backend:
+        jobs:
+            - deploy-backend:
+                    context:
+                        - valbuddy
