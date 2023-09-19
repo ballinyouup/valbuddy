@@ -68,6 +68,6 @@
     "constructs": "10.2.69",
     "prettier": "^3.0.2",
     "prettier-plugin-tailwindcss": "^0.5.3",
-    "sst": "^2.25.3"
+    "sst": "2.23.13"
   }
 }
