@@ -12,7 +12,7 @@ jobs:
       - setup_remote_docker:
           version: default
       - checkout:
-          path: ~/app/frontend
+          path: ~/app
       - restore_cache:
           keys:
             - dependency-cache-{{ checksum "package-lock.json" }}
@@ -43,7 +43,7 @@ jobs:
       - setup_remote_docker:
           version: default
       - checkout:
-          path: ~/app/backend
+          path: ~/app
       - aws-cli/setup:
           configure_default_region: true
           configure_profile_region: true
@@ -56,7 +56,7 @@ jobs:
           command: mkdir -p ~/app/backend/zip/
           name: Make zip folder
       - run:
-          command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap cmd/main.go
+          command: GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap ~/app/backend/cmd/main.go
           name: Build Binary
       - run:
           command: npm install -g aws-cdk && npm install
