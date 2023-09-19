@@ -1,6 +1,6 @@
 import { NextjsSite, StackContext } from "sst/constructs";
 
-export default function Site({ stack }: StackContext) {
+export default function Frontend({ stack }: StackContext) {
     const site = new NextjsSite(stack, "frontend", {
         customDomain: {
             domainName: "valbuddy.com",
