@@ -8,17 +8,19 @@ import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
-import { env } from "./env";
+import { env } from "../env";
 
 export class BackendStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-
+    const hostedZone = route53.HostedZone.fromLookup(this, "HostedZone", {
+      domainName: "valbuddy.com",
+    });
     const gatewayCert = new Certificate(this, "ValbuddyCert", {
       domainName: "api.valbuddy.com",
-      validation: CertificateValidation.fromDns()
+      validation: CertificateValidation.fromDns(hostedZone)
     });
-
+    
     const lambdaFunction = new lambda.Function(this, "valbuddy-lambda", {
       code: lambda.Code.fromAsset(`${env.HOME_PATH}/backend/zip`),
       handler: "bootstrap",
@@ -92,9 +94,7 @@ export class BackendStack extends cdk.Stack {
     });
 
     bucket.grantReadWrite(lambdaFunction);
-    const hostedZone = route53.HostedZone.fromLookup(this, "HostedZone", {
-      domainName: "valbuddy.com",
-    });
+    
 
     // new route53.ARecord(this, 'ApiARecord', {
     //   zone: hostedZone,

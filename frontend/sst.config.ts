@@ -4,7 +4,7 @@ import Site from "./stacks/site";
 export default {
   config(_input) {
     return {
-      name: "valbuddy-frontend",
+      name: "valbuddyFrontend",
       region: "us-east-2",
     };
   },

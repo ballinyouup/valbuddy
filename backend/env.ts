@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { config } from 'dotenv';
+config({
+    path: ".env"
+});
 const schema = z.object({
     DISCORD_ID: z.string().min(1),
     DISCORD_SECRET: z.string().min(1),
@@ -18,16 +22,16 @@ type EnvSchema = z.infer<typeof schema>;
 
 export const env: EnvSchema = schema.parse({
     API_URL: process.env.API_URL!,
-    AWS_ACCESS_KEY_ID: process.env.API_URL!,
-    AWS_REGION: process.env.API_URL!,
-    AWS_SECRET_ACCESS_KEY: process.env.API_URL!,
-    COOKIE_DOMAIN: process.env.API_URL!,
-    DATABASE_URL: process.env.API_URL!,
-    DISCORD_ID: process.env.API_URL!,
-    DISCORD_SECRET: process.env.API_URL!,
-    FRONTEND_URL: process.env.API_URL!,
-    HOME_PATH: process.env.API_URL!,
-    NEXT_PUBLIC_API_URL: process.env.API_URL!,
-    TWITCH_ID: process.env.API_URL!,
-    TWITCH_SECRET: process.env.API_URL!,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
+    AWS_REGION: process.env.AWS_REGION!,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
+    COOKIE_DOMAIN: process.env.COOKIE_DOMAIN!,
+    DATABASE_URL: process.env.DATABASE_URL!,
+    DISCORD_ID: process.env.DISCORD_ID!,
+    DISCORD_SECRET: process.env.DISCORD_SECRET!,
+    FRONTEND_URL: process.env.FRONTEND_URL!,
+    HOME_PATH: process.env.HOME_PATH!,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL!,
+    TWITCH_ID: process.env.TWITCH_ID!,
+    TWITCH_SECRET: process.env.TWITCH_SECRET!,
 });

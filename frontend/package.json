@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "next-dev": "next dev",
-    "dev": "concurrently \"next dev\" \"cd .. && cd backend && cd cmd && go run main.go\"",
+    "dev": "sst bind next dev",
     "sst-dev": "sst bind next dev",
     "build": "next build",
     "start": "next start",
@@ -63,11 +63,11 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "aws-cdk-lib": "2.84.0",
+    "aws-cdk-lib": "2.95.1",
     "concurrently": "^8.2.0",
-    "constructs": "10.1.156",
+    "constructs": "10.2.69",
     "prettier": "^3.0.2",
     "prettier-plugin-tailwindcss": "^0.5.3",
-    "sst": "^2.23.13"
+    "sst": "^2.25.3"
   }
 }
