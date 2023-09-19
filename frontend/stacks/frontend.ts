@@ -6,7 +6,7 @@ export default function Frontend({ stack }: StackContext) {
             domainName: "valbuddy.com",
             domainAlias: "www.valbuddy.com",
             hostedZone: "valbuddy.com",
-        }
+        },
     });
     stack.addOutputs({
         url: site.customDomainUrl,

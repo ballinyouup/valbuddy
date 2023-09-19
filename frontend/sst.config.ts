@@ -4,8 +4,8 @@ import Frontend from "./stacks/frontend";
 export default {
   config(_input) {
     return {
-      name: "valbuddyFrontend",
-      region: "us-east-2",
+      name: "valbuddy-frontend",
+      region: "us-east-1",
     };
   },
   stacks(app) {
