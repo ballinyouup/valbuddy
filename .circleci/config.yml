@@ -14,6 +14,10 @@ jobs:
                   version: default
             - checkout:
                   path: ~/app
+            - restore_cache:
+                  keys:
+                      - dependency-cache-{{ checksum "package-lock.json" }}
+                      - dependency-cache-
             - aws-cli/setup:
                   configure_default_region: false
                   configure_profile_region: false
@@ -27,8 +31,12 @@ jobs:
                   command: npm install
                   name: Install packages
             - run:
-                  command: npx sst deploy --stage prod
+                  command: npx sst deploy --stage prod --region ${AWS_REGION}
                   name: Run SST Deploy CMD
+            - save_cache:
+                  key: dependency-cache-{{ checksum "package-lock.json" }}
+                  paths:
+                      - ./node_modules
     deploy-backend:
         working_directory: ~/app/backend
         docker:
