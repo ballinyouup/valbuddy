@@ -65,7 +65,7 @@ jobs:
           command: chmod +x ~/app/backend/zip/bootstrap && zip ~/app/backend/zip/lambda.zip ~/app/backend/zip/bootstrap
           name: Add Permissions/Zip Binary
       - run:
-          command: npm install && export HOME_PATH=~/app
+          command: npm install
           name: Install packages
       - run:
           command: npx sst deploy --stage=prod --region=us-east-1
