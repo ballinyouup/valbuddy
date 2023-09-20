@@ -39,7 +39,7 @@ export function Backend({ stack }: StackContext) {
     // const TWITCH_SECRET = new Config.Secret(stack, env.TWITCH_SECRET);
 
     const lambdaFunction = new lambda.Function(stack, "valbuddy-lambda", {
-        code: lambda.Code.fromAsset("bootstrap"),
+        code: lambda.Code.fromAsset("bootstrap.zip"),
         handler: "bootstrap",
         runtime: lambda.Runtime.PROVIDED_AL2,
         memorySize: 1024,

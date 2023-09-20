@@ -56,19 +56,19 @@ jobs:
           aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
           region: $AWS_DEFAULT_REGION
       - run:
-          name: Make zip folder
-          command: |
-            mkdir -p ~/app/backend/zip/
-            ls -l ~/app/backend
-      - run:
           name: Build Binary
           command: |
-            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/bootstrap ~/app/backend/cmd/main.go
-            ls -l ~/app/backend/zip
+            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o bootstrap cmd/main.go
+            ls -l ~/app/backend
       - run:
-          name: Add Permissions/Zip Binary
+          name: Add Permissions
           command: |
-            chmod +x ~/app/backend/bootstrap
+            chmod +x bootstrap
+            ls -l ~/app/backend
+      - run:
+          name: Zip File
+          command: |
+            zip -r bootstrap.zip bootstrap
             ls -l ~/app/backend
       - run:
           name: Install packages
