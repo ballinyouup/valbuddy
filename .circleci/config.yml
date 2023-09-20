@@ -63,13 +63,13 @@ jobs:
       - run:
           name: Build Binary
           command: |
-            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/zip/bootstrap ~/app/backend/cmd/main.go
+            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/bootstrap ~/app/backend/cmd/main.go
             ls -l ~/app/backend/zip
       - run:
           name: Add Permissions/Zip Binary
           command: |
-            chmod +x ~/app/backend/zip/bootstrap
-            zip ~/app/backend/zip/lambda.zip ~/app/backend/zip/bootstrap
+            chmod +x ~/app/backend/bootstrap
+            zip ~/app/backend/lambda.zip ~/app/backend/bootstrap
             ls -l ~/app/backend/zip
       - run:
           name: Install packages
