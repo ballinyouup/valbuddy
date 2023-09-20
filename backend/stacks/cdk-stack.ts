@@ -1,11 +1,10 @@
 import * as cdk from "aws-cdk-lib";
-import { ApiGatewayV1Api, Bucket, Config } from "sst/constructs";
+import { ApiGatewayV1Api, Bucket } from "sst/constructs";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib";
-import { env } from "../env";
 import { StackContext } from "sst/constructs/FunctionalStack";
 import {
     BlockPublicAccess,
@@ -53,12 +52,6 @@ export function Backend({ stack }: StackContext) {
                 endpointConfiguration: {
                     types: [apigateway.EndpointType.REGIONAL],
                 },
-                defaultCorsPreflightOptions: {
-                    allowOrigins: apigateway.Cors.ALL_ORIGINS,
-                    allowCredentials: true,
-                    allowHeaders: apigateway.Cors.DEFAULT_HEADERS,
-                    allowMethods: apigateway.Cors.ALL_METHODS,
-                },
                 binaryMediaTypes: ["multipart/form-data"],
             },
         },
@@ -69,9 +62,9 @@ export function Backend({ stack }: StackContext) {
                 },
             },
         },
-        customDomain: "api.valbuddy.com"
+        customDomain: "api.valbuddy.com",
     });
-
+    gateway.attachPermissions(["lambda"]);
     const bucket = new Bucket(stack, "valbuddy-images", {
         cdk: {
             bucket: {
