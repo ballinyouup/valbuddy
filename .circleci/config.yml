@@ -63,9 +63,14 @@ jobs:
       - run:
           name: Build Binary
           command: |
-            mkdir -p /var/task
-            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o /var/task/bootstrap ~/app/backend/cmd/main.go
-            ls -l /var/task
+            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o ~/app/backend/bootstrap ~/app/backend/cmd/main.go
+            ls -l ~/app/backend/zip
+      - run:
+          name: Add Permissions/Zip Binary
+          command: |
+            chmod +x ~/app/backend/bootstrap
+            zip ~/app/backend/bootstrap.zip ~/app/backend/bootstrap
+            ls -l ~/app/backend/zip
       - run:
           name: Install packages
           command: npm install
