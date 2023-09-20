@@ -63,6 +63,7 @@ export function Backend({ stack }: StackContext) {
             },
         },
         customDomain: "api.valbuddy.com",
+        cors: false,
     });
     gateway.attachPermissions(["lambda"]);
     const bucket = new Bucket(stack, "valbuddy-images", {
