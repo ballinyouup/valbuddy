@@ -69,8 +69,7 @@ jobs:
           name: Add Permissions/Zip Binary
           command: |
             chmod +x ~/app/backend/bootstrap
-            zip ~/app/backend/bootstrap.zip ~/app/backend/bootstrap
-            ls -l ~/app/backend/zip
+            ls -l ~/app/backend
       - run:
           name: Install packages
           command: npm install
