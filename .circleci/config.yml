@@ -10,6 +10,3 @@ workflows:
           modules: |
             /backend
             /frontend
-          filters:
-            branches:
-              only: master

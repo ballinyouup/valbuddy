@@ -55,6 +55,3 @@ workflows:
       - deploy-backend:
           context:
             - valbuddy
-          filters:
-            branches:
-              only: master
