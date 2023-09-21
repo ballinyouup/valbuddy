@@ -28,7 +28,7 @@ jobs:
           command: npm install
           name: Install packages
       - run:
-          command: npx sst deploy --stage prod
+          command: npx sst deploy --stage=prod --region=us-east-1
           name: Run SST Deploy CMD
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Build Binary
           command: |
-            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o bootstrap cmd/main.go -tags lambda.norpc
+            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bootstrap cmd/main.go 
             ls -l ~/app/backend
       - run:
           name: Add Permissions
