@@ -13,6 +13,8 @@ node_modules
 .sst
 .build
 
+/vendor
+
 # opennext
 .open-next
 
