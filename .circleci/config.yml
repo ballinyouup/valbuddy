@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Build Binary
           command: |
-            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o bootstrap cmd/main.go
+            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -o bootstrap cmd/main.go -tags lambda.norpc
             ls -l ~/app/backend
       - run:
           name: Add Permissions
