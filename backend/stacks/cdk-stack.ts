@@ -162,9 +162,10 @@ export function Backend({ stack }: StackContext) {
     const imageCDN = new cloudfront.Distribution(stack, "ImageCDN", {
         defaultBehavior: {
             origin: new cdk.aws_cloudfront_origins.S3Origin(bucket.cdk.bucket),
+            viewerProtocolPolicy: cdk.aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
         },
         domainNames: ["img.valbuddy.com"],
-        certificate: imgCert
+        certificate: imgCert,
     });
 
     // Gives permissions for reading and writing to Lambda for CRUD operations.
