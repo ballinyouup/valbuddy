@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@4.1.1
+jobs:
+  deploy-frontend:
+    working_directory: ~/app/frontend
+    docker:
+      - image: cimg/node:18.17.1
+    resource_class: arm.large
+    steps:
+      - setup_remote_docker:
+          version: default
+      - checkout:
+          path: ~/app
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
+      - aws-cli/setup:
+          configure_default_region: true
+          configure_profile_region: true
+          disable_aws_pager: true
+          override_installed: true
+          aws_access_key_id: $AWS_ACCESS_KEY_ID
+          aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+          region: $AWS_DEFAULT_REGION
+      - run:
+          command: npm install
+          name: Install packages
+      - run:
+          command: npx sst deploy --stage=prod --region=us-east-1
+          name: Run SST Deploy CMD
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+workflows:
+  run-deploy-backend:
+    jobs:
+      - deploy-backend:
+          context:
+            - valbuddy

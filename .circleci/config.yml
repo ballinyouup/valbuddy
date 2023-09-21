@@ -1,93 +1,12 @@
 version: 2.1
-
+setup: true
 orbs:
-  aws-cli: circleci/aws-cli@4.1.1
-jobs:
-  deploy-frontend:
-    working_directory: ~/app/frontend
-    docker:
-      - image: cimg/node:18.17.1
-    resource_class: arm.large
-    steps:
-      - setup_remote_docker:
-          version: default
-      - checkout:
-          path: ~/app
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package-lock.json" }}
-      - aws-cli/setup:
-          configure_default_region: true
-          configure_profile_region: true
-          disable_aws_pager: true
-          override_installed: true
-          aws_access_key_id: $AWS_ACCESS_KEY_ID
-          aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
-          region: $AWS_DEFAULT_REGION
-      - run:
-          command: npm install
-          name: Install packages
-      - run:
-          command: npx sst deploy --stage=prod --region=us-east-1
-          name: Run SST Deploy CMD
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
-  deploy-backend:
-    working_directory: ~/app/backend
-    docker:
-      - image: cimg/go:1.21.1-node
-    resource_class: arm.large
-    steps:
-      - setup_remote_docker:
-          version: default
-      - checkout:
-          path: ~/app
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package-lock.json" }}
-      - aws-cli/setup:
-          configure_default_region: true
-          configure_profile_region: true
-          disable_aws_pager: true
-          override_installed: true
-          aws_access_key_id: $AWS_ACCESS_KEY_ID
-          aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
-          region: $AWS_DEFAULT_REGION
-      - run:
-          name: Build Binary
-          command: |
-            GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bootstrap cmd/main.go 
-            ls -l ~/app/backend
-      - run:
-          name: Add Permissions
-          command: |
-            chmod +x bootstrap
-            ls -l ~/app/backend
-      - run:
-          name: Zip File
-          command: |
-            zip -r bootstrap.zip bootstrap
-            ls -l ~/app/backend
-      - run:
-          name: Install packages
-          command: npm install
-      - run:
-          name: Deploy using SST/CDK
-          command: npx sst deploy --stage=prod --region=us-east-1
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
+  dynamic: bjd2385/dynamic-continuation@3.7.1
 workflows:
-  run-deploy-frontend:
+  on-commit:
     jobs:
-      - deploy-frontend:
-          context:
-            - valbuddy
-  run-deploy-backend:
-    jobs:
-      - deploy-backend:
-          context:
-            - valbuddy
+      - dynamic/continue:
+          context: circleci
+          modules: |
+            /backend
+            /frontend
