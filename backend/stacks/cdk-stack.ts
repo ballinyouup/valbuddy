@@ -168,6 +168,7 @@ export function Backend({ stack }: StackContext) {
         certificate: imgCert,
     });
 
+    
     // Gives permissions for reading and writing to Lambda for CRUD operations.
     bucket.cdk.bucket.grantReadWrite(lambdaFunction);
 
