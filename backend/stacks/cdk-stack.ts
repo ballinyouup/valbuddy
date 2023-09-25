@@ -57,6 +57,7 @@ export function Backend({ stack }: StackContext) {
             TWITCH_ID: env.TWITCH_ID,
             TWITCH_SECRET: env.TWITCH_SECRET,
         },
+        functionName: "valbuddy-lambda"
     });
 
     // Create a rest api, that gets permissions to execute the lambda.
@@ -168,7 +169,7 @@ export function Backend({ stack }: StackContext) {
         certificate: imgCert,
     });
 
-    
+
     // Gives permissions for reading and writing to Lambda for CRUD operations.
     bucket.cdk.bucket.grantReadWrite(lambdaFunction);
 

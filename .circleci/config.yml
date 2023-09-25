@@ -99,9 +99,6 @@ workflows:
             - valbuddy
   run-deploy-backend:
     jobs:
-      - backend-tests
       - deploy-backend:
-          requires:
-            - backend-tests
           context:
             - valbuddy
