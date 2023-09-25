@@ -38,9 +38,10 @@ jobs:
     working_directory: ~/app/backend/internals
     docker:
       - image: cimg/go:1.21.1-node
+    resource_class: arm.large
     steps:
       - checkout:
-          path: ~/app/backend
+          path: ~/app
       - run:
           name: Run Tests
           command: go run gotest.tools/gotestsum@latest --format testname
