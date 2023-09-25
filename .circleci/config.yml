@@ -42,9 +42,6 @@ jobs:
       - checkout:
           path: ~/app/backend
       - run:
-          name: Install dependencies
-          command: go mod download
-      - run:
           name: Run Tests
           command: go run gotest.tools/gotestsum@latest --format testname
   deploy-backend:

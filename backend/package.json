@@ -1,6 +1,6 @@
 {
-  "name": "my-sst-app",
-  "version": "0.0.0",
+  "name": "valbuddy-backend",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
