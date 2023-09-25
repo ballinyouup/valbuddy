@@ -35,7 +35,7 @@ jobs:
           paths:
             - ./node_modules
   backend-tests:
-    working_directory: ~/app/backend
+    working_directory: ~/app/backend/internals
     docker:
       - image: cimg/go:1.21.1-node
     steps:
@@ -94,6 +94,8 @@ workflows:
   run-deploy-frontend:
     jobs:
       - deploy-frontend:
+          requires:
+            - backend-tests
           context:
             - valbuddy
   run-deploy-backend:
