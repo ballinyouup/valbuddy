@@ -3,45 +3,78 @@ package handlers
 import (
 	"fmt"
 	"net/url"
+	"time"
 	"valbuddy/internals/auth"
 	"valbuddy/internals/config"
 	"valbuddy/internals/db"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetOAuth2ProviderConfig(providerName string) (interface{}, error) {
-	switch providerName {
-	case "discord":
-		return auth.DiscordOAuth2Config{
-			AuthorizeURL: auth.DiscordURLS.AuthorizeURL,
-			ResponseType: "code",
-			ClientID:     config.Env.DISCORD_ID,
-			Scope:        "identify email",
-			RedirectURI:  "/login/discord/callback",
-			Prompt:       "consent",
-		}, nil
-	case "twitch":
-		return auth.TwitchOAuth2Config{
-			AuthorizeURL: auth.TwitchURLS.AuthorizeURL,
-			ResponseType: "code",
-			ClientID:     config.Env.TWITCH_ID,
-			Scope:        "user:read:email",
-			RedirectURI:  "/login/twitch/callback",
-			ForceVerify:  "true",
-		}, nil
-	default:
-		return nil, fmt.Errorf("invalid provider")
+func GetOAuth2ProviderConfig(providerName string, mock bool) (interface{}, error) {
+	if mock {
+		switch providerName {
+		case "discord":
+			return auth.DiscordOAuth2Config{
+				ResponseType:   "code",
+				ClientID:       config.Env.DISCORD_ID,
+				Scope:          "identify email",
+				RedirectURI:    "/login/discord/callback",
+				Prompt:         "consent",
+				AccessTokenURL: "http://localhost:3001/token",
+				AuthorizeURL:   "http://localhost:3001/login/discord/authorize",
+				UserInfoURL:    "http://localhost:3001/user/discord",
+			}, nil
+		case "twitch":
+			return auth.TwitchOAuth2Config{
+				ResponseType:   "code",
+				ClientID:       config.Env.TWITCH_ID,
+				Scope:          "user:read:email",
+				RedirectURI:    "/login/twitch/callback",
+				ForceVerify:    "true",
+				AccessTokenURL: "http://localhost:3001/token",
+				AuthorizeURL:   "http://localhost:3001/login/twitch/authorize",
+				UserInfoURL:    "http://localhost:3001/user/twitch",
+			}, nil
+		default:
+			return nil, fmt.Errorf("invalid provider")
+		}
+	} else {
+		switch providerName {
+		case "discord":
+			return auth.DiscordOAuth2Config{
+				ResponseType:   "code",
+				ClientID:       config.Env.DISCORD_ID,
+				Scope:          "identify email",
+				RedirectURI:    "/login/discord/callback",
+				Prompt:         "consent",
+				AccessTokenURL: "https://discord.com/api/oauth2/token",
+				AuthorizeURL:   "https://discord.com/oauth2/authorize",
+				UserInfoURL:    "https://discord.com/api/v10/users/@me",
+			}, nil
+		case "twitch":
+			return auth.TwitchOAuth2Config{
+				ResponseType:   "code",
+				ClientID:       config.Env.TWITCH_ID,
+				Scope:          "user:read:email",
+				RedirectURI:    "/login/twitch/callback",
+				ForceVerify:    "true",
+				AccessTokenURL: "https://id.twitch.tv/oauth2/token",
+				AuthorizeURL:   "https://id.twitch.tv/oauth2/authorize",
+				UserInfoURL:    "https://api.twitch.tv/helix/users",
+			}, nil
+		default:
+			return nil, fmt.Errorf("invalid provider")
+		}
 	}
 }
 
-func HandleLogin(c *fiber.Ctx) error {
+func HandleLogin(c *fiber.Ctx, mock bool) error {
 	state, err := auth.GenerateRandomString(8)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Generating Random String: %s", err))
 	}
-	providerConfig, err := GetOAuth2ProviderConfig(c.Params("provider"))
+	providerConfig, err := GetOAuth2ProviderConfig(c.Params("provider"), mock)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid Provider")
 	}
@@ -76,7 +109,7 @@ func HandleLogin(c *fiber.Ctx) error {
 	}
 }
 
-func HandleProviderCallback(c *fiber.Ctx) error {
+func HandleProviderCallback(c *fiber.Ctx, mock bool) error {
 	var user db.User
 	code := c.Query("code")
 	err := auth.CheckStateAndCSRF(c)
@@ -86,7 +119,7 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 	provider := c.Params("provider")
 	switch provider {
 	case "discord":
-		providerConfig, err := GetOAuth2ProviderConfig("discord")
+		providerConfig, err := GetOAuth2ProviderConfig("discord", mock)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting OAuth2 Provider Config: %s", err))
 		}
@@ -99,31 +132,37 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Access Token: %s", err))
 		}
-
 		// Convert the access token response to a DiscordResponse
 		discordAccessToken, ok := accessToken.(auth.DiscordResponse)
 		if !ok {
 			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord GetAccessToken")
 		}
-
 		// Get user info using the access token
 		userInfo, err := provider.GetUserInfo(discordAccessToken)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting User Info: %s", err))
 		}
-
 		// Convert the user info to a DiscordUserResponse
 		discordUserInfo, ok := userInfo.(auth.DiscordUserResponse)
 		if !ok {
 			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord GetUserInfo")
 		}
+		newUser := db.User{
+			Email:    discordUserInfo.Email,
+			Username: discordUserInfo.Username,
+			Role:     "free",
+			Account: db.Account{
+				Image: discordUserInfo.Avatar,
+			},
+			Provider: "discord",
+		}
 		// Create or login the user using retrieved data
-		user, err = db.CreateUser(c, discordUserInfo.Email, discordUserInfo.Username, "free", discordUserInfo.Avatar, "discord")
+		user, err = db.CreateUser(c, newUser)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Creating User: %s", err))
 		}
 	case "twitch":
-		providerConfig, err := GetOAuth2ProviderConfig("twitch")
+		providerConfig, err := GetOAuth2ProviderConfig("twitch", mock)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting OAuth2 Provider Config: %s", err))
 		}
@@ -151,8 +190,19 @@ func HandleProviderCallback(c *fiber.Ctx) error {
 		if !ok {
 			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch User Info")
 		}
+
+		newUser := db.User{
+			Email:    twitchUserInfo.Data[0].Email,
+			Username: twitchUserInfo.Data[0].DisplayName,
+			Role:     "free",
+			Account: db.Account{
+				Image: twitchUserInfo.Data[0].ProfileImageURL,
+			},
+			Provider: "twitch",
+		}
+
 		// Create or login the user using retrieved data
-		user, err = db.CreateUser(c, twitchUserInfo.Data[0].Email, twitchUserInfo.Data[0].DisplayName, "free", twitchUserInfo.Data[0].ProfileImageURL, "twitch")
+		user, err = db.CreateUser(c, newUser)
 		if err != nil {
 			if err.Error() == "incorrect provider" {
 				errorParam := url.QueryEscape("Incorrect Provider")

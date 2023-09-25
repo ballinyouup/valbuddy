@@ -34,6 +34,19 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+  backend-tests:
+    working_directory: ~/app/backend/internals
+    docker:
+      - image: cimg/go:1.21.1-node
+    steps:
+      - checkout:
+          path: ~/app/backend
+      - run:
+          name: Install dependencies
+          command: go mod download
+      - run:
+          name: Run Tests
+          command: go run gotest.tools/gotestsum@latest --format testname
   deploy-backend:
     working_directory: ~/app/backend
     docker:
@@ -88,6 +101,7 @@ workflows:
             - valbuddy
   run-deploy-backend:
     jobs:
+      - backend-tests
       - deploy-backend:
           context:
             - valbuddy

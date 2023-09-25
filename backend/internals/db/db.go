@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"valbuddy/internals/config"
 	"time"
+	"valbuddy/internals/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +11,7 @@ import (
 	pg "github.com/gofiber/storage/postgres/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var validate *validator.Validate
@@ -39,26 +40,26 @@ func GetSessions() *session.Store {
 }
 
 // Init initializes various components of the application.
-func Init() error {
+func Init(databaseURL string, logLevel logger.LogLevel) error {
 	// Initialize the validator
 	validate = validator.New()
 	var err error
 
 	// Initialize the database connection using the provided DATABASE_URL
-	database, err = gorm.Open(postgres.Open(config.Env.DATABASE_URL), &gorm.Config{})
+	database, err = gorm.Open(postgres.Open(databaseURL), &gorm.Config{
+		Logger: logger.Default.LogMode(logLevel),
+	})
 	if err != nil {
 		return fmt.Errorf("error initializing database: %w", err)
 	}
-
 	// Initialize the session storage using PostgreSQL as a backend
 	store = pg.New(pg.Config{
-		ConnectionURI: config.Env.DATABASE_URL,
+		ConnectionURI: databaseURL,
 		Database:      "postgres",
 		Table:         "sessions",
 		Reset:         false,
 		GCInterval:    10 * time.Second,
 	})
-
 	// Initialize session management
 	sessions = session.New(session.Config{
 		Storage:        store,
@@ -68,7 +69,6 @@ func Init() error {
 		CookieSecure:   true,
 		CookiePath:     "/",
 	})
-
 	// Perform automatic database migration for specified models
 	err = database.AutoMigrate(&User{}, &Account{}, &Post{})
 	if err != nil {

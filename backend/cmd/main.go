@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	log "gorm.io/gorm/logger"
 )
 
 var fiberLambda *fiberadapter.FiberLambda
@@ -41,10 +42,10 @@ func StartFiber() *fiber.App {
 
 func init() {
 	// Load configuration and initialize the database
-	if _, err := config.LoadConfig(); err != nil {
+	if _, err := config.LoadConfig("../.env"); err != nil {
 		initError = fmt.Errorf("error loading configuration: %w", err)
 	}
-	if err := db.Init(); err != nil {
+	if err := db.Init(config.Env.DATABASE_URL, log.Info); err != nil {
 		initError = fmt.Errorf("error initializing database: %w", err)
 	}
 	if err := config.AWSInit(); err != nil {

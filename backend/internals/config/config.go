@@ -18,6 +18,7 @@ type Config struct {
 	COOKIE_DOMAIN  string
 	TWITCH_ID      string
 	TWITCH_SECRET  string
+	TEST_DB        string
 	// Add more configuration variables here if needed
 }
 
@@ -25,11 +26,11 @@ type Config struct {
 var Env *Config
 
 // LoadConfig loads the configuration from the .env file or environment variables.
-func LoadConfig() (*Config, error) {
+func LoadConfig(path string) (*Config, error) {
 	// Check if running on AWS Lambda, load from environment variables accordingly
 	if os.Getenv("AWS_LAMBDA_FUNCTION_NAME") == "" {
 		// Load environment variables from .env file
-		err := godotenv.Load("../.env")
+		err := godotenv.Load(path)
 		if err != nil {
 			return nil, fmt.Errorf("error loading config: %w", err)
 		}
@@ -62,6 +63,7 @@ func LoadConfig() (*Config, error) {
 		FRONTEND_URL:  frontendURL,
 		COOKIE_DOMAIN: cookieDomain,
 		IS_LAMBDA:     os.Getenv("AWS_LAMBDA_FUNCTION_NAME") != "",
+		TEST_DB:       os.Getenv("TEST_DB"),
 		// Add more configuration variables here if needed
 	}
 

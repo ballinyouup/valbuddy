@@ -10,10 +10,13 @@ import (
 )
 
 // CreateUser creates a new user or returns an existing user based on provided parameters.
-func CreateUser(c *fiber.Ctx, email string, username string, role string, image string, provider string) (User, error) {
+func CreateUser(c *fiber.Ctx, newUser User) (User, error) {
 	// Check if a user with the same email exists in the database
 	existingUser := User{}
-	err := GetDatabase().Where("email = ?", email).First(&existingUser).Error
+	query := User{
+		Email: newUser.Email,
+	}
+	err := GetDatabase().Where(query).First(&existingUser).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return User{}, fmt.Errorf("error with database: %w", err)
 	}
@@ -25,41 +28,41 @@ func CreateUser(c *fiber.Ctx, email string, username string, role string, image 
 
 		// TODO: Add check if username already exists
 		// Create a new User object with provided data
-		newUser := &User{
+		createdUser := User{
 			ID:       userId,
-			Email:    email,
-			Username: username,
-			Provider: provider,
-			Role:     role,
-			Account:  Account{
+			Email:    newUser.Email,
+			Username: newUser.Username,
+			Provider: newUser.Provider,
+			Role:     newUser.Role,
+			Account: Account{
 				ID:       cuid.New(),
 				UserID:   userId,
-				Username: username,
-				Image:    image,
+				Username: newUser.Username,
+				Image:    newUser.Account.Image,
 			},
 		}
 
 		// Validate the new User's data
-		if err := ValidateCheck(newUser); err != nil {
+		if err := ValidateCheck(createdUser); err != nil {
 			return User{}, fmt.Errorf("error validating new user: %w", err)
 		}
 
 		// Validate the new Account's data
-		if err := ValidateCheck(newUser.Account); err != nil {
+		if err := ValidateCheck(createdUser.Account); err != nil {
 			return User{}, fmt.Errorf("error validating new account: %w", err)
 		}
 
 		// Create the new User record in the database
-		if err := GetDatabase().Create(newUser).Error; err != nil {
+		if err := GetDatabase().Create(&createdUser).Error; err != nil {
 			return User{}, fmt.Errorf("user creation failed: %w", err)
 		}
 
 		// Return the newly created User
-		return *newUser, nil
+		return createdUser, nil
 	}
 
 	// If the user exists, check if the provided provider matches the existing provider
-	if existingUser.Provider != provider {
+	if existingUser.Provider != newUser.Provider {
 		return User{}, fmt.Errorf("incorrect provider")
 	}
 
