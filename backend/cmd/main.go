@@ -45,7 +45,7 @@ func init() {
 	if _, err := config.LoadConfig("../.env"); err != nil {
 		initError = fmt.Errorf("error loading configuration: %w", err)
 	}
-	if err := db.Init(config.Env.DATABASE_URL, log.Info); err != nil {
+	if err := db.Init(config.Env.DATABASE_URL, log.Warn); err != nil {
 		initError = fmt.Errorf("error initializing database: %w", err)
 	}
 	if err := config.AWSInit(); err != nil {
