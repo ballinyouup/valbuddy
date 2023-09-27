@@ -48,7 +48,7 @@ const users = [
 
 export default function Messages() {
     return (
-        <div className="flex h-72 w-2/3 flex-col overflow-hidden rounded-lg bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90">
+        <div className="flex h-72 w-2/3 flex-col overflow-hidden rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90">
             {users.map((user, index) => {
                 return (
                     <motion.div
@@ -57,7 +57,7 @@ export default function Messages() {
                             y: [96, 0, -96, -192]
                         }}
                         transition={{
-                            duration: 7.5,
+                            duration: 5,
                             ease: [0, 1, 0, 1],
                             times: [0, 0.2, 0.4, 0.6, 1],
                             repeat: Infinity
@@ -104,7 +104,7 @@ function DiscordMessage({
                     <p className="text-sm">{username}</p>
                     <p className="text-xs text-muted-foreground">{time}</p>
                 </div>
-                <p className="text-lg leading-tight">{message}</p>
+                <p className="text-base leading-tight">{message}</p>
             </div>
         </div>
     );

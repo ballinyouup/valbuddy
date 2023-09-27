@@ -112,7 +112,7 @@ function FeatureOne() {
                                 <span className="text-primary">
                                     No More&nbsp;
                                 </span>
-                                Player Profiles
+                                LFG Applications
                             </h4>
                         </div>
                     </div>
@@ -169,9 +169,9 @@ function FeatureThree() {
                         <div>
                             <h4 className="font-black">
                                 <span className="text-primary">
-                                    Vetted&nbsp;
+                                    Dominate&nbsp;
                                 </span>
-                                Player Profiles
+                                The Competition
                             </h4>
                         </div>
                     </div>
