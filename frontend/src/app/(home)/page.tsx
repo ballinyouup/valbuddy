@@ -154,16 +154,16 @@ function FeatureTwo() {
                 </div>
             </div>
             <div className="flex w-full max-w-2xl items-center justify-center lg:w-1/2">
-                <div className="flex h-80 w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-2/3">
-                    <div className="relative flex gap-4 bg-red-950 p-6">
+                <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:h-80 lg:w-3/4">
+                    <div className="relative flex gap-4 bg-red-950 p-4 sm:p-6">
                         <Image
                             src="/jett-portrait.jpg"
                             alt="Jett Portrait"
                             height={80}
                             width={80}
-                            className="rounded-full border-2 border-black"
+                            className="h-20 max-h-[80px] w-20 min-w-[80px] rounded-full border-2 border-black"
                         />
-                        <div className="absolute left-20 top-20 flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-black object-cover">
+                        <div className="absolute left-[72px] top-[76px] flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-black object-cover">
                             <Image
                                 src={"/rank-ascendant.png"}
                                 width={48}
@@ -173,8 +173,8 @@ function FeatureTwo() {
                             />
                         </div>
                         <div className="h-full w-full">
-                            <div className="flex justify-between">
-                                <span className="flex items-center gap-2 font-bold">
+                            <div className="flex w-full flex-col min-[480px]:flex-row min-[480px]:items-center min-[480px]:justify-between gap-1">
+                                <span className="flex items-center gap-1 text-base font-bold">
                                     JettPlayer256{" "}
                                     <Verified
                                         width={24}
@@ -183,54 +183,54 @@ function FeatureTwo() {
                                         fill="black"
                                     />
                                 </span>
-                                <div className="flex h-5 w-full justify-end gap-1">
+                                <div className="flex h-5 w-fit gap-1 sm:justify-end">
                                     <Image
                                         src="/role-controller.png"
                                         alt="Controller Icon"
                                         height={18}
                                         width={18}
-                                        className="rounded-full"
+                                        className="h-5 w-5 rounded-full"
                                     />
                                     <Image
                                         src="/role-sentinel.png"
                                         alt="Sentinel Icon"
                                         height={18}
                                         width={18}
-                                        className="rounded-full"
+                                        className="h-5 w-5 rounded-full"
                                     />
                                     <Image
                                         src="/role-initiator.png"
                                         alt="Initiator Icon"
                                         height={18}
                                         width={18}
-                                        className="rounded-full"
+                                        className="h-5 w-5 rounded-full"
                                     />
                                     <Image
                                         src="/role-duelist.png"
                                         alt="Duelist Icon"
                                         height={18}
                                         width={18}
-                                        className="rounded-full"
+                                        className="h-5 w-5 rounded-full"
                                     />
                                     <Image
                                         src="/role-fill.png"
                                         alt="Fill Icon"
                                         height={18}
                                         width={18}
-                                        className="rounded-full"
+                                        className="h-5 w-5 rounded-full"
                                         quality={100}
                                     />
                                 </div>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="font-bold">NA</span>
-                                <div className="flex h-6 gap-1">
+                            <div className="flex w-full flex-col-reverse justify-between pt-1 min-[480px]:flex-row min-[480px]:pt-0">
+                                <span className="text-base font-bold">NA</span>
+                                <div className="flex gap-1">
                                     <Image
                                         src="/jett-portrait.jpg"
                                         alt="Initiator Icon"
                                         height={24}
                                         width={24}
-                                        className="rounded-full"
+                                        className="h-6 w-6 rounded-full"
                                         quality={100}
                                     />
                                     <Image
@@ -238,7 +238,7 @@ function FeatureTwo() {
                                         alt="Duelist Icon"
                                         height={24}
                                         width={24}
-                                        className="rounded-full"
+                                        className="h-6 w-6 rounded-full"
                                         quality={100}
                                     />
                                     <Image
@@ -246,7 +246,7 @@ function FeatureTwo() {
                                         alt="Fill Icon"
                                         height={24}
                                         width={24}
-                                        className="rounded-full"
+                                        className="h-6 w-6 rounded-full"
                                         quality={100}
                                     />
                                 </div>
