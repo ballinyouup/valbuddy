@@ -15,21 +15,24 @@ export default function Page() {
 
 function Hero() {
     return (
-        <div className="Container flex w-full">
-            <div className="LeftHero flex h-desktop w-1/2 items-center justify-center bg-gradient-to-tr from-transparent via-transparent to-red-950/90 p-12">
-                <div className="HeroTextContainer flex h-2/3 w-full flex-col justify-between p-4">
-                    <div className="HeroTextHeaders w-full">
+        <div className="flex w-screen lg:w-full">
+            <div className="LeftHero flex h-desktop w-full items-center justify-center bg-gradient-to-tr from-transparent via-transparent to-red-950/90 px-10 lg:w-1/2">
+                <div className="HeroTextContainer flex h-3/5 w-full flex-col justify-between">
+                    <div className="HeroTextHeaders flex w-full flex-col whitespace-nowrap [&>h2]:text-6xl [&>h2]:sm:text-7xl [&>h2]:md:text-7xl [&>h2]:lg:text-6xl [&>h2]:xl:text-7xl">
                         <h2 className="font-black uppercase">
                             <span className="text-primary">Make</span> Friends
                         </h2>
                         <h2 className="font-black uppercase">
                             Create <span className="text-primary">Teams</span>
                         </h2>
-                        <h2 className="font-black uppercase leading-[1.1]">
-                            <span className="text-primary underline">
-                                Dominate
-                            </span>{" "}
-                            The Competition
+                        <h2 className="flex flex-col font-black uppercase leading-[1.1]">
+                            <div className="flex">
+                                <span className="text-primary underline">
+                                    Dominate&nbsp;
+                                </span>
+                                <span>The</span>
+                            </div>
+                            <span>Competition</span>
                         </h2>
                     </div>
                     <div className="HeroParagraphText">
@@ -55,13 +58,13 @@ function Hero() {
                     </div>
                 </div>
             </div>
-            <div className="hidden h-desktop w-1/2 overflow-hidden md:flex">
+            <div className="hidden h-desktop w-1/2 overflow-hidden bg-gradient-to-t from-transparent via-red-950/90 to-red-950/90 lg:flex">
                 <Image
                     src={"/hero-image.png"}
                     height={720}
                     width={895}
                     alt="VALORANT Hero Image"
-                    className="object-cover"
+                    className="object-cover mix-blend-soft-light"
                 />
             </div>
         </div>
