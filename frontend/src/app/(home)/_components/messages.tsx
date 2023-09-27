@@ -48,7 +48,7 @@ const users = [
 
 export default function Messages() {
     return (
-        <div className="flex h-72 w-full sm:min-w-[360px] flex-col overflow-hidden rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-2/3">
+        <div className="flex h-72 w-full flex-col overflow-hidden rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:min-w-[360px] lg:w-2/3">
             {users.map((user, index) => {
                 return (
                     <motion.div
@@ -91,7 +91,7 @@ function DiscordMessage({
     time?: string;
 }) {
     return (
-        <div className="flex h-24 items-start gap-4 bg-neutral-800 px-8 py-4">
+        <div className="flex h-24 items-start gap-4 bg-neutral-800 px-4 py-4 sm:px-8">
             <Image
                 src={image}
                 alt={imageAlt}
