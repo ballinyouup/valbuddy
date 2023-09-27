@@ -48,7 +48,7 @@ const users = [
 
 export default function Messages() {
     return (
-        <div className="flex h-72 w-2/3 flex-col overflow-hidden rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90">
+        <div className="flex h-72 w-full sm:min-w-[360px] flex-col overflow-hidden rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-2/3">
             {users.map((user, index) => {
                 return (
                     <motion.div

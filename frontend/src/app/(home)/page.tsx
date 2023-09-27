@@ -16,9 +16,9 @@ export default function Page() {
 function Hero() {
     return (
         <div className="flex w-screen lg:w-full">
-            <div className="LeftHero flex h-desktop w-full items-center justify-center bg-gradient-to-tr from-transparent via-transparent to-red-950/90 px-10 lg:w-1/2">
-                <div className="HeroTextContainer flex h-3/5 w-full flex-col justify-between">
-                    <div className="HeroTextHeaders flex w-full flex-col whitespace-nowrap [&>h2]:text-6xl [&>h2]:sm:text-7xl [&>h2]:md:text-7xl [&>h2]:lg:text-6xl [&>h2]:xl:text-7xl">
+            <div className="LeftHero flex h-full w-full items-center justify-center bg-gradient-to-tr from-transparent via-transparent to-red-950/90 px-8 lg:h-desktop lg:w-1/2 lg:px-10">
+                <div className="HeroTextContainer flex h-full w-full flex-col justify-between gap-10 pt-40 lg:h-3/5 lg:py-0">
+                    <div className="HeroTextHeaders flex w-full flex-col lg:whitespace-nowrap [&>h2]:text-4xl [&>h2]:sm:text-6xl [&>h2]:md:text-7xl [&>h2]:lg:text-6xl [&>h2]:xl:text-7xl">
                         <h2 className="font-black uppercase">
                             <span className="text-primary">Make</span> Friends
                         </h2>
@@ -26,7 +26,7 @@ function Hero() {
                             Create <span className="text-primary">Teams</span>
                         </h2>
                         <h2 className="flex flex-col font-black uppercase leading-[1.1]">
-                            <div className="flex">
+                            <div className="flex flex-wrap">
                                 <span className="text-primary underline">
                                     Dominate&nbsp;
                                 </span>
@@ -35,8 +35,8 @@ function Hero() {
                             <span>Competition</span>
                         </h2>
                     </div>
-                    <div className="HeroParagraphText">
-                        <p className="text-xl">
+                    <div className="HeroParagraphText max-w-3xl">
+                        <p className="text-base lg:text-xl">
                             Build a lasting community. Valbuddy is more than
                             just a place to find teammates. It&apos;s a place to
                             build lasting friendships and connections. Join our
@@ -44,7 +44,7 @@ function Hero() {
                             your passion for Valorant.
                         </p>
                     </div>
-                    <div className="HeroCTAButtons flex w-full gap-8">
+                    <div className="HeroCTAButtons flex w-full flex-wrap gap-3 lg:gap-8">
                         <Button className="h-12 w-full text-lg" size={"lg"}>
                             Get Started
                         </Button>
@@ -73,7 +73,7 @@ function Hero() {
 
 function Features() {
     return (
-        <div className="flex h-fit w-full flex-col items-start justify-start">
+        <div className="flex h-fit w-screen flex-col items-start justify-start gap-10 px-6 lg:w-full lg:px-0">
             <FeatureTitle />
             <InView>
                 <FeatureOne />
@@ -93,21 +93,22 @@ function Features() {
 
 function FeatureTitle() {
     return (
-        <div className="flex w-full justify-center py-20 text-6xl font-black uppercase text-white">
-            Find the &nbsp;<span className="text-red-700">Perfect&nbsp;</span>
-            Teammates
+        <div className="flex w-full flex-wrap justify-center px-8 py-20 text-5xl font-black uppercase text-white lg:text-6xl">
+            <span>Find the &nbsp;</span>
+            <span className="text-red-700">Perfect&nbsp;</span>
+            <span>Teammates</span>
         </div>
     );
 }
 
 function FeatureOne() {
     return (
-        <div className="flex w-full py-32">
-            <div className="flex w-1/2 items-center justify-center">
+        <div className="flex w-full flex-wrap justify-center gap-20 lg:gap-0 lg:py-32">
+            <div className="flex w-full max-w-3xl items-center justify-center lg:w-1/2">
                 <Messages />
             </div>
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-full w-2/3 flex-col items-center justify-center gap-4">
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 lg:w-2/3">
                     <div className="flex w-full items-center gap-8">
                         <Icons.searchX />
                         <div>
@@ -131,9 +132,9 @@ function FeatureOne() {
 
 function FeatureTwo() {
     return (
-        <div className="flex w-full py-32">
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-full w-2/3 flex-col items-center justify-center gap-4">
+        <div className="flex w-full flex-col-reverse gap-20 py-32 lg:flex-row lg:gap-0">
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 lg:w-2/3">
                     <div className="flex w-full items-center gap-8">
                         <Icons.socialVerified />
                         <div>
@@ -152,8 +153,8 @@ function FeatureTwo() {
                     </p>
                 </div>
             </div>
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-80 w-2/3 flex-col overflow-hidden rounded-3xl bg-white shadow-[0_25px_175px_-12px] shadow-red-900/90" />
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-80 w-full flex-col overflow-hidden rounded-3xl bg-white shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-2/3" />
             </div>
         </div>
     );
@@ -161,12 +162,12 @@ function FeatureTwo() {
 
 function FeatureThree() {
     return (
-        <div className="flex w-full py-32">
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-80 w-2/3 flex-col overflow-hidden rounded-3xl bg-white shadow-[0_25px_175px_-12px] shadow-red-900/90" />
+        <div className="flex w-full flex-col gap-20 lg:flex-row lg:gap-0 lg:py-32">
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-80 w-full flex-col overflow-hidden rounded-3xl bg-white shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-2/3" />
             </div>
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-full w-2/3 flex-col items-center justify-center gap-4">
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 lg:w-2/3">
                     <div className="flex w-full items-center gap-8">
                         <Icons.swords />
                         <div>
@@ -190,9 +191,9 @@ function FeatureThree() {
 
 function FeatureFour() {
     return (
-        <div className="flex w-full py-32">
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-full w-2/3 flex-col items-center justify-center gap-4">
+        <div className="flex w-full flex-col-reverse gap-20 lg:flex-row lg:gap-0 lg:py-32">
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 lg:w-2/3">
                     <div className="flex w-full items-center gap-8">
                         <Icons.calendarSearch />
                         <div>
@@ -211,8 +212,8 @@ function FeatureFour() {
                     </p>
                 </div>
             </div>
-            <div className="flex w-1/2 items-center justify-center">
-                <div className="flex h-80 w-2/3 flex-col overflow-hidden rounded-3xl bg-white shadow-[0_25px_175px_-12px] shadow-red-900/90" />
+            <div className="flex w-full items-center justify-center lg:w-1/2">
+                <div className="flex h-80 w-full flex-col overflow-hidden rounded-3xl bg-white shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-2/3" />
             </div>
         </div>
     );

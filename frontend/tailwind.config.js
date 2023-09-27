@@ -18,12 +18,18 @@ module.exports = {
     extend: {
       height: {
         "desktop": "960px",
+        "phone": "640px",
       },
       width: {
         "desktop": "1440px",
+        "xs": "480px",
+      },
+      minWidth: {
+        "xs": "480px",
       },
       maxWidth: {
         "desktop": "1440px",
+        "xs": "480px",
       },
       colors: {
         border: "hsl(var(--border))",
