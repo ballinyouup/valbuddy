@@ -3,61 +3,62 @@
 @tailwind utilities;
 
 body {
-  height: 100vh;
-  width: 100%;
+    height: 100%;
+    width: 100%;
+    min-width: -webkit-fill-available;
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 72.2% 50.6%;
-    --primary-foreground: 0 85.7% 97.3%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 72.2% 50.6%;
-    --radius: 0.5rem;
-  }
+    :root {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 72.2% 50.6%;
+        --primary-foreground: 0 85.7% 97.3%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 72.2% 50.6%;
+        --radius: 0.5rem;
+    }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  * {
-    @apply border-border;
-  }
-  h1 {
-    @apply text-9xl font-bold;
-  }
-  h2 {
-    @apply text-7xl font-bold;
-  }
-  h3 {
-    @apply text-6xl font-bold;
-  }
-  h4 {
-    @apply text-4xl font-bold;
-  }
-  h5 {
-    @apply text-2xl font-bold;
-  }
-  h6 {
-    @apply text-xl font-bold;
-  }
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    * {
+        @apply border-border;
+    }
+    h1 {
+        @apply text-9xl font-bold;
+    }
+    h2 {
+        @apply text-7xl font-bold;
+    }
+    h3 {
+        @apply text-6xl font-bold;
+    }
+    h4 {
+        @apply text-4xl font-bold;
+    }
+    h5 {
+        @apply text-2xl font-bold;
+    }
+    h6 {
+        @apply text-xl font-bold;
+    }
 }

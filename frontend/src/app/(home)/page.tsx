@@ -17,9 +17,9 @@ export default function Page() {
 
 function Hero() {
     return (
-        <div className="flex h-full w-screen lg:w-full">
+        <div className="flex h-phone lg:h-full w-screen lg:w-full">
             <div className="LeftHero flex h-full w-full items-center justify-center bg-gradient-to-tr from-transparent via-transparent to-red-950/90 px-8 lg:h-desktop lg:w-1/2 lg:px-10">
-                <div className="HeroTextContainer flex h-screen w-fit flex-col items-center justify-center gap-10 lg:h-3/5 lg:w-full lg:py-0">
+                <div className="HeroTextContainer flex h-full w-fit flex-col items-center justify-center gap-10 lg:h-3/5 lg:w-full lg:py-0">
                     <div className="HeroTextHeaders flex w-full flex-col lg:whitespace-nowrap">
                         <HeroText />
                     </div>
@@ -163,7 +163,7 @@ function FeatureTwo() {
                             width={80}
                             className="h-20 max-h-[80px] w-20 min-w-[80px] rounded-full border-2 border-black"
                         />
-                        <div className="absolute left-[72px] top-[76px] flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-black object-cover">
+                        <div className="absolute left-[72px] top-[76px] flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-black object-cover sm:left-20 sm:top-20">
                             <Image
                                 src={"/rank-ascendant.png"}
                                 width={48}
@@ -173,7 +173,7 @@ function FeatureTwo() {
                             />
                         </div>
                         <div className="h-full w-full">
-                            <div className="flex w-full flex-col min-[480px]:flex-row min-[480px]:items-center min-[480px]:justify-between gap-1">
+                            <div className="flex w-full flex-col gap-1 min-[480px]:flex-row min-[480px]:items-center min-[480px]:justify-between">
                                 <span className="flex items-center gap-1 text-base font-bold">
                                     JettPlayer256{" "}
                                     <Verified

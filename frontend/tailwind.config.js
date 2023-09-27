@@ -18,7 +18,7 @@ module.exports = {
     extend: {
       height: {
         "desktop": "960px",
-        "phone": "640px",
+        "phone": "800px",
       },
       width: {
         "desktop": "1440px",
