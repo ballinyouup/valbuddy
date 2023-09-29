@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { X } from "lucide-react";
 const users = [
     {
         username: "JettPlayer256",
@@ -48,31 +49,40 @@ const users = [
 
 export default function Messages() {
     return (
-        <div className="flex h-72 w-full flex-col overflow-hidden rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:min-w-[360px] lg:w-2/3">
-            {users.map((user, index) => {
-                return (
-                    <motion.div
-                        key={index}
-                        animate={{
-                            y: [96, 0, -96, -192]
-                        }}
-                        transition={{
-                            duration: 5,
-                            ease: [0, 1, 0, 1],
-                            times: [0, 0.2, 0.4, 0.6, 1],
-                            repeat: Infinity
-                        }}
-                    >
-                        <DiscordMessage
-                            image={user.image}
-                            imageAlt={user.imageAlt}
-                            message={user.message}
-                            time={user.time}
-                            username={user.username}
-                        />
-                    </motion.div>
-                );
-            })}
+        <div className="relative flex h-72 w-full flex-col rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:min-w-[360px] lg:w-3/4">
+            <X
+                width={36}
+                height={36}
+                stroke="black"
+                strokeWidth={3}
+                className="absolute -top-2 -right-2 z-10 rounded-full bg-primary p-1"
+            />
+            <div className="flex-grow overflow-hidden rounded-3xl">
+                {users.map((user, index) => {
+                    return (
+                        <motion.div
+                            key={index}
+                            animate={{
+                                y: [96, 0, -96, -192]
+                            }}
+                            transition={{
+                                duration: 5,
+                                ease: [0, 1, 0, 1],
+                                times: [0, 0.2, 0.4, 0.6, 1],
+                                repeat: Infinity
+                            }}
+                        >
+                            <DiscordMessage
+                                image={user.image}
+                                imageAlt={user.imageAlt}
+                                message={user.message}
+                                time={user.time}
+                                username={user.username}
+                            />
+                        </motion.div>
+                    );
+                })}
+            </div>
         </div>
     );
 }
