@@ -12,7 +12,7 @@ export default function HeroText() {
 
         // Clean up interval on unmount
         return () => clearInterval(interval);
-    }, [words]);
+    }, [words.length]);
     return (
         <AnimatePresence mode="wait">
             <motion.h2

@@ -283,9 +283,9 @@ function Features() {
                                 </Badge>
                                 <span className="text-xs leading-tight sm:text-[14px]">
                                     NovaSphere Invitational is THE place to show
-                                    off your skills and win some cash! Don't
-                                    miss your shot at becoming the next
-                                    NovaSphere Champ.
+                                    off your skills and win some cash!
+                                    Don&apos;t miss your shot at becoming the
+                                    next NovaSphere Champ.
                                 </span>
                             </div>
                         </div>
@@ -426,6 +426,7 @@ function FeatureContent() {
                         <div className="flex h-5 w-fit gap-1 sm:justify-end">
                             {roles.map(({ src, alt }) => (
                                 <Image
+                                    key={alt}
                                     src={src}
                                     alt={alt}
                                     height={18}
@@ -440,6 +441,7 @@ function FeatureContent() {
                         <div className="flex gap-1">
                             {agents.map(({ src, alt }) => (
                                 <Image
+                                    key={alt}
                                     src={src}
                                     alt={alt}
                                     height={24}
