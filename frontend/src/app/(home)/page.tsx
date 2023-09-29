@@ -53,7 +53,7 @@ function Hero() {
             </div>
             <div className="hidden h-desktop w-1/2 overflow-hidden bg-gradient-to-t from-transparent via-red-950/90 to-red-950/90 lg:flex">
                 <Image
-                    src={"/hero-image.png"}
+                    src={"/files/hero-image.png"}
                     height={720}
                     width={895}
                     alt="VALORANT Hero Image"
@@ -107,7 +107,7 @@ function Features() {
                     <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-3/4">
                         <div className="flex w-full flex-col gap-2 bg-destructive p-6 sm:flex-row sm:gap-0">
                             <Image
-                                src="/wingman-icon.webp"
+                                src="/files/wingman-icon.webp"
                                 height={80}
                                 width={80}
                                 alt="Wingman Icon"
@@ -131,7 +131,7 @@ function Features() {
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
                                     <Image
-                                        src="/jett-portrait.jpg"
+                                        src="/files/jett-portrait.jpg"
                                         height={20}
                                         width={20}
                                         alt="Jett Icon"
@@ -140,7 +140,7 @@ function Features() {
                                     <span>JettPlayer256</span>
                                 </div>
                                 <Image
-                                    src={"/role-duelist.png"}
+                                    src={"/files/role-duelist.png"}
                                     height={20}
                                     width={20}
                                     alt="Duelist Icon"
@@ -149,7 +149,7 @@ function Features() {
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
                                     <Image
-                                        src="/killjoy-portrait.jpg"
+                                        src="/files/killjoy-portrait.jpg"
                                         height={20}
                                         width={20}
                                         alt="Killjoy Icon"
@@ -158,7 +158,7 @@ function Features() {
                                     <span>KillJoyTurret1337</span>
                                 </div>
                                 <Image
-                                    src={"/role-sentinel.png"}
+                                    src={"/files/role-sentinel.png"}
                                     height={20}
                                     width={20}
                                     alt="Sentinel Icon"
@@ -167,7 +167,7 @@ function Features() {
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
                                     <Image
-                                        src="/kayo-portrait.jpg"
+                                        src="/files/kayo-portrait.jpg"
                                         height={20}
                                         width={20}
                                         alt="Kayo Icon"
@@ -176,7 +176,7 @@ function Features() {
                                     <span>KayoFlash101</span>
                                 </div>
                                 <Image
-                                    src={"/role-initiator.png"}
+                                    src={"/files/role-initiator.png"}
                                     height={20}
                                     width={20}
                                     alt="Initiator Icon"
@@ -185,7 +185,7 @@ function Features() {
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
                                     <Image
-                                        src="/skye-portrait.png"
+                                        src="/files/skye-portrait.png"
                                         height={20}
                                         width={20}
                                         alt="Skye Icon"
@@ -194,7 +194,7 @@ function Features() {
                                     <span>SkyeBird1</span>
                                 </div>
                                 <Image
-                                    src={"/role-initiator.png"}
+                                    src={"/files/role-initiator.png"}
                                     height={20}
                                     width={20}
                                     alt="Initiator Icon"
@@ -203,7 +203,7 @@ function Features() {
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
                                     <Image
-                                        src="/omen-portrait.jpg"
+                                        src="/files/omen-portrait.jpg"
                                         height={20}
                                         width={20}
                                         alt="Omen Icon"
@@ -212,7 +212,7 @@ function Features() {
                                     <span>OmenOwl22</span>
                                 </div>
                                 <Image
-                                    src={"/role-controller.png"}
+                                    src={"/files/role-controller.png"}
                                     height={20}
                                     width={20}
                                     alt="Controller Icon"
@@ -235,7 +235,7 @@ function Features() {
                     <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:h-80 lg:w-3/4">
                         <div className="flex overflow-hidden">
                             <Image
-                                src={"/valorant-events-image.png"}
+                                src={"/files/valorant-events-image.png"}
                                 width={160}
                                 height={160}
                                 alt="Valorant Events Image"
@@ -264,7 +264,7 @@ function Features() {
                         </div>
                         <div className="flex h-fit overflow-hidden">
                             <Image
-                                src="/valorant-events-image-1.png"
+                                src="/files/valorant-events-image-1.png"
                                 height={160}
                                 width={160}
                                 alt="Valorant Events Image"
@@ -358,38 +358,38 @@ function Feature({
 function FeatureContent() {
     const roles = [
         {
-            src: "/role-controller.png",
+            src: "/files/role-controller.png",
             alt: "Controller Icon"
         },
         {
-            src: "/role-sentinel.png",
+            src: "/files/role-sentinel.png",
             alt: "Sentinel Icon"
         },
         {
-            src: "/role-duelist.png",
+            src: "/files/role-duelist.png",
             alt: "Duelist Icon"
         },
         {
-            src: "/role-initiator.png",
+            src: "/files/role-initiator.png",
             alt: "Initiator Icon"
         },
         {
-            src: "/role-fill.png",
+            src: "/files/role-fill.png",
             alt: "Fill Icon"
         }
     ];
 
     const agents = [
         {
-            src: "/jett-portrait.jpg",
+            src: "/files/jett-portrait.jpg",
             alt: "Jett Portrait"
         },
         {
-            src: "/raze-portrait.png",
+            src: "/files/raze-portrait.png",
             alt: "Raze Portrait"
         },
         {
-            src: "/pheonix-portrait.jpg",
+            src: "/files/pheonix-portrait.jpg",
             alt: "Pheonix Portrait"
         }
     ];
@@ -397,7 +397,7 @@ function FeatureContent() {
         <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-80 lg:w-3/4">
             <div className="relative flex gap-4 bg-destructive p-4 sm:p-6">
                 <Image
-                    src="/jett-portrait.jpg"
+                    src="/files/jett-portrait.jpg"
                     alt="Jett Portrait"
                     height={80}
                     width={80}
@@ -405,7 +405,7 @@ function FeatureContent() {
                 />
                 <div className="absolute left-[72px] top-[76px] flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-accent object-cover sm:left-20 sm:top-20">
                     <Image
-                        src={"/rank-ascendant.png"}
+                        src={"/files/rank-ascendant.png"}
                         width={48}
                         height={48}
                         alt="Ascendant Rank"
