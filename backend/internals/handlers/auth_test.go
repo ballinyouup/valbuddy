@@ -60,11 +60,37 @@ func TestAuthFlow(t *testing.T) {
 }
 
 func Routes(app *fiber.App) {
+	discord_cfg := auth.DiscordOAuth2Config{
+		ResponseType:   "code",
+		Scope:          "identify email",
+		RedirectURI:    "/login/discord/callback",
+		Prompt:         "consent",
+		AccessTokenURL: "http://localhost:3001/token",
+		AuthorizeURL:   "http://localhost:3001/login/discord/authorize",
+		UserInfoURL:    "http://localhost:3001/user/discord",
+		Env:            config.Env,
+	}
+	twitch_cfg := auth.TwitchOAuth2Config{
+		ResponseType:   "code",
+		Scope:          "user:read:email",
+		RedirectURI:    "/login/twitch/callback",
+		ForceVerify:    "true",
+		AccessTokenURL: "http://localhost:3001/token",
+		AuthorizeURL:   "http://localhost:3001/login/twitch/authorize",
+		UserInfoURL:    "http://localhost:3001/user/twitch",
+		Env:            config.Env,
+	}
+
+	providers := auth.Providers{
+		Discord: discord_cfg,
+		Twitch:  twitch_cfg,
+	}
 	app.Get("/login/:provider", func(c *fiber.Ctx) error {
-		return HandleLogin(c, true)
+
+		return HandleLogin(c, providers)
 	})
 	app.Get("/login/:provider/callback", func(c *fiber.Ctx) error {
-		return HandleProviderCallback(c, true)
+		return HandleProviderCallback(c, providers)
 	})
 	app.Post("/token", func(c *fiber.Ctx) error {
 		res := fiber.Map{

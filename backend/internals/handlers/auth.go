@@ -11,70 +11,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetOAuth2ProviderConfig(providerName string, mock bool) (interface{}, error) {
-	if mock {
-		switch providerName {
-		case "discord":
-			return auth.DiscordOAuth2Config{
-				ResponseType:   "code",
-				ClientID:       config.Env.DISCORD_ID,
-				Scope:          "identify email",
-				RedirectURI:    "/login/discord/callback",
-				Prompt:         "consent",
-				AccessTokenURL: "http://localhost:3001/token",
-				AuthorizeURL:   "http://localhost:3001/login/discord/authorize",
-				UserInfoURL:    "http://localhost:3001/user/discord",
-			}, nil
-		case "twitch":
-			return auth.TwitchOAuth2Config{
-				ResponseType:   "code",
-				ClientID:       config.Env.TWITCH_ID,
-				Scope:          "user:read:email",
-				RedirectURI:    "/login/twitch/callback",
-				ForceVerify:    "true",
-				AccessTokenURL: "http://localhost:3001/token",
-				AuthorizeURL:   "http://localhost:3001/login/twitch/authorize",
-				UserInfoURL:    "http://localhost:3001/user/twitch",
-			}, nil
-		default:
-			return nil, fmt.Errorf("invalid provider")
-		}
-	} else {
-		switch providerName {
-		case "discord":
-			return auth.DiscordOAuth2Config{
-				ResponseType:   "code",
-				ClientID:       config.Env.DISCORD_ID,
-				Scope:          "identify email",
-				RedirectURI:    "/login/discord/callback",
-				Prompt:         "consent",
-				AccessTokenURL: "https://discord.com/api/oauth2/token",
-				AuthorizeURL:   "https://discord.com/oauth2/authorize",
-				UserInfoURL:    "https://discord.com/api/v10/users/@me",
-			}, nil
-		case "twitch":
-			return auth.TwitchOAuth2Config{
-				ResponseType:   "code",
-				ClientID:       config.Env.TWITCH_ID,
-				Scope:          "user:read:email",
-				RedirectURI:    "/login/twitch/callback",
-				ForceVerify:    "true",
-				AccessTokenURL: "https://id.twitch.tv/oauth2/token",
-				AuthorizeURL:   "https://id.twitch.tv/oauth2/authorize",
-				UserInfoURL:    "https://api.twitch.tv/helix/users",
-			}, nil
-		default:
-			return nil, fmt.Errorf("invalid provider")
-		}
-	}
-}
-
-func HandleLogin(c *fiber.Ctx, mock bool) error {
+func HandleLogin(c *fiber.Ctx, oauth auth.Providers) error {
 	state, err := auth.GenerateRandomString(8)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Generating Random String: %s", err))
 	}
-	providerConfig, err := GetOAuth2ProviderConfig(c.Params("provider"), mock)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid Provider")
 	}
@@ -89,27 +30,20 @@ func HandleLogin(c *fiber.Ctx, mock bool) error {
 	})
 	switch c.Params("provider") {
 	case "discord":
-		provider, ok := providerConfig.(auth.DiscordOAuth2Config)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord Provider Config")
-		}
-		provider.State = state
-		result := provider.FormatAuthURL()
+		oauth.Discord.State = state
+		result := oauth.Discord.FormatAuthURL()
 		return c.Redirect(result)
 	case "twitch":
-		provider, ok := providerConfig.(auth.TwitchOAuth2Config)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch Provider Config")
-		}
-		provider.State = state
-		result := provider.FormatAuthURL()
+		
+		oauth.Twitch.State = state
+		result := oauth.Twitch.FormatAuthURL()
 		return c.Redirect(result)
 	default:
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid Provider")
 	}
 }
 
-func HandleProviderCallback(c *fiber.Ctx, mock bool) error {
+func HandleProviderCallback(c *fiber.Ctx, oauth auth.Providers) error {
 	var user db.User
 	code := c.Query("code")
 	err := auth.CheckStateAndCSRF(c)
@@ -119,40 +53,23 @@ func HandleProviderCallback(c *fiber.Ctx, mock bool) error {
 	provider := c.Params("provider")
 	switch provider {
 	case "discord":
-		providerConfig, err := GetOAuth2ProviderConfig("discord", mock)
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting OAuth2 Provider Config: %s", err))
-		}
-		provider, ok := providerConfig.(auth.DiscordOAuth2Config)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord Provider Config")
-		}
 		// Get access token from the provider
-		accessToken, err := provider.GetAccessToken(code)
+		accessToken, err := oauth.Discord.GetAccessToken(code)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Access Token: %s", err))
 		}
-		// Convert the access token response to a DiscordResponse
-		discordAccessToken, ok := accessToken.(auth.DiscordResponse)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord GetAccessToken")
-		}
 		// Get user info using the access token
-		userInfo, err := provider.GetUserInfo(discordAccessToken)
+		userInfo, err := oauth.Discord.GetUserInfo(accessToken)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting User Info: %s", err))
 		}
-		// Convert the user info to a DiscordUserResponse
-		discordUserInfo, ok := userInfo.(auth.DiscordUserResponse)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Discord GetUserInfo")
-		}
+
 		newUser := db.User{
-			Email:    discordUserInfo.Email,
-			Username: discordUserInfo.Username,
+			Email:    userInfo.Email,
+			Username: userInfo.Username,
 			Role:     "free",
 			Account: db.Account{
-				Image: discordUserInfo.Avatar,
+				Image: userInfo.Avatar,
 			},
 			Provider: "discord",
 		}
@@ -162,41 +79,24 @@ func HandleProviderCallback(c *fiber.Ctx, mock bool) error {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Creating User: %s", err))
 		}
 	case "twitch":
-		providerConfig, err := GetOAuth2ProviderConfig("twitch", mock)
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting OAuth2 Provider Config: %s", err))
-		}
-		provider, ok := providerConfig.(auth.TwitchOAuth2Config)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch Provider Config")
-		}
+		
 		// Get access token from the provider
-		accessToken, err := provider.GetAccessToken(code)
+		accessToken, err := oauth.Twitch.GetAccessToken(code)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Access Token: %s", err))
 		}
-		// Convert the access token response to a TwitchResponse
-		twitchAccessToken, ok := accessToken.(auth.TwitchResponse)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch GetAccessToken")
-		}
 		// Get user info using the access token
-		userInfo, err := provider.GetUserInfo(twitchAccessToken)
+		userInfo, err := oauth.Twitch.GetUserInfo(accessToken)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Get Twitch User Info Error: %s", err))
 		}
-		// Convert the user info to a TwitchUserResponse
-		twitchUserInfo, ok := userInfo.(auth.TwitchUserResponse)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "Unexpected response type from Twitch User Info")
-		}
 
 		newUser := db.User{
-			Email:    twitchUserInfo.Data[0].Email,
-			Username: twitchUserInfo.Data[0].DisplayName,
+			Email:    userInfo.Data[0].Email,
+			Username: userInfo.Data[0].DisplayName,
 			Role:     "free",
 			Account: db.Account{
-				Image: twitchUserInfo.Data[0].ProfileImageURL,
+				Image: userInfo.Data[0].ProfileImageURL,
 			},
 			Provider: "twitch",
 		}

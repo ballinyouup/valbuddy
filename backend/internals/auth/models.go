@@ -1,21 +1,22 @@
 package auth
 
-type OAuth2Config interface {
-	FormatAuthURL() string
-	GetAccessToken(code string) (interface{}, error)
-	GetUserInfo(tokenResponse interface{}) (interface{}, error)
+import "valbuddy/internals/config"
+
+type Providers struct {
+	Discord DiscordOAuth2Config
+	Twitch  TwitchOAuth2Config
 }
 
 type DiscordOAuth2Config struct {
 	AuthorizeURL   string
 	ResponseType   string
-	ClientID       string
 	Scope          string
 	State          string
 	RedirectURI    string
 	Prompt         string
 	AccessTokenURL string
 	UserInfoURL    string
+	Env            *config.Config
 }
 
 type DiscordResponse struct {
@@ -77,11 +78,11 @@ type TwitchUserResponse struct {
 type TwitchOAuth2Config struct {
 	AuthorizeURL   string
 	ResponseType   string
-	ClientID       string
 	Scope          string
 	State          string
 	RedirectURI    string
 	ForceVerify    string
 	AccessTokenURL string
 	UserInfoURL    string
+	Env            *config.Config
 }

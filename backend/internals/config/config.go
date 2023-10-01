@@ -22,6 +22,7 @@ type Config struct {
 	// Add more configuration variables here if needed
 }
 
+
 // Env holds the application's configuration loaded from environment variables.
 var Env *Config
 
@@ -50,7 +51,7 @@ func LoadConfig(path string) (*Config, error) {
 		frontendURL = "http://localhost:3000"
 		cookieDomain = "localhost"
 	}
-
+	
 	// Create a new Config instance and populate it with the environment variables
 	Env = &Config{
 		DISCORD_ID:     os.Getenv("DISCORD_ID"),
@@ -66,6 +67,5 @@ func LoadConfig(path string) (*Config, error) {
 		TEST_DB:       os.Getenv("TEST_DB"),
 		// Add more configuration variables here if needed
 	}
-
 	return Env, nil
 }

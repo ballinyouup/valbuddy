@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
-	"valbuddy/internals/config"
 
 	"github.com/gofiber/fiber/v2"
 )
 
+/**
+* Discord OAUTH
+**/
+
 // FormatAuthURL formats the OAuth2 authorization URL for Discord.
 func (oauth DiscordOAuth2Config) FormatAuthURL() string {
 	// URL-encode the redirect URI with the API URL and OAuth's redirect URI.
-	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
+	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", oauth.Env.API_URL, oauth.RedirectURI))
 
 	// URL-encode the scope.
 	scope := url.QueryEscape(oauth.Scope)
@@ -22,7 +25,7 @@ func (oauth DiscordOAuth2Config) FormatAuthURL() string {
 	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&prompt=%s",
 		oauth.AuthorizeURL,
 		oauth.ResponseType,
-		oauth.ClientID,
+		oauth.Env.DISCORD_ID,
 		scope,
 		oauth.State,
 		redirectURI,
@@ -30,28 +33,8 @@ func (oauth DiscordOAuth2Config) FormatAuthURL() string {
 	)
 }
 
-// FormatAuthURL formats the OAuth2 authorization URL for Twitch.
-func (oauth TwitchOAuth2Config) FormatAuthURL() string {
-	// URL-encode the redirect URI with the API URL and OAuth's redirect URI.
-	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
-
-	// URL-encode the scope.
-	scope := url.QueryEscape(oauth.Scope)
-
-	// Construct the authorization URL with various query parameters.
-	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&force_verify=%s",
-		oauth.AuthorizeURL,
-		oauth.ResponseType,
-		oauth.ClientID,
-		scope,
-		oauth.State,
-		redirectURI,
-		oauth.ForceVerify,
-	)
-}
-
 // GetAccessToken retrieves an access token from Discord using the provided authorization code.
-func (oauth DiscordOAuth2Config) GetAccessToken(code string) (interface{}, error) {
+func (oauth DiscordOAuth2Config) GetAccessToken(code string) (DiscordResponse, error) {
 	// Create a Fiber Agent to manage the HTTP request.
 	a := fiber.AcquireAgent()
 	defer fiber.ReleaseAgent(a)
@@ -65,11 +48,11 @@ func (oauth DiscordOAuth2Config) GetAccessToken(code string) (interface{}, error
 	// Prepare form arguments for the request.
 	args := fiber.AcquireArgs()
 	defer fiber.ReleaseArgs(args)
-	args.Add("client_id", config.Env.DISCORD_ID)
-	args.Add("client_secret", config.Env.DISCORD_SECRET)
+	args.Add("client_id", oauth.Env.DISCORD_ID)
+	args.Add("client_secret", oauth.Env.DISCORD_SECRET)
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-	args.Add("redirect_uri", fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
+	args.Add("redirect_uri", fmt.Sprintf("%s%s", oauth.Env.API_URL, oauth.RedirectURI))
 	a.Form(args)
 
 	// Parse the request using the Agent.
@@ -94,7 +77,7 @@ func (oauth DiscordOAuth2Config) GetAccessToken(code string) (interface{}, error
 }
 
 // GetUserInfo retrieves user information from Discord using the provided access token.
-func (oauth DiscordOAuth2Config) GetUserInfo(discordResp DiscordResponse) (interface{}, error) {
+func (oauth DiscordOAuth2Config) GetUserInfo(discordResp DiscordResponse) (DiscordUserResponse, error) {
 	access_token := discordResp.AccessToken
 
 	// Create a Fiber Agent to manage the HTTP request.
@@ -147,8 +130,32 @@ func CreateDiscordAvatar(discordTokenResp *DiscordUserResponse) error {
 	return nil
 }
 
+/**
+* Twitch OAUTH
+**/
+
+// FormatAuthURL formats the OAuth2 authorization URL for Twitch.
+func (oauth TwitchOAuth2Config) FormatAuthURL() string {
+	// URL-encode the redirect URI with the API URL and OAuth's redirect URI.
+	redirectURI := url.QueryEscape(fmt.Sprintf("%s%s", oauth.Env.API_URL, oauth.RedirectURI))
+
+	// URL-encode the scope.
+	scope := url.QueryEscape(oauth.Scope)
+
+	// Construct the authorization URL with various query parameters.
+	return fmt.Sprintf("%s?response_type=%s&client_id=%s&scope=%s&state=%s&redirect_uri=%s&force_verify=%s",
+		oauth.AuthorizeURL,
+		oauth.ResponseType,
+		oauth.Env.TWITCH_ID,
+		scope,
+		oauth.State,
+		redirectURI,
+		oauth.ForceVerify,
+	)
+}
+
 // GetAccessToken retrieves an access token from Twitch using the provided authorization code.
-func (oauth TwitchOAuth2Config) GetAccessToken(code string) (interface{}, error) {
+func (oauth TwitchOAuth2Config) GetAccessToken(code string) (TwitchResponse, error) {
 	// Create a Fiber Agent to manage the HTTP request.
 	a := fiber.AcquireAgent()
 	defer fiber.ReleaseAgent(a)
@@ -162,11 +169,11 @@ func (oauth TwitchOAuth2Config) GetAccessToken(code string) (interface{}, error)
 	// Prepare form arguments for the request.
 	args := fiber.AcquireArgs()
 	defer fiber.ReleaseArgs(args)
-	args.Add("client_id", config.Env.TWITCH_ID)
-	args.Add("client_secret", config.Env.TWITCH_SECRET)
+	args.Add("client_id", oauth.Env.TWITCH_ID)
+	args.Add("client_secret", oauth.Env.TWITCH_SECRET)
 	args.Add("grant_type", "authorization_code")
 	args.Add("code", code)
-	args.Add("redirect_uri", fmt.Sprintf("%s%s", config.Env.API_URL, oauth.RedirectURI))
+	args.Add("redirect_uri", fmt.Sprintf("%s%s", oauth.Env.API_URL, oauth.RedirectURI))
 	a.Form(args)
 
 	// Parse the request using the Agent.
@@ -191,7 +198,7 @@ func (oauth TwitchOAuth2Config) GetAccessToken(code string) (interface{}, error)
 }
 
 // GetUserInfo retrieves user information from Twitch using the provided access token.
-func (oauth TwitchOAuth2Config) GetUserInfo(twitchResp TwitchResponse) (interface{}, error) {
+func (oauth TwitchOAuth2Config) GetUserInfo(twitchResp TwitchResponse) (TwitchUserResponse, error) {
 	access_token := twitchResp.AccessToken
 
 	// Create a Fiber Agent to manage the HTTP request.
@@ -203,7 +210,7 @@ func (oauth TwitchOAuth2Config) GetUserInfo(twitchResp TwitchResponse) (interfac
 	token_req.SetRequestURI(oauth.UserInfoURL)
 	token_req.Header.SetMethod("GET")
 	token_req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", access_token))
-	token_req.Header.Add("Client-Id", config.Env.TWITCH_ID)
+	token_req.Header.Add("Client-Id", oauth.Env.TWITCH_ID)
 
 	// Parse the request using the Agent.
 	if err := token_agent.Parse(); err != nil {
