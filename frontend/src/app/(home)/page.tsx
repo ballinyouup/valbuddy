@@ -112,6 +112,7 @@ function Features() {
                                 width={80}
                                 alt="Wingman Icon"
                                 className="!max-h-[80px] !max-w-[80px] rounded-full"
+                                quality={100}
                             />
                             <div className="flex w-full flex-col px-2">
                                 <div className="flex w-full gap-1 font-bold">
@@ -136,6 +137,7 @@ function Features() {
                                         width={20}
                                         alt="Jett Icon"
                                         className="h-5 w-5 rounded-full"
+                                        quality={100}
                                     />
                                     <span>JettPlayer256</span>
                                 </div>
@@ -144,6 +146,7 @@ function Features() {
                                     height={20}
                                     width={20}
                                     alt="Duelist Icon"
+                                    quality={100}
                                 />
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
@@ -154,6 +157,7 @@ function Features() {
                                         width={20}
                                         alt="Killjoy Icon"
                                         className="h-5 w-5 rounded-full"
+                                        quality={100}
                                     />
                                     <span>KillJoyTurret1337</span>
                                 </div>
@@ -162,6 +166,7 @@ function Features() {
                                     height={20}
                                     width={20}
                                     alt="Sentinel Icon"
+                                    quality={100}
                                 />
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
@@ -172,6 +177,7 @@ function Features() {
                                         width={20}
                                         alt="Kayo Icon"
                                         className="h-5 w-5 rounded-full"
+                                        quality={100}
                                     />
                                     <span>KayoFlash101</span>
                                 </div>
@@ -180,6 +186,7 @@ function Features() {
                                     height={20}
                                     width={20}
                                     alt="Initiator Icon"
+                                    quality={100}
                                 />
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
@@ -190,6 +197,7 @@ function Features() {
                                         width={20}
                                         alt="Skye Icon"
                                         className="h-5 w-5 rounded-full"
+                                        quality={100}
                                     />
                                     <span>SkyeBird1</span>
                                 </div>
@@ -198,6 +206,7 @@ function Features() {
                                     height={20}
                                     width={20}
                                     alt="Initiator Icon"
+                                    quality={100}
                                 />
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
@@ -208,6 +217,7 @@ function Features() {
                                         width={20}
                                         alt="Omen Icon"
                                         className="h-5 w-5 rounded-full"
+                                        quality={100}
                                     />
                                     <span>OmenOwl22</span>
                                 </div>
@@ -216,6 +226,7 @@ function Features() {
                                     height={20}
                                     width={20}
                                     alt="Controller Icon"
+                                    quality={100}
                                 />
                             </div>
                         </div>
@@ -269,6 +280,7 @@ function Features() {
                                 width={160}
                                 alt="Valorant Events Image"
                                 className="flex h-40 object-cover max-[480px]:w-32"
+                                quality={100}
                             />
                             <div className="flex h-fit w-full flex-col gap-1 px-4 py-2 sm:py-1">
                                 <div className="flex flex-wrap justify-between pr-1 font-bold">
@@ -402,6 +414,7 @@ function FeatureContent() {
                     height={80}
                     width={80}
                     className="h-20 max-h-[80px] w-20 min-w-[80px] rounded-full border border-black"
+                    quality={100}
                 />
                 <div className="absolute left-[72px] top-[76px] flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-accent object-cover sm:left-20 sm:top-20">
                     <Image
@@ -410,6 +423,7 @@ function FeatureContent() {
                         height={48}
                         alt="Ascendant Rank"
                         className="h-10 w-10 object-cover"
+                        quality={100}
                     />
                 </div>
                 <div className="h-full w-full">
@@ -432,6 +446,7 @@ function FeatureContent() {
                                     height={18}
                                     width={18}
                                     className="h-5 w-5 rounded-full"
+                                    quality={100}
                                 />
                             ))}
                         </div>

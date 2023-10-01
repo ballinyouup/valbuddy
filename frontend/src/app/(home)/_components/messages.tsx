@@ -5,42 +5,42 @@ import { X } from "lucide-react";
 const users = [
     {
         username: "JettPlayer256",
-        image: "/jett-portrait.jpg",
+        image: "/files/jett-portrait.jpg",
         imageAlt: "Jett Image",
         time: "Today at 6:48PM",
         message: "Hey! Looking for duo gold 3! Join channel 2"
     },
     {
         username: "PheonixUlt888",
-        image: "/pheonix-portrait.jpg",
+        image: "/files/pheonix-portrait.jpg",
         imageAlt: "Pheonix Image",
         time: "Today at 6:48PM",
         message: "lfg gold"
     },
     {
         username: "YoruMain147",
-        image: "/yoru-portrait.jpg",
+        image: "/files/yoru-portrait.jpg",
         imageAlt: "Yoru Image",
         time: "Today at 6:48PM",
         message: "anyone quick play?"
     },
     {
         username: "JettPlayer256",
-        image: "/jett-portrait.jpg",
+        image: "/files/jett-portrait.jpg",
         imageAlt: "Jett Image",
         time: "Today at 6:48PM",
         message: "Hey! Looking for duo gold 3! Join channel 2"
     },
     {
         username: "PheonixUlt888",
-        image: "/pheonix-portrait.jpg",
+        image: "/files/pheonix-portrait.jpg",
         imageAlt: "Pheonix Image",
         time: "Today at 6:48PM",
         message: "lfg gold"
     },
     {
         username: "YoruMain147",
-        image: "/yoru-portrait.jpg",
+        image: "/files/yoru-portrait.jpg",
         imageAlt: "Yoru Image",
         time: "Today at 6:48PM",
         message: "anyone quick play?"
@@ -55,7 +55,7 @@ export default function Messages() {
                 height={36}
                 stroke="black"
                 strokeWidth={3}
-                className="absolute -top-2 -right-2 z-10 rounded-full bg-primary p-1"
+                className="absolute -right-2 -top-2 z-10 rounded-full bg-primary p-1"
             />
             <div className="flex-grow overflow-hidden rounded-3xl">
                 {users.map((user, index) => {
