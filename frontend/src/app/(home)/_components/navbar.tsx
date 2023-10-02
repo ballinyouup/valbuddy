@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 export default function Navbar() {
     return (
-        <div className="flex w-full justify-between pl-8 pr-4 2xl:pr-0">
+        <div className="flex w-full justify-between bg-black pl-8 pr-4 2xl:pr-0 py-4 z-10">
             <div className="V hidden text-4xl font-black text-white sm:flex">
                 VALBUDDY
             </div>

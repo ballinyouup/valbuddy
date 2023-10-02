@@ -220,7 +220,7 @@ export default function Features() {
                                 height={160}
                                 width={160}
                                 alt="Valorant Events Image"
-                                className="flex h-40 object-cover max-[480px]:w-32"
+                                className="flex object-cover max-[480px]:w-32"
                                 quality={100}
                             />
                             <div className="flex h-fit w-full flex-col gap-1 px-4 py-2 sm:py-1">
@@ -309,7 +309,6 @@ function Feature({
 }
 
 function FeatureContent() {
-    
     return (
         <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-fit lg:w-3/4">
             <div className="relative flex flex-col gap-4 bg-destructive p-4 sm:flex-row sm:p-6">

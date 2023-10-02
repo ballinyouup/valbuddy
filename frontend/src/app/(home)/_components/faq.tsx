@@ -41,7 +41,7 @@ export default function FAQ() {
             <Accordion
                 type="single"
                 collapsible
-                className="w-full max-w-2xl overflow-hidden rounded-xl"
+                className="w-full max-w-2xl overflow-hidden rounded-xl shadow-[0_10px_175px_-50px] shadow-primary/90"
             >
                 {faq.map((item, index) => (
                     <React.Fragment key={index}>

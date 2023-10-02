@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} h-full w-screen`}>
         <Providers>
           <div className="flex w-full justify-center">
-            <div className="Navbar max-w-desktop flex w-full flex-col items-start justify-between gap-4 py-4">
+            <div className="max-w-desktop flex w-full flex-col items-start justify-between">
               <Navbar />
               {children}
               <Footer />

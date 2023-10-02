@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Footer() {
     return (
         <footer className="flex w-full justify-center">
-            <div className="max-w-6xl flex h-fit w-full flex-col md:flex-row">
+            <div className="flex h-fit w-full max-w-6xl flex-col md:flex-row">
                 <FooterSection>
                     <FooterHeader className="md:pl-2">VALBUDDY</FooterHeader>
                     <FooterLinksContainer>
@@ -33,7 +33,7 @@ export default function Footer() {
                 <FooterSection>
                     <FooterHeader>Subscribe</FooterHeader>
 
-                    <form className="flex w-56 flex-wrap gap-2">
+                    <form className="flex w-full flex-wrap gap-2 sm:w-1/2 md:w-56">
                         <p className="text-xs text-muted-foreground">
                             Enter your email below to stay up to date with
                             events!
