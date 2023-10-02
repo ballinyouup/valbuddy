@@ -4,6 +4,7 @@ import {
     AccordionItem,
     AccordionTrigger
 } from "@/components/ui/accordion";
+import React from "react";
 
 type FAQItem = {
     question: string;
@@ -42,8 +43,10 @@ export default function FAQ() {
                 collapsible
                 className="w-full max-w-2xl overflow-hidden rounded-xl"
             >
-                {faq.map((item) => (
-                    <FAQItem {...item} />
+                {faq.map((item, index) => (
+                    <React.Fragment key={index}>
+                        <FAQItem {...item} />
+                    </React.Fragment>
                 ))}
             </Accordion>
         </div>
@@ -53,9 +56,7 @@ export default function FAQ() {
 function FAQItem(item: FAQItem) {
     return (
         <AccordionItem value={item.question}>
-            <AccordionTrigger>
-                {item.question}
-            </AccordionTrigger>
+            <AccordionTrigger>{item.question}</AccordionTrigger>
             <AccordionContent>{item.answer}</AccordionContent>
         </AccordionItem>
     );
