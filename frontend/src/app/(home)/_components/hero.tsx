@@ -6,16 +6,18 @@ export default function Hero() {
     return (
         <div className="flex h-phone w-screen lg:h-full lg:w-full">
             <div
-                className={`LeftHero flex h-full w-full items-center justify-center bg-[#1f0000] px-8 lg:h-desktop lg:w-1/2 lg:bg-transparent lg:bg-gradient-to-tr lg:from-transparent lg:via-transparent lg:to-red-950/90 lg:px-10`}
+                className={`LeftHero relative flex h-full w-full items-center justify-center px-8 lg:h-desktop lg:w-1/2 lg:bg-transparent lg:bg-gradient-to-tr lg:from-transparent lg:via-transparent lg:to-red-950/90 lg:px-10`}
             >
-                <Image
-                    src={HeroImage}
-                    alt="VALORANT Hero Image"
-                    className="absolute z-0 object-cover mix-blend-soft-light lg:hidden"
-                    fill
-                    priority
-                    quality={100}
-                />
+                <div className="absolute z-0 h-full w-full bg-red-950 brightness-75 lg:hidden">
+                    <Image
+                        src={HeroImage}
+                        alt="VALORANT Hero Image"
+                        layout="fill"
+                        objectFit="cover"
+                        quality={100}
+                        className="object-cover mix-blend-soft-light"
+                    />
+                </div>
                 <div className="HeroTextContainer z-10 flex h-full w-fit flex-col items-center justify-center gap-10 lg:h-3/5 lg:w-full lg:py-0">
                     <div className="HeroTextHeaders flex w-full flex-col lg:whitespace-nowrap">
                         <HeroText />
