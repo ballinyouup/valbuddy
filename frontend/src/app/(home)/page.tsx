@@ -19,8 +19,8 @@ export default function Page() {
 
 function Hero() {
     return (
-        <div className="flex h-phone w-screen lg:h-full lg:w-full">
-            <div className="LeftHero flex h-full w-full items-center justify-center bg-gradient-to-tr from-transparent via-transparent to-red-950/90 px-8 lg:h-desktop lg:w-1/2 lg:px-10">
+        <div className="flex h-phone w-screen bg-black lg:h-full lg:w-full">
+            <div className="LeftHero flex h-full w-full items-center justify-center bg-[url('/files/hero-image.png')] bg-[rgb(22,8,8)] bg-cover px-8 bg-blend-soft-light lg:h-desktop lg:w-1/2 lg:bg-transparent lg:bg-gradient-to-tr lg:from-transparent lg:via-transparent lg:to-red-950/90 lg:px-10">
                 <div className="HeroTextContainer flex h-full w-fit flex-col items-center justify-center gap-10 lg:h-3/5 lg:w-full lg:py-0">
                     <div className="HeroTextHeaders flex w-full flex-col lg:whitespace-nowrap">
                         <HeroText />
@@ -311,7 +311,7 @@ function Features() {
 function FeatureTitle() {
     return (
         <div className="flex w-full max-w-6xl flex-col self-center">
-            <div className="flex w-full flex-wrap justify-center px-8 pb-16 text-4xl font-black uppercase text-white md:text-5xl lg:py-20 lg:text-6xl">
+            <div className="flex w-full flex-wrap justify-center px-8 py-20 pb-16 text-4xl font-black uppercase text-white md:text-5xl lg:text-6xl">
                 <span>Find the &nbsp;</span>
                 <span className="text-red-700">Perfect&nbsp;</span>
                 <span>Teammates</span>
@@ -406,8 +406,8 @@ function FeatureContent() {
         }
     ];
     return (
-        <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-80 lg:w-3/4">
-            <div className="relative flex gap-4 bg-destructive p-4 sm:p-6">
+        <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-fit lg:w-3/4">
+            <div className="relative flex flex-col gap-4 bg-destructive p-4 sm:flex-row sm:p-6">
                 <Image
                     src="/files/jett-portrait.jpg"
                     alt="Jett Portrait"
@@ -427,14 +427,15 @@ function FeatureContent() {
                     />
                 </div>
                 <div className="h-full w-full">
-                    <div className="flex w-full flex-col gap-1 min-[480px]:flex-row min-[480px]:items-center min-[480px]:justify-between">
-                        <span className="flex items-center gap-1 text-base font-bold">
+                    <div className="flex w-full flex-row justify-between gap-1 min-[480px]:items-center">
+                        <span className="flex items-center gap-1 text-xs font-bold min-[340px]:text-base">
                             JettPlayer256{" "}
                             <Verified
                                 width={24}
                                 height={24}
                                 stroke="green"
                                 fill="black"
+                                className="h-5 w-5 min-[340px]:h-6 min-[340px]:w-6"
                             />
                         </span>
                         <div className="flex h-5 w-fit gap-1 sm:justify-end">
@@ -443,16 +444,18 @@ function FeatureContent() {
                                     key={alt}
                                     src={src}
                                     alt={alt}
-                                    height={18}
-                                    width={18}
-                                    className="h-5 w-5 rounded-full"
+                                    height={20}
+                                    width={20}
+                                    className="rounded-full"
                                     quality={100}
                                 />
                             ))}
                         </div>
                     </div>
-                    <div className="flex w-full flex-col-reverse justify-between pt-1 min-[480px]:flex-row min-[480px]:pt-0">
-                        <span className="text-base font-bold">NA</span>
+                    <div className="flex w-full flex-row justify-between pt-1 min-[480px]:pt-0">
+                        <span className="text-xs font-bold min-[340px]:text-base">
+                            NA
+                        </span>
                         <div className="flex gap-1">
                             {agents.map(({ src, alt }) => (
                                 <Image
