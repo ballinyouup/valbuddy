@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import HeroText from "./_components/hero-text";
 import { Verified } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { roles, agents } from "@/data/valorant";
 
 export default function Page() {
     return (
@@ -19,7 +20,7 @@ export default function Page() {
 
 function Hero() {
     return (
-        <div className="flex h-phone w-screen bg-black lg:h-full lg:w-full">
+        <div className="flex h-phone w-screen lg:h-full lg:w-full">
             <div className="LeftHero flex h-full w-full items-center justify-center bg-[url('/files/hero-image.png')] bg-[rgb(22,8,8)] bg-cover px-8 bg-blend-soft-light lg:h-desktop lg:w-1/2 lg:bg-transparent lg:bg-gradient-to-tr lg:from-transparent lg:via-transparent lg:to-red-950/90 lg:px-10">
                 <div className="HeroTextContainer flex h-full w-fit flex-col items-center justify-center gap-10 lg:h-3/5 lg:w-full lg:py-0">
                     <div className="HeroTextHeaders flex w-full flex-col lg:whitespace-nowrap">
@@ -368,43 +369,7 @@ function Feature({
 }
 
 function FeatureContent() {
-    const roles = [
-        {
-            src: "/files/role-controller.png",
-            alt: "Controller Icon"
-        },
-        {
-            src: "/files/role-sentinel.png",
-            alt: "Sentinel Icon"
-        },
-        {
-            src: "/files/role-duelist.png",
-            alt: "Duelist Icon"
-        },
-        {
-            src: "/files/role-initiator.png",
-            alt: "Initiator Icon"
-        },
-        {
-            src: "/files/role-fill.png",
-            alt: "Fill Icon"
-        }
-    ];
-
-    const agents = [
-        {
-            src: "/files/jett-portrait.jpg",
-            alt: "Jett Portrait"
-        },
-        {
-            src: "/files/raze-portrait.png",
-            alt: "Raze Portrait"
-        },
-        {
-            src: "/files/pheonix-portrait.jpg",
-            alt: "Pheonix Portrait"
-        }
-    ];
+    
     return (
         <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-fit lg:w-3/4">
             <div className="relative flex flex-col gap-4 bg-destructive p-4 sm:flex-row sm:p-6">

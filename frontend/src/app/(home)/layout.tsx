@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Providers from "@/components/providers";
 import Navbar from "./_components/navbar";
+import Footer from "./_components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
             <div className="Navbar max-w-desktop flex w-full flex-col items-start justify-between gap-4 py-4">
               <Navbar />
               {children}
+              <Footer />
             </div>
           </div>
         </Providers>
