@@ -49,7 +49,7 @@ const users = [
 
 export default function Messages() {
     return (
-        <div className="relative flex h-72 w-full flex-col rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:min-w-[360px] lg:w-3/4">
+        <div className="relative flex h-72 w-full flex-col rounded-3xl bg-neutral-800 shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:min-w-[360px] lg:w-4/5">
             <X
                 width={36}
                 height={36}
@@ -111,10 +111,12 @@ function DiscordMessage({
             />
             <div className="items- flex h-fit w-full flex-col gap-1">
                 <div className="flex items-center gap-4">
-                    <p className="text-sm">{username}</p>
-                    <p className="text-xs text-muted-foreground">{time}</p>
+                    <p className="text-base">{username}</p>
+                    <p className="text-xs text-muted-foreground tracking-wider">{time}</p>
                 </div>
-                <p className="text-base leading-tight">{message}</p>
+                <p className="text-base leading-tight tracking-wide">
+                    {message}
+                </p>
             </div>
         </div>
     );

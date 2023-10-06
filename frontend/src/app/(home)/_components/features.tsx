@@ -14,7 +14,7 @@ export default function Features() {
             <InView>
                 <Feature
                     titleOne="No More&nbsp;"
-                    titleTwo="LFG Applications"
+                    titleTwo="LFG Apps"
                     icon={<Icons.searchX />}
                     text="Forget scrolling through Discord for hours trying to
                         find players at your skill level"
@@ -27,10 +27,7 @@ export default function Features() {
                     titleOne="Vetted&nbsp;"
                     titleTwo="Player Profiles"
                     icon={<Icons.socialVerified />}
-                    text="Hello everyone, my name is JettPlayer256 and im a smokes
-                    main who has been playing FPS for more than 2 years. I
-                    started playing valorant since Beta. Currently in college,
-                    looking for serious players"
+                    text="View player profiles to see their rank, agents, play style and interests. Get matched with teammates you'll gel with."
                     reverse={true}
                 >
                     <FeatureContent />
@@ -45,7 +42,7 @@ export default function Features() {
                     text="Level up your squad to the next tier. Create a team of
                     hardcore gamers as obsessed with grinding LP as you are"
                 >
-                    <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-3/4">
+                    <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 lg:w-4/5">
                         <div className="flex w-full flex-col gap-2 bg-destructive p-6 sm:flex-row sm:gap-0">
                             <Image
                                 src="/files/wingman-icon.webp"
@@ -57,7 +54,7 @@ export default function Features() {
                             />
                             <div className="flex w-full flex-col px-2">
                                 <div className="flex w-full gap-1 font-bold">
-                                    Zero Latency{" "}
+                                    <p>Zero Latency </p>
                                     <Verified
                                         width={24}
                                         height={24}
@@ -65,22 +62,26 @@ export default function Features() {
                                         fill="black"
                                     />
                                 </div>
-                                Sniping goals and defusing dreams. Zero Latency
-                                — Valorant pros in the making. 🎮
+                                <p className="text-base">
+                                    Sniping goals and defusing dreams. Zero
+                                    Latency — Valorant pros in the making. 🎮
+                                </p>
                             </div>
                         </div>
                         <div className="flex h-full flex-col py-2">
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
-                                    <Image
-                                        src="/files/jett-portrait.jpg"
-                                        height={20}
-                                        width={20}
-                                        alt="Jett Icon"
-                                        className="h-5 w-5 rounded-full"
-                                        quality={100}
-                                    />
-                                    <span>JettPlayer256</span>
+                                    <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                                        <Image
+                                            src="/files/jett-portrait.jpg"
+                                            fill
+                                            alt="Jett Icon"
+                                            quality={100}
+                                        />
+                                    </div>
+                                    <span className="text-lg tracking-wider">
+                                        JettPlayer256
+                                    </span>
                                 </div>
                                 <Image
                                     src={"/files/role-duelist.png"}
@@ -92,15 +93,17 @@ export default function Features() {
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
-                                    <Image
-                                        src="/files/killjoy-portrait.jpg"
-                                        height={20}
-                                        width={20}
-                                        alt="Killjoy Icon"
-                                        className="h-5 w-5 rounded-full"
-                                        quality={100}
-                                    />
-                                    <span>KillJoyTurret1337</span>
+                                    <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                                        <Image
+                                            src="/files/killjoy-portrait.jpg"
+                                            fill
+                                            alt="Killjoy Icon"
+                                            quality={100}
+                                        />
+                                    </div>
+                                    <span className="text-lg tracking-wider">
+                                        KillJoyTurret1337
+                                    </span>
                                 </div>
                                 <Image
                                     src={"/files/role-sentinel.png"}
@@ -112,15 +115,17 @@ export default function Features() {
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
-                                    <Image
-                                        src="/files/kayo-portrait.jpg"
-                                        height={20}
-                                        width={20}
-                                        alt="Kayo Icon"
-                                        className="h-5 w-5 rounded-full"
-                                        quality={100}
-                                    />
-                                    <span>KayoFlash101</span>
+                                    <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                                        <Image
+                                            src="/files/kayo-portrait.jpg"
+                                            fill
+                                            alt="KAYO Icon"
+                                            quality={100}
+                                        />
+                                    </div>
+                                    <span className="text-lg tracking-wider">
+                                        KayoFlash101
+                                    </span>
                                 </div>
                                 <Image
                                     src={"/files/role-initiator.png"}
@@ -132,15 +137,18 @@ export default function Features() {
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
-                                    <Image
-                                        src="/files/skye-portrait.png"
-                                        height={20}
-                                        width={20}
-                                        alt="Skye Icon"
-                                        className="h-5 w-5 rounded-full"
-                                        quality={100}
-                                    />
-                                    <span>SkyeBird1</span>
+                                    <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                                        <Image
+                                            src="/files/skye-portrait.png"
+                                            fill
+                                            alt="Skye Icon"
+                                            className="bg-white"
+                                            quality={100}
+                                        />
+                                    </div>
+                                    <span className="text-lg tracking-wider">
+                                        SkyeBird1
+                                    </span>
                                 </div>
                                 <Image
                                     src={"/files/role-initiator.png"}
@@ -152,15 +160,17 @@ export default function Features() {
                             </div>
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
                                 <div className="flex items-center gap-2">
-                                    <Image
-                                        src="/files/omen-portrait.jpg"
-                                        height={20}
-                                        width={20}
-                                        alt="Omen Icon"
-                                        className="h-5 w-5 rounded-full"
-                                        quality={100}
-                                    />
-                                    <span>OmenOwl22</span>
+                                    <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                                        <Image
+                                            src="/files/omen-portrait.jpg"
+                                            fill
+                                            alt="Omen Icon"
+                                            quality={100}
+                                        />
+                                    </div>
+                                    <span className="text-lg tracking-wider">
+                                        OmenOwl22
+                                    </span>
                                 </div>
                                 <Image
                                     src={"/files/role-controller.png"}
@@ -184,20 +194,21 @@ export default function Features() {
                     opponents."
                     reverse={true}
                 >
-                    <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:h-80 lg:w-3/4">
+                    <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:h-80 lg:w-4/5">
                         <div className="flex overflow-hidden">
-                            <Image
-                                src={"/files/valorant-events-image.png"}
-                                width={160}
-                                height={160}
-                                alt="Valorant Events Image"
-                                className="flex object-cover max-[480px]:w-32"
-                                quality={100}
-                            />
+                            <div className="relative sm:h-48 w-52 overflow-hidden">
+                                <Image
+                                    src="/files/valorant-events-image.png"
+                                    fill
+                                    alt="Valorant Events Image"
+                                    className="object-cover"
+                                    quality={100}
+                                />
+                            </div>
                             <div className="flex w-full flex-col gap-1 px-4 py-2 sm:py-1">
                                 <div className="flex flex-wrap justify-between pr-1 font-bold">
-                                    <span>TurboPulse</span>
-                                    <span>$500</span>
+                                    <h6>TurboPulse</h6>
+                                    <h6>$500</h6>
                                 </div>
                                 <Badge
                                     className="w-fit py-0 text-[14px] font-bold"
@@ -205,7 +216,7 @@ export default function Features() {
                                 >
                                     NA
                                 </Badge>
-                                <span className="text-xs leading-tight sm:text-[14px]">
+                                <span>
                                     Step into the arena of TurboPulse Elite
                                     Series, where top-tier gaming meets serious
                                     rewards. Elevate your game play, challenge
@@ -215,18 +226,19 @@ export default function Features() {
                             </div>
                         </div>
                         <div className="flex h-fit overflow-hidden">
-                            <Image
-                                src="/files/valorant-events-image-1.png"
-                                height={160}
-                                width={160}
-                                alt="Valorant Events Image"
-                                className="flex object-cover max-[480px]:w-32"
-                                quality={100}
-                            />
+                            <div className="relative sm:h-48 w-52 overflow-hidden">
+                                <Image
+                                    src="/files/valorant-events-image-1.png"
+                                    fill
+                                    alt="Valorant Events Image"
+                                    className="object-cover"
+                                    quality={100}
+                                />
+                            </div>
                             <div className="flex h-fit w-full flex-col gap-1 px-4 py-2 sm:py-1">
                                 <div className="flex flex-wrap justify-between pr-1 font-bold">
-                                    <span>NovaSphere</span>
-                                    <span>$250</span>
+                                    <h6>NovaSphere</h6>
+                                    <h6>$250</h6>
                                 </div>
                                 <Badge
                                     className="w-fit py-0 text-[14px] font-bold"
@@ -234,7 +246,7 @@ export default function Features() {
                                 >
                                     EU
                                 </Badge>
-                                <span className="text-xs leading-tight sm:text-[14px]">
+                                <span>
                                     NovaSphere Invitational is THE place to show
                                     off your skills and win some cash!
                                     Don&apos;t miss your shot at becoming the
@@ -252,10 +264,10 @@ export default function Features() {
 function FeatureTitle() {
     return (
         <div className="flex w-full max-w-6xl flex-col self-center">
-            <div className="flex w-full flex-wrap justify-center px-8 py-20 pb-16 text-4xl font-black uppercase text-white md:text-5xl lg:text-6xl">
-                <span>Find the &nbsp;</span>
-                <span className="text-red-700">Perfect&nbsp;</span>
-                <span>Teammates</span>
+            <div className="flex w-full flex-wrap justify-center px-8 py-20 pb-16 text-white md:text-5xl lg:text-6xl">
+                <h3>Find the &nbsp;</h3>
+                <h3 className="text-red-700">Perfect&nbsp;</h3>
+                <h3>Teammates</h3>
             </div>
             <Separator />
         </div>
@@ -289,19 +301,19 @@ function Feature({
                 {children}
             </div>
             <div className="flex w-full max-w-2xl items-center justify-center lg:w-1/2">
-                <div className="flex h-full w-full flex-col items-center justify-center gap-4 lg:w-2/3">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 lg:w-4/5">
                     <div className="flex w-full flex-col items-center gap-8 sm:flex-row">
                         <div className="flex items-center justify-center sm:w-1/3">
                             {icon}
                         </div>
                         <div className="w-full text-center sm:text-start">
-                            <h4 className="font-black">
+                            <span className="text-5xl font-black">
                                 <span className="text-primary">{titleOne}</span>
                                 {titleTwo}
-                            </h4>
+                            </span>
                         </div>
                     </div>
-                    <p className="text-lg">{text}</p>
+                    <p className="text-2xl tracking-wide">{text}</p>
                 </div>
             </div>
         </div>
@@ -310,7 +322,7 @@ function Feature({
 
 function FeatureContent() {
     return (
-        <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-fit lg:w-3/4">
+        <div className="flex w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-primary/90 sm:h-fit lg:w-4/5">
             <div className="relative flex flex-col gap-4 bg-destructive p-4 sm:flex-row sm:p-6">
                 <Image
                     src="/files/jett-portrait.jpg"
@@ -332,7 +344,7 @@ function FeatureContent() {
                 </div>
                 <div className="h-full w-full">
                     <div className="flex w-full flex-row justify-between gap-1 min-[480px]:items-center">
-                        <span className="flex items-center gap-1 text-xs font-bold min-[340px]:text-base">
+                        <span className="flex items-center gap-1 text-xs font-bold min-[340px]:text-lg">
                             JettPlayer256{" "}
                             <Verified
                                 width={24}
@@ -357,9 +369,7 @@ function FeatureContent() {
                         </div>
                     </div>
                     <div className="flex w-full flex-row justify-between pt-1 min-[480px]:pt-0">
-                        <span className="text-xs font-bold min-[340px]:text-base">
-                            NA
-                        </span>
+                        <span className="text-xs min-[340px]:text-lg">NA</span>
                         <div className="flex gap-1">
                             {agents.map(({ src, alt }) => (
                                 <Image
@@ -377,8 +387,8 @@ function FeatureContent() {
                 </div>
             </div>
             <div className="flex h-full flex-col gap-4 p-6">
-                <h6>Looking For Team </h6>
-                <p>
+                <h4>Looking For Team </h4>
+                <p className="tracking-wide">
                     Hello everyone, my name is JettPlayer256 and im a smokes
                     main who has been playing FPS for more than 2 years. I
                     started playing valorant since Beta. Currently in college,

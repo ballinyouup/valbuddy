@@ -12,8 +12,7 @@ export default function Hero() {
                     <Image
                         src={HeroImage}
                         alt="VALORANT Hero Image"
-                        layout="fill"
-                        objectFit="cover"
+                        fill
                         quality={100}
                         className="object-cover mix-blend-soft-light"
                     />
@@ -23,7 +22,7 @@ export default function Hero() {
                         <HeroText />
                     </div>
                     <div className="HeroParagraphText max-w-3xl">
-                        <p className="text-base sm:text-lg lg:text-xl">
+                        <p className="text-base sm:text-lg lg:text-lg tracking-wider">
                             Build a lasting community. Valbuddy is more than
                             just a place to find teammates. It&apos;s a place to
                             build lasting friendships and connections. Join our

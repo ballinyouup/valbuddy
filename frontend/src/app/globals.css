@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 body {
-    height: 100%;
+    height: 100vh;
     width: 100%;
     min-width: -webkit-fill-available;
+    font-family: "Cal Sans";
 }
 
 @layer base {
@@ -44,7 +45,7 @@ body {
         @apply border-border;
     }
     h1 {
-        @apply text-9xl font-bold;
+        @apply text-8xl font-bold;
     }
     h2 {
         @apply text-7xl font-bold;
@@ -60,5 +61,8 @@ body {
     }
     h6 {
         @apply text-xl font-bold;
+    }
+    p {
+        @apply text-lg font-bold tracking-[0.04em];
     }
 }

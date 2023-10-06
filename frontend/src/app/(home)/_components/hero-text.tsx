@@ -15,11 +15,11 @@ export default function HeroText() {
     }, [words.length]);
     return (
         <AnimatePresence mode="wait">
-            <h2
+            <div
                 key={words[index]}
                 className="flex flex-col text-[16vw] sm:text-8xl"
             >
-                <motion.span
+                <motion.h1
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: 50 }}
@@ -30,8 +30,8 @@ export default function HeroText() {
                     className="text-primary"
                 >
                     {words[index].split(" ")[0]}
-                </motion.span>
-                <motion.span
+                </motion.h1>
+                <motion.h1
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: 50 }}
@@ -41,8 +41,8 @@ export default function HeroText() {
                     }}
                 >
                     {words[index].split(" ")[1]}
-                </motion.span>
-            </h2>
+                </motion.h1>
+            </div>
         </AnimatePresence>
     );
 }

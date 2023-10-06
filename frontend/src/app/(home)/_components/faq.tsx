@@ -37,7 +37,7 @@ const faq: FAQItem[] = [
 export default function FAQ() {
     return (
         <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-12">
-            <h4 className="text-center">Frequently Asked Questions</h4>
+            <h3 className="text-center">Frequently Asked Questions</h3>
             <Accordion
                 type="single"
                 collapsible

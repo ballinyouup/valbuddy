@@ -34,7 +34,7 @@ export default function Footer() {
                     <FooterHeader>Subscribe</FooterHeader>
 
                     <form className="flex w-full flex-wrap gap-2 sm:w-1/2 md:w-56">
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                             Enter your email below to stay up to date with
                             events!
                         </p>
@@ -61,7 +61,7 @@ function FooterSection({ children }: FooterProps) {
 }
 
 function FooterHeader({ children, className }: FooterProps) {
-    return <h5 className={className}>{children}</h5>;
+    return <h4 className={className}>{children}</h4>;
 }
 
 function FooterLinksContainer({ children }: FooterProps) {
@@ -73,7 +73,7 @@ function FooterLink(props: FooterLink) {
         <Button
             asChild
             variant={"link"}
-            className="h-fit w-fit p-0 text-base text-white"
+            className="h-fit w-fit p-0 text-xl text-white"
         >
             <Link {...props}>{props.children}</Link>
         </Button>

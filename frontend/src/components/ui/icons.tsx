@@ -1,7 +1,7 @@
-type IconProps = React.HTMLAttributes<SVGElement>;
 
+import { LucideProps } from "lucide-react";
 export const Icons = {
-  logo: (props: IconProps) => (
+  logo: (props: LucideProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {...props}>
       <rect width="256" height="256" fill="none" />
       <line
@@ -28,7 +28,7 @@ export const Icons = {
       />
     </svg>
   ),
-  discord: (props: IconProps) => (
+  discord: (props: LucideProps) => (
     <svg
       viewBox="0 -28.5 256 256"
       version="1.1"
@@ -55,7 +55,7 @@ export const Icons = {
       </g>
     </svg>
   ),
-  twitch: (props: IconProps) => (
+  twitch: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -72,7 +72,7 @@ export const Icons = {
       <path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7" />
     </svg>
   ),
-  spinner: (props: IconProps) => (
+  spinner: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -88,7 +88,7 @@ export const Icons = {
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
   ),
-  users: (props: IconProps) => (
+  users: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -108,7 +108,7 @@ export const Icons = {
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   ),
-  swords: (props: IconProps) => (
+  swords: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="80"
@@ -132,7 +132,7 @@ export const Icons = {
       <line x1="3" x2="5" y1="19" y2="21" />
     </svg>
   ),
-  gamepad: (props: IconProps) => (
+  gamepad: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -153,7 +153,7 @@ export const Icons = {
       <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
     </svg>
   ),
-  bookUp: (props: IconProps) => (
+  bookUp: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -174,7 +174,7 @@ export const Icons = {
       <path d="m9 5 3-3 3 3" />
     </svg>
   ),
-  clapperBoard: (props: IconProps) => (
+  clapperBoard: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -194,7 +194,7 @@ export const Icons = {
       <path d="m11.86 3.38 3.38 4.2" />
     </svg>
   ),
-  calendarSearch: (props: IconProps) => (
+  calendarSearch: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="80"
@@ -216,7 +216,7 @@ export const Icons = {
       <path d="m22 22-1.5-1.5" />
     </svg>
   ),
-  chatMessage: (props: IconProps) => (
+  chatMessage: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -233,7 +233,7 @@ export const Icons = {
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   ),
-  plus: (props: IconProps) => (
+  plus: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -251,7 +251,7 @@ export const Icons = {
       <path d="M12 5v14" />
     </svg>
   ),
-  info: (props: IconProps) => (
+  info: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -270,7 +270,7 @@ export const Icons = {
       <path d="M12 8h.01" />
     </svg>
   ),
-  searchX: (props: IconProps) => (
+  searchX: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="80"
@@ -290,7 +290,7 @@ export const Icons = {
       <path d="m21 21-4.3-4.3" />
     </svg>
   ),
-  socialVerified: (props: IconProps) => (
+  socialVerified: (props: LucideProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="80"

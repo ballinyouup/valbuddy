@@ -33,7 +33,9 @@ const AccordionTrigger = React.forwardRef<
             )}
             {...props}
         >
-            <span className="flex-grow break-words text-left">{children}</span>
+            <span className="flex-grow break-words text-left text-xl tracking-wide">
+                {children}
+            </span>
             <ChevronDown className="h-6 w-6 shrink-0 transition-transform duration-200 sm:h-8 sm:w-8" />
         </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
@@ -47,7 +49,7 @@ const AccordionContent = React.forwardRef<
     <AccordionPrimitive.Content
         ref={ref}
         className={cn(
-            "overflow-hidden text-base transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
+            "overflow-hidden text-lg tracking-[0.03rem] transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
             className
         )}
         {...props}

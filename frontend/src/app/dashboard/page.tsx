@@ -1,5 +1,4 @@
 import { GetDuosPosts, GetTeamsPosts, type Post } from "@/api/post";
-import SidebarRight from "./_components/sidebar-right";
 import {
   Accordion,
   AccordionContent,
@@ -36,7 +35,6 @@ export default async function Home() {
           </AccordionItem>
         </Accordion>
       </main>
-      <SidebarRight />
     </>
   );
 }
