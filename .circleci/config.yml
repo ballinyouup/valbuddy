@@ -34,6 +34,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+            - ./.next
   backend-tests:
     working_directory: ~/app/backend/internals
     docker:

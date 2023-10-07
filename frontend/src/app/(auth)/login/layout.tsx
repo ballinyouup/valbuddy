@@ -1,7 +1,6 @@
 import "../../globals.css";
 import type { Metadata } from "next";
 import Providers from "@/components/providers";
-import 'cal-sans';
 
 export const metadata: Metadata = {
   title: "Create Next App",

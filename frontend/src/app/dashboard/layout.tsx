@@ -2,7 +2,6 @@ import "../globals.css";
 import type { Metadata } from "next";
 import Providers from "@/components/providers";
 import Sidebar from "./_components/sidebar";
-import 'cal-sans';
 
 export const metadata: Metadata = {
     title: "VALBuddy",
