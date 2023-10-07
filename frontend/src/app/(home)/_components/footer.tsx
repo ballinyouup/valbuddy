@@ -61,7 +61,7 @@ function FooterSection({ children }: FooterProps) {
 }
 
 function FooterHeader({ children, className }: FooterProps) {
-    return <h4 className={className}>{children}</h4>;
+    return <h5 className={className}>{children}</h5>;
 }
 
 function FooterLinksContainer({ children }: FooterProps) {
@@ -93,7 +93,7 @@ function FooterSocial({ social }: { social: typeof Socials.twitter }) {
                     fill="white"
                     className="rounded-lg p-2"
                 />
-                <p className="text-base">{social.name}</p>
+                <p className="font-cal text-lg tracking-wide">{social.name}</p>
             </Link>
         </Button>
     );

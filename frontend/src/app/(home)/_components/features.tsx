@@ -54,7 +54,9 @@ export default function Features() {
                             />
                             <div className="flex w-full flex-col px-2">
                                 <div className="flex w-full gap-1 font-bold">
-                                    <p>Zero Latency </p>
+                                    <h6>
+                                        Zero Latency{" "}
+                                    </h6>
                                     <Verified
                                         width={24}
                                         height={24}
@@ -62,7 +64,7 @@ export default function Features() {
                                         fill="black"
                                     />
                                 </div>
-                                <p className="text-base">
+                                <p className="text-lg tracking-tight">
                                     Sniping goals and defusing dreams. Zero
                                     Latency — Valorant pros in the making. 🎮
                                 </p>
@@ -70,7 +72,7 @@ export default function Features() {
                         </div>
                         <div className="flex h-full flex-col py-2">
                             <div className="flex h-10 w-full items-center justify-between px-6 py-1">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-start gap-2">
                                     <div className="relative h-8 w-8 overflow-hidden rounded-full">
                                         <Image
                                             src="/files/jett-portrait.jpg"
@@ -79,7 +81,7 @@ export default function Features() {
                                             quality={100}
                                         />
                                     </div>
-                                    <span className="text-lg tracking-wider">
+                                    <span className="text-xl leading-tight tracking-tight">
                                         JettPlayer256
                                     </span>
                                 </div>
@@ -101,7 +103,7 @@ export default function Features() {
                                             quality={100}
                                         />
                                     </div>
-                                    <span className="text-lg tracking-wider">
+                                    <span className="text-xl leading-tight tracking-tight">
                                         KillJoyTurret1337
                                     </span>
                                 </div>
@@ -123,7 +125,7 @@ export default function Features() {
                                             quality={100}
                                         />
                                     </div>
-                                    <span className="text-lg tracking-wider">
+                                    <span className="text-xl leading-tight tracking-tight">
                                         KayoFlash101
                                     </span>
                                 </div>
@@ -146,7 +148,7 @@ export default function Features() {
                                             quality={100}
                                         />
                                     </div>
-                                    <span className="text-lg tracking-wider">
+                                    <span className="text-xl leading-tight tracking-tight">
                                         SkyeBird1
                                     </span>
                                 </div>
@@ -168,7 +170,7 @@ export default function Features() {
                                             quality={100}
                                         />
                                     </div>
-                                    <span className="text-lg tracking-wider">
+                                    <span className="text-xl leading-tight tracking-tight">
                                         OmenOwl22
                                     </span>
                                 </div>
@@ -194,9 +196,9 @@ export default function Features() {
                     opponents."
                     reverse={true}
                 >
-                    <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:h-80 lg:w-4/5">
-                        <div className="flex overflow-hidden">
-                            <div className="relative sm:h-48 w-52 overflow-hidden">
+                    <div className="flex h-fit w-full flex-col overflow-hidden rounded-3xl shadow-[0_25px_175px_-12px] shadow-red-900/90 sm:h-full lg:w-4/5">
+                        <div className="flex">
+                            <div className="relative w-52 overflow-hidden sm:h-48">
                                 <Image
                                     src="/files/valorant-events-image.png"
                                     fill
@@ -216,7 +218,7 @@ export default function Features() {
                                 >
                                     NA
                                 </Badge>
-                                <span>
+                                <span className="tracking-tight">
                                     Step into the arena of TurboPulse Elite
                                     Series, where top-tier gaming meets serious
                                     rewards. Elevate your game play, challenge
@@ -226,7 +228,7 @@ export default function Features() {
                             </div>
                         </div>
                         <div className="flex h-fit overflow-hidden">
-                            <div className="relative sm:h-48 w-52 overflow-hidden">
+                            <div className="relative w-52 overflow-hidden sm:h-48">
                                 <Image
                                     src="/files/valorant-events-image-1.png"
                                     fill
@@ -264,10 +266,10 @@ export default function Features() {
 function FeatureTitle() {
     return (
         <div className="flex w-full max-w-6xl flex-col self-center">
-            <div className="flex w-full flex-wrap justify-center px-8 py-20 pb-16 text-white md:text-5xl lg:text-6xl">
-                <h3>Find the &nbsp;</h3>
-                <h3 className="text-red-700">Perfect&nbsp;</h3>
-                <h3>Teammates</h3>
+            <div className="flex w-full flex-wrap justify-center px-8 py-20 pb-16 text-white">
+                <h2>Find the&nbsp;</h2>
+                <h2 className="text-red-700">Perfect&nbsp;</h2>
+                <h2>Teammates</h2>
             </div>
             <Separator />
         </div>
@@ -307,13 +309,15 @@ function Feature({
                             {icon}
                         </div>
                         <div className="w-full text-center sm:text-start">
-                            <span className="text-5xl font-black">
-                                <span className="text-primary">{titleOne}</span>
+                            <h3 className="font-black">
+                                <div className="text-primary">{titleOne}</div>
                                 {titleTwo}
-                            </span>
+                            </h3>
                         </div>
                     </div>
-                    <p className="text-2xl tracking-wide">{text}</p>
+                    <p className="text-center text-3xl font-light tracking-tight md:text-start">
+                        {text}
+                    </p>
                 </div>
             </div>
         </div>
@@ -386,9 +390,9 @@ function FeatureContent() {
                     </div>
                 </div>
             </div>
-            <div className="flex h-full flex-col gap-4 p-6">
-                <h4>Looking For Team </h4>
-                <p className="tracking-wide">
+            <div className="flex h-full flex-col gap-2 p-6">
+                <h6 className="text-3xl">Looking For Team </h6>
+                <p className="text-xl leading-tight tracking-tight">
                     Hello everyone, my name is JettPlayer256 and im a smokes
                     main who has been playing FPS for more than 2 years. I
                     started playing valorant since Beta. Currently in college,

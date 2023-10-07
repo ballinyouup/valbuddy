@@ -101,22 +101,25 @@ function DiscordMessage({
     time?: string;
 }) {
     return (
-        <div className="flex h-24 items-start gap-4 bg-neutral-800 px-4 py-4 sm:px-8">
-            <Image
-                src={image}
-                alt={imageAlt}
-                height={52}
-                width={52}
-                className="rounded-full"
-            />
-            <div className="items- flex h-fit w-full flex-col gap-1">
-                <div className="flex items-center gap-4">
-                    <p className="text-base">{username}</p>
-                    <p className="text-xs text-muted-foreground tracking-wider">{time}</p>
+        <div className="flex h-24 items-start gap-2 sm:gap-4 bg-neutral-800 px-4 py-4 sm:px-8">
+            <div className="relative h-8 max-h-8 min-h-[52px] w-8 min-w-[52px] max-w-[52px] overflow-hidden rounded-full">
+                <Image
+                    src={image}
+                    alt={imageAlt}
+                    fill
+                    className="rounded-full object-cover"
+                />
+            </div>
+            <div className="flex h-fit w-full flex-col items-start gap-1">
+                <div className="flex items-start gap-2">
+                    <p className="font-cal text-base tracking-wide">
+                        {username}
+                    </p>
+                    <p className="whitespace-nowrap text-sm text-muted-foreground">
+                        {time}
+                    </p>
                 </div>
-                <p className="text-base leading-tight tracking-wide">
-                    {message}
-                </p>
+                <p className="text-lg tracking-tight">{message}</p>
             </div>
         </div>
     );

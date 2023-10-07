@@ -4,7 +4,7 @@ import Image from "next/image";
 import HeroImage from "../../../../public/files/hero-image.png";
 export default function Hero() {
     return (
-        <div className="flex h-phone w-screen lg:h-full lg:w-full">
+        <div className="flex h-phone w-screen lg:h-full lg:w-full overflow-hidden">
             <div
                 className={`LeftHero relative flex h-full w-full items-center justify-center px-8 lg:h-desktop lg:w-1/2 lg:bg-transparent lg:bg-gradient-to-tr lg:from-transparent lg:via-transparent lg:to-red-950/90 lg:px-10`}
             >
@@ -22,7 +22,7 @@ export default function Hero() {
                         <HeroText />
                     </div>
                     <div className="HeroParagraphText max-w-3xl">
-                        <p className="text-base sm:text-lg lg:text-lg tracking-wider">
+                        <p className="text-2xl sm:text-3xl tracking-tighter font-light">
                             Build a lasting community. Valbuddy is more than
                             just a place to find teammates. It&apos;s a place to
                             build lasting friendships and connections. Join our
