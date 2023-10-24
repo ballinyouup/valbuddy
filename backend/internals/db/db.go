@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	"time"
-	"valbuddy/internals/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -14,46 +13,21 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var validate *validator.Validate
-var database *gorm.DB
-var store fiber.Storage
-var sessions *session.Store
-
-// GetValidate returns the validate instance
-func GetValidate() *validator.Validate {
-	return validate
-}
-
-// GetDatabase returns the database instance
-func GetDatabase() *gorm.DB {
-	return database
-}
-
-// GetStore returns the store instance
-func GetStore() fiber.Storage {
-	return store
-}
-
-// GetSessions returns the sessions instance
-func GetSessions() *session.Store {
-	return sessions
-}
-
 // Init initializes various components of the application.
-func Init(databaseURL string, logLevel logger.LogLevel) error {
+func NewDatabase(databaseURL string, logLevel logger.LogLevel, cookieDomain string) (*validator.Validate, *gorm.DB, fiber.Storage, *session.Store, error) {
 	// Initialize the validator
-	validate = validator.New()
+	validate := validator.New()
 	var err error
 
 	// Initialize the database connection using the provided DATABASE_URL
-	database, err = gorm.Open(postgres.Open(databaseURL), &gorm.Config{
+	database, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{
 		Logger: logger.Default.LogMode(logLevel),
 	})
 	if err != nil {
-		return fmt.Errorf("error initializing database: %w", err)
+		return &validator.Validate{}, &gorm.DB{}, pg.New(pg.Config{}), &session.Store{}, fmt.Errorf("error initializing database: %w", err)
 	}
 	// Initialize the session storage using PostgreSQL as a backend
-	store = pg.New(pg.Config{
+	store := pg.New(pg.Config{
 		ConnectionURI: databaseURL,
 		Database:      "postgres",
 		Table:         "sessions",
@@ -61,10 +35,10 @@ func Init(databaseURL string, logLevel logger.LogLevel) error {
 		GCInterval:    10 * time.Second,
 	})
 	// Initialize session management
-	sessions = session.New(session.Config{
+	sessions := session.New(session.Config{
 		Storage:        store,
 		Expiration:     24 * time.Hour,
-		CookieDomain:   config.Env.COOKIE_DOMAIN,
+		CookieDomain:   cookieDomain,
 		CookieSameSite: "None",
 		CookieSecure:   true,
 		CookiePath:     "/",
@@ -72,8 +46,8 @@ func Init(databaseURL string, logLevel logger.LogLevel) error {
 	// Perform automatic database migration for specified models
 	err = database.AutoMigrate(&User{}, &Account{}, &Post{})
 	if err != nil {
-		return fmt.Errorf("error during auto migration: %w", err)
+		return &validator.Validate{}, &gorm.DB{}, pg.New(pg.Config{}), &session.Store{}, fmt.Errorf("error during auto migration: %w", err)
 	}
 
-	return nil
+	return validate, database, store, sessions, nil
 }

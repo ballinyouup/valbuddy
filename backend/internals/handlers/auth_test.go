@@ -13,24 +13,32 @@ import (
 	"valbuddy/internals/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm/logger"
-	// "github.com/gofiber/fiber/v2/middleware/logger"
+	l "gorm.io/gorm/logger"
 )
 
 var app *fiber.App
+var a *config.App
 
 // Uncomment logger middleware for API request logging/debugging tests.
 func TestMain(m *testing.M) {
-	var err error
-	if _, err = config.LoadConfig("../../.env"); err != nil {
-		log.Fatalf("error loading configuration: %s", err)
+	// Initialize dependencies
+	env, err := config.LoadConfig("../../.env")
+	if err != nil {
+		panic("Error loading environment variables")
 	}
-	if err := db.Init(config.Env.TEST_DB, logger.Silent); err != nil {
-		log.Fatalf("error initializing database: %s", err)
+	validator, database, store, sessions, err := db.NewDatabase(env.TEST_DB, l.Warn, env.COOKIE_DOMAIN)
+	if err != nil {
+		panic("Error initializing database")
 	}
+	aws, err := config.NewAWS()
+	if err != nil {
+		panic("Error initializing AWS")
+	}
+	a = config.NewApp(validator, database, store, sessions, env, aws)
+
 	app = fiber.New()
 	// app.Use(logger.New())
-	Routes(app)
+	Routes(app, a)
 	// Start server
 	go func() {
 		app.Listen("localhost:3001")
@@ -47,7 +55,7 @@ func TestMain(m *testing.M) {
 
 func TestAuthFlow(t *testing.T) {
 	t.Run("Pre-Test Cleanup", func(t *testing.T) {
-		DeleteDataFromDB(t)
+		DeleteDataFromDB(t, a)
 	})
 
 	t.Run("Discord OAuth Flow", func(t *testing.T) {
@@ -59,7 +67,7 @@ func TestAuthFlow(t *testing.T) {
 	})
 }
 
-func Routes(app *fiber.App) {
+func Routes(app *fiber.App, a *config.App) {
 	discord_cfg := auth.DiscordOAuth2Config{
 		ResponseType:   "code",
 		Scope:          "identify email",
@@ -68,7 +76,7 @@ func Routes(app *fiber.App) {
 		AccessTokenURL: "http://localhost:3001/token",
 		AuthorizeURL:   "http://localhost:3001/login/discord/authorize",
 		UserInfoURL:    "http://localhost:3001/user/discord",
-		Env:            config.Env,
+		Env:            a.Env,
 	}
 	twitch_cfg := auth.TwitchOAuth2Config{
 		ResponseType:   "code",
@@ -78,7 +86,7 @@ func Routes(app *fiber.App) {
 		AccessTokenURL: "http://localhost:3001/token",
 		AuthorizeURL:   "http://localhost:3001/login/twitch/authorize",
 		UserInfoURL:    "http://localhost:3001/user/twitch",
-		Env:            config.Env,
+		Env:            a.Env,
 	}
 
 	providers := auth.Providers{
@@ -87,10 +95,10 @@ func Routes(app *fiber.App) {
 	}
 	app.Get("/login/:provider", func(c *fiber.Ctx) error {
 
-		return HandleLogin(c, providers)
+		return HandleLogin(c, providers, a)
 	})
 	app.Get("/login/:provider/callback", func(c *fiber.Ctx) error {
-		return HandleProviderCallback(c, providers)
+		return HandleProviderCallback(c, providers, a)
 	})
 	app.Post("/token", func(c *fiber.Ctx) error {
 		res := fiber.Map{
@@ -216,13 +224,11 @@ func Routes(app *fiber.App) {
 
 }
 
-func DeleteDataFromDB(t *testing.T) {
-	tx := db.GetDatabase().Begin()
-
+func DeleteDataFromDB(t *testing.T, a *config.App) {
+	tx := a.Database.Begin()
 	if tx.Error != nil {
 		t.Fatalf("Database Transaction Error: %v ❌", tx.Error)
 	}
-
 	// Execute the DELETE statements
 	tables := []string{"accounts", "users", "sessions", "posts"}
 	for _, table := range tables {
@@ -231,7 +237,6 @@ func DeleteDataFromDB(t *testing.T) {
 			t.Fatalf("Error deleting data from %v: %v ❌", table, err)
 		}
 	}
-
 	// Commit the transaction
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()

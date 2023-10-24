@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"fmt"
-	"valbuddy/internals/db"
 	"strconv"
 	"strings"
+	"valbuddy/internals/config"
+	"valbuddy/internals/db"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // TODO: Finish Post CRUD Functions
-func GetDuosPosts(c *fiber.Ctx) error {
+func GetDuosPostsHandler(c *fiber.Ctx, a *config.App) error {
 	// Get the query params /posts?limit=5. if empty, set to 10
 	query := c.Query("limit")
 	if query == "" {
@@ -22,13 +23,13 @@ func GetDuosPosts(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
 	}
 	// Get the posts and return as JSON
-	posts, err := db.GetDuosPosts(limit)
+	posts, err := db.GetDuosPosts(limit, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
 	}
 	return c.JSON(posts)
 }
-func GetTeamsPosts(c *fiber.Ctx) error {
+func GetTeamsPostsHandler(c *fiber.Ctx, a *config.App) error {
 	// Get the query params /posts?limit=5. if empty, set to 10
 	query := c.Query("limit")
 	if query == "" {
@@ -40,34 +41,34 @@ func GetTeamsPosts(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
 	}
 	// Get the posts and return as JSON
-	posts, err := db.GetTeamsPosts(limit)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
-	}
-	return c.JSON(posts)
-}
-
-func GetScrimsPosts(c *fiber.Ctx) error {
-	// Get the query params /posts?limit=5. if empty, set to 10
-	query := c.Query("limit")
-	if query == "" {
-		query = "10"
-	}
-	// Convert string to int
-	limit, err := strconv.Atoi(query)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
-	}
-	// Get the posts and return as JSON
-	posts, err := db.GetScrimsPosts(limit)
+	posts, err := db.GetTeamsPosts(limit, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
 	}
 	return c.JSON(posts)
 }
 
-func GetUserPosts(c *fiber.Ctx) error {
-	s, err := db.ValidateSession(c)
+func GetScrimsPostsHandler(c *fiber.Ctx, a *config.App) error {
+	// Get the query params /posts?limit=5. if empty, set to 10
+	query := c.Query("limit")
+	if query == "" {
+		query = "10"
+	}
+	// Convert string to int
+	limit, err := strconv.Atoi(query)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error converting limit to int: %s", err))
+	}
+	// Get the posts and return as JSON
+	posts, err := db.GetScrimsPosts(limit, a)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
+	}
+	return c.JSON(posts)
+}
+
+func GetUserPostsHandler(c *fiber.Ctx, a *config.App) error {
+	s, err := db.ValidateSession(c, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}
@@ -84,7 +85,7 @@ func GetUserPosts(c *fiber.Ctx) error {
 
 	// Retrieve the user ID from the session
 	userId := s.Get("user_id").(string)
-	posts, err := db.GetUserPosts(userId, limit)
+	posts, err := db.GetUserPosts(userId, limit, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
 	}
@@ -101,8 +102,8 @@ type Post struct {
 	Region   string   `json:"region"`
 }
 
-func CreatePost(c *fiber.Ctx) error {
-	s, err := db.ValidateSession(c)
+func CreatePostHandler(c *fiber.Ctx, a *config.App) error {
+	s, err := db.ValidateSession(c, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}
@@ -111,14 +112,14 @@ func CreatePost(c *fiber.Ctx) error {
 	if err := c.BodyParser(&post); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error parsing body: %s", err))
 	}
-	if err := db.CreatePost(userId, post.Text, post.Region, post.Category, post.Amount, post.Roles, post.Ranks); err != nil {
+	if err := db.CreatePost(userId, post.Text, post.Region, post.Category, post.Amount, post.Roles, post.Ranks, a); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing create posts: %s", err))
 	}
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func UpdatePost(c *fiber.Ctx) error {
-	s, err := db.ValidateSession(c)
+func UpdatePostHandler(c *fiber.Ctx, a *config.App) error {
+	s, err := db.ValidateSession(c, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}
@@ -130,12 +131,12 @@ func UpdatePost(c *fiber.Ctx) error {
 	}
 	playerRoles := strings.Split(c.FormValue("PlayerRoles"), ",")
 	playerRanks := strings.Split(c.FormValue("PlayerRanks"), ",")
-	if err := db.UpdatePost(userID, postID, c.FormValue("Text"), playerAmount, playerRoles, playerRanks); err != nil {
+	if err := db.UpdatePost(userID, postID, c.FormValue("Text"), playerAmount, playerRoles, playerRanks, a); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("error executing get posts: %s", err))
 	}
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func DeletePost(c *fiber.Ctx) error {
+func DeletePostHandler(c *fiber.Ctx, a *config.App) error {
 	return c.SendString("Deleting User Post: 1")
 }

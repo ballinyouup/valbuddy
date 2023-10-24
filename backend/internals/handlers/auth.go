@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func HandleLogin(c *fiber.Ctx, oauth auth.Providers) error {
+func HandleLogin(c *fiber.Ctx, oauth auth.Providers, a *config.App) error {
 	state, err := auth.GenerateRandomString(8)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Generating Random String: %s", err))
@@ -25,7 +25,7 @@ func HandleLogin(c *fiber.Ctx, oauth auth.Providers) error {
 		HTTPOnly: true,
 		SameSite: "None",
 		Secure:   true,
-		Domain:   config.Env.COOKIE_DOMAIN,
+		Domain:   a.Env.COOKIE_DOMAIN,
 		Path:     "/",
 	})
 	switch c.Params("provider") {
@@ -34,7 +34,7 @@ func HandleLogin(c *fiber.Ctx, oauth auth.Providers) error {
 		result := oauth.Discord.FormatAuthURL()
 		return c.Redirect(result)
 	case "twitch":
-		
+
 		oauth.Twitch.State = state
 		result := oauth.Twitch.FormatAuthURL()
 		return c.Redirect(result)
@@ -43,7 +43,7 @@ func HandleLogin(c *fiber.Ctx, oauth auth.Providers) error {
 	}
 }
 
-func HandleProviderCallback(c *fiber.Ctx, oauth auth.Providers) error {
+func HandleProviderCallback(c *fiber.Ctx, oauth auth.Providers, a *config.App) error {
 	var user db.User
 	code := c.Query("code")
 	err := auth.CheckStateAndCSRF(c)
@@ -74,12 +74,12 @@ func HandleProviderCallback(c *fiber.Ctx, oauth auth.Providers) error {
 			Provider: "discord",
 		}
 		// Create or login the user using retrieved data
-		user, err = db.CreateUser(c, newUser)
+		user, err = db.CreateUser(c, newUser, a)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Creating User: %s", err))
 		}
 	case "twitch":
-		
+
 		// Get access token from the provider
 		accessToken, err := oauth.Twitch.GetAccessToken(code)
 		if err != nil {
@@ -102,19 +102,19 @@ func HandleProviderCallback(c *fiber.Ctx, oauth auth.Providers) error {
 		}
 
 		// Create or login the user using retrieved data
-		user, err = db.CreateUser(c, newUser)
+		user, err = db.CreateUser(c, newUser, a)
 		if err != nil {
 			if err.Error() == "incorrect provider" {
 				errorParam := url.QueryEscape("Incorrect Provider")
-				return c.Redirect(fmt.Sprintf("%s/login?error=%s", config.Env.FRONTEND_URL, errorParam))
+				return c.Redirect(fmt.Sprintf("%s/login?error=%s", a.Env.FRONTEND_URL, errorParam))
 			}
 			return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Create User Error: %s", err))
 		}
 	default:
 		errorParam := url.QueryEscape("Provider Not Found")
-		return c.Redirect(fmt.Sprintf("%s/login?error=%s", config.Env.FRONTEND_URL, errorParam))
+		return c.Redirect(fmt.Sprintf("%s/login?error=%s", a.Env.FRONTEND_URL, errorParam))
 	}
-	s, err := db.GetSessions().Get(c)
+	s, err := a.Sessions.Get(c)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("GET Session Error:  %s", err))
 	}
@@ -135,11 +135,11 @@ func HandleProviderCallback(c *fiber.Ctx, oauth auth.Providers) error {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("DB Save Error: %s", err))
 	}
 
-	return c.Redirect(config.Env.FRONTEND_URL)
+	return c.Redirect(a.Env.FRONTEND_URL)
 }
 
-func HandleLogout(c *fiber.Ctx) error {
-	s, err := db.ValidateSession(c)
+func HandleLogout(c *fiber.Ctx, a *config.App) error {
+	s, err := db.ValidateSession(c, a)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("error validating session %s", err))
 	}

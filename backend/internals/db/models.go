@@ -3,7 +3,6 @@ package db
 import (
 	"time"
 )
-
 // Sensitive User Data
 type User struct {
 	ID       string `json:"id" gorm:"primaryKey" validate:"required,min=1"`   // User ID

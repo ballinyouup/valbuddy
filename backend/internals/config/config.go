@@ -5,26 +5,30 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"context"
+
+	"github.com/aws/aws-lambda-go/events"
+	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
+	"gorm.io/gorm"
 )
 
-// Config represents the configuration for your application.
-type Config struct {
-	DISCORD_ID     string
-	DISCORD_SECRET string
-	DATABASE_URL   string
-	API_URL        string
-	IS_LAMBDA      bool
-	FRONTEND_URL   string
-	COOKIE_DOMAIN  string
-	TWITCH_ID      string
-	TWITCH_SECRET  string
-	TEST_DB        string
-	// Add more configuration variables here if needed
+func NewApp(validator *validator.Validate, database *gorm.DB, store fiber.Storage, sessions *session.Store, env *Config, AWS *AWS) *App {
+	return &App{
+		Validate: validator,
+		Database: database,
+		Store:    store,
+		Sessions: sessions,
+		Env:      env,
+		AWS:      AWS,
+	}
 }
 
-
-// Env holds the application's configuration loaded from environment variables.
-var Env *Config
+func (a *App) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return fiberadapter.New(a.App).ProxyWithContext(ctx, req)
+}
 
 // LoadConfig loads the configuration from the .env file or environment variables.
 func LoadConfig(path string) (*Config, error) {
@@ -53,7 +57,7 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	
 	// Create a new Config instance and populate it with the environment variables
-	Env = &Config{
+	Env := &Config{
 		DISCORD_ID:     os.Getenv("DISCORD_ID"),
 		DISCORD_SECRET: os.Getenv("DISCORD_SECRET"),
 		TWITCH_ID:      os.Getenv("TWITCH_ID"),
@@ -69,3 +73,4 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	return Env, nil
 }
+

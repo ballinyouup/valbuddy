@@ -3,18 +3,18 @@ package db
 import (
 	"fmt"
 	"strings"
+	"valbuddy/internals/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
-	
 )
 
 // validateCheck performs validation on the provided data using the validator library.
 // It returns an error containing validation error messages if validation fails,
-func ValidateCheck(data interface{}) error {
+func ValidateCheck(data interface{}, a *config.App) error {
 	// Attempt to validate the provided data using the validator library
-	if err := GetValidate().Struct(data); err != nil {
+	if err := a.Validate.Struct(data); err != nil {
 		// If validation fails, store validation error messages
 		var validationErrors []string
 
@@ -30,8 +30,8 @@ func ValidateCheck(data interface{}) error {
 	return nil
 }
 
-func ValidateSession(c *fiber.Ctx) (*session.Session, error){
-	s, err := GetSessions().Get(c)
+func ValidateSession(c *fiber.Ctx, a *config.App) (*session.Session, error){
+	s, err := a.Sessions.Get(c)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Error Getting Session: %s", err))
 	}

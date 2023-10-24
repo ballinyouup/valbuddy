@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"valbuddy/internals/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/lucsky/cuid"
@@ -10,13 +11,13 @@ import (
 )
 
 // CreateUser creates a new user or returns an existing user based on provided parameters.
-func CreateUser(c *fiber.Ctx, newUser User) (User, error) {
+func CreateUser(c *fiber.Ctx, newUser User, a *config.App) (User, error) {
 	// Check if a user with the same email exists in the database
 	existingUser := User{}
 	query := User{
 		Email: newUser.Email,
 	}
-	err := GetDatabase().Where(query).First(&existingUser).Error
+	err := a.Database.Where(query).First(&existingUser).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return User{}, fmt.Errorf("error with database: %w", err)
 	}
@@ -43,17 +44,17 @@ func CreateUser(c *fiber.Ctx, newUser User) (User, error) {
 		}
 
 		// Validate the new User's data
-		if err := ValidateCheck(createdUser); err != nil {
+		if err := ValidateCheck(createdUser,a); err != nil {
 			return User{}, fmt.Errorf("error validating new user: %w", err)
 		}
 
 		// Validate the new Account's data
-		if err := ValidateCheck(createdUser.Account); err != nil {
+		if err := ValidateCheck(createdUser.Account, a); err != nil {
 			return User{}, fmt.Errorf("error validating new account: %w", err)
 		}
 
 		// Create the new User record in the database
-		if err := GetDatabase().Create(&createdUser).Error; err != nil {
+		if err := a.Database.Create(&createdUser).Error; err != nil {
 			return User{}, fmt.Errorf("user creation failed: %w", err)
 		}
 
@@ -70,7 +71,7 @@ func CreateUser(c *fiber.Ctx, newUser User) (User, error) {
 	return existingUser, nil
 }
 
-func GetUser(userID string) (User, error) {
+func GetUser(userID string, a *config.App) (User, error) {
 	// Create an empty User object
 	var user User
 	query := User{
@@ -78,7 +79,7 @@ func GetUser(userID string) (User, error) {
 	}
 	// Retrieve user data from the database based on the user ID
 	// db.Database.Omit("email", "provider").Where("id = ?", userId).First(&user)
-	if err := GetDatabase().Omit("Account", "Posts").Where(query).First(&user).Error; err != nil {
+	if err := a.Database.Omit("Account", "Posts").Where(query).First(&user).Error; err != nil {
 		return User{}, fmt.Errorf("error getting user: %w", err)
 	}
 	return user, nil
@@ -88,7 +89,7 @@ type FormData struct {
 	Image string
 }
 
-func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
+func UpdateUserField(c *fiber.Ctx, userID string, formData FormData, a *config.App) error {
 	// Check for empty userID or fieldName
 	if userID == "" {
 		return fmt.Errorf("error updating user: no user id")
@@ -107,7 +108,7 @@ func UpdateUserField(c *fiber.Ctx, userID string, formData FormData) error {
 	}
 
 	// Use Updates to save the updated fields back to the database
-	if err := GetDatabase().Model(&User{}).Where(query).Updates(updates).Error; err != nil {
+	if err := a.Database.Model(&User{}).Where(query).Updates(updates).Error; err != nil {
 		return fmt.Errorf("error updating user in the database: %w", err)
 	}
 
