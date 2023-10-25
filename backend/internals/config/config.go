@@ -5,10 +5,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"context"
-
-	"github.com/aws/aws-lambda-go/events"
-	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -24,10 +20,6 @@ func NewApp(validator *validator.Validate, database *gorm.DB, store fiber.Storag
 		Env:      env,
 		AWS:      AWS,
 	}
-}
-
-func (a *App) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return fiberadapter.New(a.App).ProxyWithContext(ctx, req)
 }
 
 // LoadConfig loads the configuration from the .env file or environment variables.

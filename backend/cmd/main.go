@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"valbuddy/internals/config"
 	"valbuddy/internals/db"
 	"valbuddy/internals/routes"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -14,7 +17,16 @@ import (
 	log "gorm.io/gorm/logger"
 )
 
+var fiberLambda *fiberadapter.FiberLambda
+
+func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return fiberLambda.ProxyWithContext(ctx, req)
+}
+
 func main() {
+	// Initialize App
+	app := fiber.New()
+
 	// Initialize dependencies
 	env, err := config.LoadConfig("../.env")
 	if err != nil {
@@ -29,10 +41,8 @@ func main() {
 		panic("Error creating New AWS")
 	}
 	a := config.NewApp(validator, database, store, sessions, env, aws)
-	// Create A Routes
 
 	// Define Middleware
-	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(recover.New())
 	app.Use(cors.New(cors.Config{
@@ -40,6 +50,7 @@ func main() {
 		AllowHeaders:     "*",
 		AllowCredentials: true,
 	}))
+
 	// Define App Routes
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Welcome!")
@@ -47,8 +58,9 @@ func main() {
 	routes.User(app, a)
 	routes.Auth(app, a)
 	if a.Env.IS_LAMBDA {
+		fiberLambda = fiberadapter.New(app)
 		// If running as a Lambda function, start the Lambda handler
-		lambda.Start(a.Handler)
+		lambda.Start(Handler)
 	} else {
 		// If not running as a Lambda function, start the Fiber server
 		app.Listen("localhost:3001")
